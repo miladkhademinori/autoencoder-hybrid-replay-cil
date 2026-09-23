@@ -1,0 +1,319 @@
+"""Autoencoder-Based Hybrid Replay (AHR), Algorithms 1-4 of the paper.
+
+For every new task ``l``:
+
+1. ``CCE_Placement`` (Alg. 2): the new classes' centroid embeddings are
+   initialised at their class means under the current encoder and pushed away
+   from all other CCEs by the repulsive force algorithm. CCEs never move again.
+2. ``HAE_Train`` (Alg. 3): the previous HAE is frozen and copied; the copy is
+   trained on the new data plus exemplars decoded on the fly from the latent
+   memory. Each minibatch holds ``B / l`` new samples and ``B (l-1) / l``
+   decoded exemplars drawn uniformly (class-balanced) from memory. The loss is
+
+       ||x - psi(phi(x))||^2 + lambda ||phi(x) - p_y||^2                 (Eq. 1)
+       + a_z ||phi_old(x) - phi(x)|| + a_x ||psi_old(phi_old(x)) - psi(phi(x))||
+
+3. ``Memory_Population`` (Alg. 4): new data and the old exemplars (decoded with
+   the previous decoder) are encoded with the new encoder; per class the
+   ``M / #classes`` samples with the smallest latent loss are kept, and their
+   latent codes are stored.
+
+Inference: ``argmin_{c} ||phi(x) - p_c||`` over all classes seen so far.
+"""
+import copy
+import math
+
+import torch
+
+from . import memory as mem
+from .common import autocast, batched, make_optimizer, make_scheduler
+from .data import augment, to_float
+from .models import make_hae, n_params
+from .rfa import place_cces, spacing_stats
+
+
+def _sq(a, b):
+    return ((a - b) ** 2).flatten(1).sum(1)
+
+
+class AHR:
+    def __init__(self, bench, args, log=print):
+        self.bench, self.args, self.log = bench, args, log
+        self.model = make_hae(bench.name, bench.input_shape, args.latent_dim,
+                              decoder_width=args.decoder_width, enc_pool=args.enc_pool)
+        self.cces = torch.zeros(0, args.latent_dim)
+        self.lossless = args.memory_kind == "raw"
+        if self.lossless:
+            self.memory = mem.RawMemory(args.n_exemplars)
+        else:
+            self.memory = mem.LatentMemory(args.n_exemplars, bits=args.latent_bits)
+        self.n_seen = 0
+        self.mem_src = torch.zeros(0, dtype=torch.long)  # (task * 1e6 + index) of each exemplar
+        self.log(f"[AHR] encoder params={n_params(self.model.encoder):,} "
+                 f"decoder params={n_params(self.model.decoder):,} "
+                 f"memory={'raw' if self.lossless else 'latent'} x {args.n_exemplars} exemplars")
+
+    # ------------------------------------------------------------------ #
+    def encode(self, x_uint8, model=None):
+        model = model or self.model
+        model.eval()
+        return batched(model.encoder, x_uint8, self.args.eval_batch)
+
+    def predict(self, x_uint8):
+        z = self.encode(x_uint8)
+        return torch.cdist(z, self.cces).argmin(1)
+
+    def decode_memory(self, idx, decoder):
+        """Replay samples: stored latents decoded with the (frozen) previous decoder."""
+        data, y = self.memory.get(idx)
+        if self.lossless:
+            return to_float(data), y
+        with torch.no_grad(), autocast(self.args.bf16):
+            x = decoder(data).float()
+        return x, y
+
+    # ------------------------------------------------------------------ #
+    def cce_placement(self, task):
+        a = self.args
+        z = self.encode(task.x_train)
+        init = torch.stack([z[task.y_train == c].mean(0) for c in task.classes])
+        new, n_steps = place_cces(init, self.cces, zeta=a.rfa_zeta, mass=a.rfa_mass, dt=a.rfa_dt,
+                                  steps=a.rfa_steps, damping=a.rfa_damping,
+                                  softening=a.rfa_softening, target_dist=a.rfa_target)
+        shift = (new - init).norm(dim=1).mean()
+        self.cces = torch.cat([self.cces, new.float()])
+        mn, mean = spacing_stats(self.cces)
+        self.log(f"  CCE placement ({n_steps} RFA steps): |init spread|={spacing_stats(init)[1]:.3f} "
+                 f"mean shift={shift:.3f} min/mean CCE distance={mn:.3f}/{mean:.3f} "
+                 f"|p| mean={self.cces.norm(dim=1).mean():.3f}")
+
+    # ------------------------------------------------------------------ #
+    def train_task(self, t, task, old):
+        a = self.args
+        model = self.model
+        opt = make_optimizer(model.parameters(), a)
+        n_new = len(task.y_train)
+        replay = old is not None and len(self.memory) > 0
+        b_new = max(1, round(a.batch_size / (t + 1))) if replay else a.batch_size
+        b_mem = a.batch_size - b_new if replay else 0
+        iters = math.ceil(n_new / b_new)
+        sched = make_scheduler(opt, a, a.epochs * iters)
+        cces = self.cces
+        flip = self.bench.flip
+        for ep in range(a.epochs):
+            model.train()
+            perm = torch.randperm(n_new)
+            tot = {"rec": 0.0, "lat": 0.0, "dz": 0.0, "dx": 0.0, "mem": 0.0}
+            for it in range(iters):
+                idx = perm[it * b_new:(it + 1) * b_new]
+                x = to_float(task.x_train[idx])
+                y = task.y_train[idx]
+                codes = None
+                if b_mem > 0:
+                    midx = self.memory.sample_indices(b_mem)
+                    xm, ym = self.decode_memory(midx, old.decoder)
+                    if not self.lossless and a.alpha_mem > 0:
+                        codes, xm_target = self.memory.get(midx)[0], xm
+                    x, y = torch.cat([x, xm]), torch.cat([y, ym])
+                if a.augment:
+                    x = augment(x, pad=a.crop_pad, flip=flip)
+                with autocast(a.bf16):
+                    z, xh = model(x)
+                    if old is not None:
+                        with torch.no_grad():
+                            z_old = old.encoder(x)
+                            x_old = old.decoder(z_old)
+                z, xh = z.float(), xh.float()
+                l_rec = _sq(xh, x).mean()
+                l_lat = _sq(z, cces[y]).mean()
+                loss = l_rec + a.lam * l_lat
+                if old is not None:
+                    dz, dx = _sq(z, z_old.float()), _sq(xh, x_old.float())
+                    if a.distill_norm == "l2":
+                        dz, dx = dz.clamp_min(1e-12).sqrt(), dx.clamp_min(1e-12).sqrt()
+                    l_dz, l_dx = dz.mean(), dx.mean()
+                    loss = loss + a.alpha_z * l_dz + a.alpha_x * l_dx
+                    tot["dz"] += l_dz.item()
+                    tot["dx"] += l_dx.item()
+                    if a.lam_recon_new > 0:
+                        # new-task samples also presented through the (old) AE, so that
+                        # "reconstructed-looking" is not a cue for "old class"
+                        with autocast(a.bf16):
+                            z_rn = model.encoder(x_old[:len(idx)].float())
+                        loss = loss + a.lam * a.lam_recon_new * _sq(z_rn.float(), cces[y[:len(idx)]]).mean()
+                if codes is not None:
+                    # decoder distillation on the stored codes: psi(m) must keep decoding
+                    # every stored latent into the same exemplar as psi_old(m)
+                    with autocast(a.bf16):
+                        xm_new = model.decoder(codes)
+                    l_mem = _sq(xm_new.float(), xm_target).mean()
+                    loss = loss + a.alpha_mem * l_mem
+                    tot["mem"] += l_mem.item()
+                opt.zero_grad(set_to_none=True)
+                loss.backward()
+                opt.step()
+                if sched is not None:
+                    sched.step()
+                tot["rec"] += l_rec.item()
+                tot["lat"] += l_lat.item()
+            if ep == 0 or (ep + 1) % a.log_every == 0 or ep + 1 == a.epochs:
+                msg = " ".join(f"{k}={v / iters:.3f}" for k, v in tot.items())
+                self.log(f"  task {t + 1} epoch {ep + 1}/{a.epochs} ({iters} it, b_new={b_new}) {msg}")
+
+    # ------------------------------------------------------------------ #
+    @torch.no_grad()
+    def _select(self, z, y, scores, per_class):
+        a = self.args
+        if a.selection == "rank":
+            return mem.select_rank(scores, y, per_class)
+        if a.selection == "herding":
+            return mem.select_herding(z, y, per_class)
+        return mem.select_random(y, per_class)
+
+    @torch.no_grad()
+    def populate_memory(self, t, task, old):
+        if self.args.memory_mode == "frozen":
+            return self.populate_memory_frozen(t, task)
+        a = self.args
+        n_classes = self.n_seen
+        per_class = self.memory.per_class(n_classes)
+        # D <- D_l  U  psi_{l-1}(M): new data plus the old exemplars decoded by the old decoder
+        xs, ys = [to_float(task.x_train)], [task.y_train]
+        src = [t * 10**6 + torch.arange(len(task.y_train)), self.mem_src]
+        if len(self.memory) > 0:
+            all_idx = torch.arange(len(self.memory))
+            for i in range(0, len(all_idx), a.eval_batch):
+                xm, ym = self.decode_memory(all_idx[i:i + a.eval_batch], old.decoder)
+                xs.append(xm)
+                ys.append(ym)
+        x, y, src = torch.cat(xs), torch.cat(ys), torch.cat(src)
+        self.model.eval()
+        z = batched(self.model.encoder, x, a.eval_batch, uint8=False)
+        scores = _sq(z, self.cces[y])
+        keep = self._select(z, y, scores, per_class)
+        if self.lossless:
+            self.memory.set((x[keep] * 255).round().to(torch.uint8), y[keep])
+        else:
+            self.memory.set(z[keep], y[keep])
+        self.mem_src = src[keep]
+        self.log(f"  memory: {len(self.memory)} exemplars ({per_class}/class), "
+                 f"{self.memory.scalars():,} scalars, {self.memory.nbytes():,} bytes")
+
+    @torch.no_grad()
+    def populate_memory_frozen(self, t, task):
+        """Alg. 4 with codes frozen at storage time: exemplars of task i keep the code
+        phi(w_i, x) computed by the encoder of task i; old classes are only reduced to
+        the new per-class quota (keeping the first-selected ones, as in iCaRL)."""
+        a = self.args
+        per_class = self.memory.per_class(self.n_seen)
+        self.model.eval()
+        z = self.encode(task.x_train)
+        keep_new = self._select(z, task.y_train, _sq(z, self.cces[task.y_train]), per_class)
+        new_data = task.x_train[keep_new] if self.lossless else z[keep_new]
+        new_src = t * 10**6 + keep_new
+        if len(self.memory) > 0:
+            keep_old = mem.truncate_per_class(self.memory.labels, per_class)
+            old_data, old_y = self.memory.get(keep_old)
+            data = torch.cat([old_data, new_data])
+            ys = torch.cat([old_y, task.y_train[keep_new]])
+            src = torch.cat([self.mem_src[keep_old], new_src])
+        else:
+            data, ys, src = new_data, task.y_train[keep_new], new_src
+        self.memory.set(data, ys)
+        self.mem_src = src
+        self.log(f"  memory (frozen codes): {len(self.memory)} exemplars ({per_class}/class), "
+                 f"{self.memory.scalars():,} scalars, {self.memory.nbytes():,} bytes")
+
+    # ------------------------------------------------------------------ #
+    def memorize(self, t, task, old):
+        """Decoder-only memorisation of the stored exemplars.
+
+        New exemplars are fitted to their original images (still available at the end
+        of the task); old exemplars are fitted to what the previous decoder produced
+        for them, so that their decoding does not drift. Only used with frozen codes.
+        """
+        a = self.args
+        if (a.memorize_epochs <= 0 or self.lossless or len(self.memory) == 0
+                or a.memory_mode != "frozen"):
+            return
+        codes, _ = self.memory.get(torch.arange(len(self.memory)))
+        is_new = (self.mem_src // 10**6) == t
+        targets = torch.empty(len(codes), *self.bench.input_shape)
+        new_idx = is_new.nonzero(as_tuple=True)[0]
+        targets[new_idx] = to_float(task.x_train[self.mem_src[new_idx] % 10**6])
+        old_idx = (~is_new).nonzero(as_tuple=True)[0]
+        if len(old_idx):
+            old.eval()
+            targets[old_idx] = batched(old.decoder, codes[old_idx], a.eval_batch, uint8=False)
+        dec = self.model.decoder
+        dec.train()
+        opt = torch.optim.Adam(dec.parameters(), lr=a.memorize_lr)
+        n, B = len(codes), a.batch_size
+        iters = math.ceil(n / B)
+        sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, a.memorize_epochs * iters)
+        for ep in range(a.memorize_epochs):
+            perm = torch.randperm(n)
+            tot = 0.0
+            for it in range(iters):
+                idx = perm[it * B:(it + 1) * B]
+                with autocast(a.bf16):
+                    out = dec(codes[idx])
+                loss = _sq(out.float(), targets[idx]).mean()
+                opt.zero_grad(set_to_none=True)
+                loss.backward()
+                opt.step()
+                sched.step()
+                tot += loss.item()
+        self.log(f"  memorisation: {a.memorize_epochs} decoder epochs over {n} exemplars, "
+                 f"final loss={tot / iters:.3f}")
+
+    # ------------------------------------------------------------------ #
+    def learn_task(self, t, task):
+        self.n_seen += len(task.classes)
+        old = None
+        if t > 0:
+            old = copy.deepcopy(self.model).eval()
+            for p in old.parameters():
+                p.requires_grad_(False)
+        self.cce_placement(task)              # Alg. 2 (uses phi_{l-1})
+        self.train_task(t, task, old)         # Alg. 3
+        self.populate_memory(t, task, old)    # Alg. 4
+        self.memorize(t, task, old)
+        del old                               # Alg. 1, line 7
+
+    # ------------------------------------------------------------------ #
+    @torch.no_grad()
+    def reconstruction_mse(self, x_uint8, n=500):
+        self.model.eval()
+        x = to_float(x_uint8[:n])
+        z = self.model.encoder(x)
+        return float(((self.model.decoder(z) - x) ** 2).mean())
+
+    @torch.no_grad()
+    def diagnostics(self, x_uint8, y):
+        """Accuracy on AE-reconstructed test images and on the decoded memory."""
+        self.model.eval()
+        rec = batched(lambda b: self.model.decoder(self.model.encoder(b)), x_uint8, self.args.eval_batch)
+        z = batched(self.model.encoder, rec, self.args.eval_batch, uint8=False)
+        acc_rec = float((torch.cdist(z, self.cces).argmin(1) == y).float().mean()) * 100
+        acc_mem = None
+        if len(self.memory):
+            idx = torch.arange(len(self.memory))
+            xm, ym = self.decode_memory(idx, self.model.decoder)
+            zm = batched(self.model.encoder, xm, self.args.eval_batch, uint8=False)
+            acc_mem = float((torch.cdist(zm, self.cces).argmin(1) == ym).float().mean()) * 100
+        return acc_rec, acc_mem
+
+    @torch.no_grad()
+    def memory_fidelity(self, n=None):
+        """Diagnostic only: PSNR (dB) of the exemplars decoded from memory against the
+        original training images they were encoded from, and a sample of both."""
+        if len(self.memory) == 0:
+            return None, None, None
+        idx = torch.arange(len(self.memory)) if n is None else torch.randperm(len(self.memory))[:n]
+        self.model.eval()
+        dec, _ = self.decode_memory(idx, self.model.decoder)
+        orig = to_float(torch.stack([self.bench.tasks[int(s) // 10**6].x_train[int(s) % 10**6]
+                                     for s in self.mem_src[idx]]))
+        mse = ((dec - orig) ** 2).flatten(1).mean(1).clamp_min(1e-10)
+        return float((10 * torch.log10(1.0 / mse)).mean()), orig[:16], dec[:16]
