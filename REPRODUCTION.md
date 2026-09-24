@@ -89,6 +89,7 @@ their paper numbers are quoted for reference only.
 | Encoder / latent (SVHN, CIFAR) | ResNet-32 up to its 8x8x64 feature map + 1x1 conv to 5 channels: an 8x8x5 = 320-number spatial latent (paper: 307); head initialised with std 1e-3 | a pooled 307-d vector latent reconstructs only colour blobs (§3.6, §3.9); the small init keeps the latent scale set by RFA rather than by the backbone's activation scale |
 | Decoder (MNIST) | mirror MLP 20-400-400-784, sigmoid | paper |
 | Decoder (SVHN, CIFAR) | Conv3x3(5->384), ConvT(384->192, x2), ConvT(192->3, x2), ReLU, sigmoid; 1.21M params | "3 layers of CNNs", ~1.4M params (Table 3) |
+| Classification domain (SVHN, CIFAR) | latent loss only on decoder outputs (decoded exemplars + reconstructions of the new samples); test on `phi(psi(phi(x)))` | removes the real-vs-decoded task cue (§3.10, §3.11); MNIST keeps the paper's rule |
 | Memory | codes stored once with the encoder of their task (Alg. 4 `phi(w_i, D)`) and never re-encoded; decoder distillation also applied to the stored codes; after each task the decoder alone is fitted to the new exemplars' (code, image) pairs for 20 epochs (MNIST) / 1,500 steps (others) | §3.5 |
 | Minibatch composition | `round(B/l)` new samples + `B - round(B/l)` exemplars sampled uniformly from the class-balanced memory; one epoch = one pass over the new task's data | Sec. 2 ("1/l fraction ... (l-1)/l fraction"); gives the O(t) compute of Table 1 |
 | Exemplar selection | herding in latent space | the text says Alg. 4 is "based on Herding as in iCaRL"; the literal `Rank` of `L_z` is implemented too (§3.1) |
@@ -243,3 +244,21 @@ looks real is "new". With 6x fewer iterations (40% of the data, 20 epochs) the s
 configuration still retained 76.6% of the first task after the second, so the
 shortcut is learned gradually and the paper's training length is enough to learn
 it completely.
+
+### 3.11 What finally works on CIFAR: classify in the decoder's output domain
+Since any detectable difference between real and decoded images becomes a task cue
+(§3.10), the classification loss is applied only to images produced by the decoder:
+the decoded exemplars and, for the new task, the HAE's own reconstructions of the new
+samples (computed in the same minibatch, §3.7); real images still train the
+autoencoder. At test time an image is classified through the autoencoder,
+`argmin_c ||phi(psi(phi(x))) - p_c||`, so train and test inputs come from the same
+domain for every class (`--latent-domain recon`). With the spatial latent the
+reconstructions are good enough (26 dB on the stored exemplars) for this to cost
+little accuracy: at full scale on CIFAR-10 the first task reaches 95.9% and after the
+second task the model keeps **81.7%** of the first task while learning the second to
+79.3% (80.5% overall; iCaRL at the same point: 83.5%, FT-E 75.4%). With the
+vector latent (§3.6) the same idea only reached 70.7% on the first task because its
+reconstructions carried too little class information.
+
+This deviates from the paper's test rule (`argmin ||phi(x) - p||`) and uses the
+reconstruction term of §3.2, but keeps every other element of Alg. 1-4.
