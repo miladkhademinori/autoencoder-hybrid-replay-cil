@@ -14,6 +14,7 @@ Methods
 import argparse
 import json
 import os
+import re
 import sys
 import time
 
@@ -39,13 +40,16 @@ PRESETS = {
 # validation run (see REPRODUCTION.md).
 AHR_DEFAULTS = {
     "mnist":    dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=5.0,
-                     lam_recon_new=0.0, latent_kind="vector"),
+                     lam_recon_new=0.0, latent_kind="vector", latent_domain="input"),
     "svhn":     dict(lam=0.3, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
-                     memorize_steps=1500, lam_recon_new=0.0, latent_kind="spatial"),
+                     memorize_steps=1500, lam_recon_new=1.0, latent_kind="spatial",
+                     latent_domain="recon"),
     "cifar10":  dict(lam=0.3, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
-                     memorize_steps=1500, lam_recon_new=0.0, latent_kind="spatial"),
+                     memorize_steps=1500, lam_recon_new=1.0, latent_kind="spatial",
+                     latent_domain="recon"),
     "cifar100": dict(lam=0.3, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
-                     memorize_steps=1500, lam_recon_new=0.0, latent_kind="spatial"),
+                     memorize_steps=1500, lam_recon_new=1.0, latent_kind="spatial",
+                     latent_domain="recon"),
 }
 
 METHODS = ["ahr", "ahr_lossless", "ahr_lossy_mini", "ahr_lossless_mini",
@@ -65,6 +69,7 @@ def parse_args(argv=None):
     ap.add_argument("--train-fraction", type=float, default=1.0)
     ap.add_argument("--threads", type=int, default=None)
     ap.add_argument("--stop-after", type=int, default=None, help="only learn the first N tasks")
+    ap.add_argument("--resume", default=None, help="AHR checkpoint <run>_ckpt_t<k>.pt to continue from")
     ap.add_argument("--save-ckpt", type=int, default=0, choices=[0, 1],
                     help="save model, CCEs and memory after every task (for debugging)")
     # optimisation (Table 4: Adam, lr 1e-3, momentum 0.9)
@@ -123,7 +128,7 @@ def parse_args(argv=None):
                     help="also optimise the stored codes during memorisation")
     ap.add_argument("--lam-recon-new", type=float, default=None,
                     help="latent loss (x lambda) on reconstructions of the new samples")
-    ap.add_argument("--latent-domain", default="input", choices=["input", "recon"],
+    ap.add_argument("--latent-domain", default=None, choices=["input", "recon"],
                     help="input: L_z on phi(x) and test on phi(x) (paper); recon: L_z only on decoder "
                     "outputs (decoded exemplars, reconstructions of new samples) and test on "
                     "phi(psi(phi(x)))")
@@ -225,7 +230,26 @@ def main(argv=None):
         else:
             learner = SoftmaxLearner(bench, args, args.method, log)
         psnr = []
+        start = 0
+        if args.resume:
+            # continue an AHR run from the checkpoint written after task k (--save-ckpt 1)
+            ck = torch.load(args.resume)
+            start = int(re.search(r"_ckpt_t(\d+)\.pt$", args.resume).group(1))
+            learner.model.load_state_dict(ck["model"])
+            learner.cces = ck["cces"]
+            learner.memory.set(ck["mem_data"].float(), ck["mem_labels"])
+            learner.mem_src = ck["mem_src"]
+            learner.n_seen = len(learner.cces)
+            prev = re.findall(r"after task (\d+): acc=([0-9.]+) per-task=\[([^\]]*)\].*?memory-PSNR=([0-9.]+)dB",
+                              open(args.resume.split("_ckpt_t")[0] + ".log").read())
+            for k, acc, per, p in prev[:start]:
+                accs.append(float(acc))
+                acc_matrix.append([float(v) for v in per.split(",")])
+                psnr.append(float(p))
+            log(f"resumed from {args.resume} after task {start}: accs so far {accs}")
         for t, task in enumerate(bench.tasks[:args.stop_after]):
+            if t < start:
+                continue
             learner.learn_task(t, task)
             if args.save_ckpt and args.method.startswith("ahr"):
                 torch.save({"model": learner.model.state_dict(), "cces": learner.cces,
