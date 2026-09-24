@@ -15,7 +15,7 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 |---|---|---|---|---|---|---|---|---|
 | FT | 19.76 ± 0.01 (n=3) | 19.93 ± 0.03 | 19.64 (n=1) | 19.19 ± 0.04 | 19.57 (n=1) | 18.72 ± 0.30 | - | 8.91 ± 0.12 |
 | FT-E | 72.18 ± 0.81 (n=3) | 92.17 ± 0.16 | 55.61 (n=1) | 87.13 ± 0.37 | 43.95 (n=1) | 72.17 ± 0.84 | 27.10 (n=1) | 48.47 ± 0.83 |
-| Joint | 98.54 ± 0.04 (n=3) | 98.48 ± 0.06 | - | 95.88 ± 0.04 | 89.02 (n=1) | 92.37 ± 0.09 | - | 73.87 ± 0.10 |
+| Joint | 98.54 ± 0.04 (n=3) | 98.48 ± 0.06 | 95.43 (n=1) | 95.88 ± 0.04 | 89.02 (n=1) | 92.37 ± 0.09 | - | 73.87 ± 0.10 |
 | iCaRL | 88.60 ± 0.10 (n=3) | 93.06 ± 0.33 | 71.07 (n=1) | 89.63 ± 0.61 | 62.82 (n=1) | 73.29 ± 0.73 | - | 49.38 ± 0.62 |
 | AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | - | 93.02 ± 0.65 | - | 77.12 ± 0.75 | - | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
@@ -36,6 +36,7 @@ Epochs / exemplars / wall-clock per run:
 | mnist | AHR-lossless | 40 | 7840 | 6,146,560 | 15 |
 | svhn | FT | 50 | 0 | 0 | 136 |
 | svhn | FT-E | 50 | 200 | 614,400 | 137 |
+| svhn | Joint | 50 | 0 | 0 | 142 |
 | svhn | iCaRL | 50 | 200 | 614,400 | 162 |
 | cifar10 | FT | 50 | 0 | 0 | 143 |
 | cifar10 | FT-E | 50 | 200 | 614,400 | 147 |
@@ -49,6 +50,7 @@ mnist ablations (final accuracy %, mean ± SEM):
 |---|---|
 | AHR (final configuration) | 94.57 ± 0.61 (n=3) |
 | + latent loss on reconstructions of new samples | 93.42 ± 0.38 (n=3) |
+| + classification in the decoder's output domain (as used for SVHN/CIFAR) | 91.45 ± 0.54 (n=3) |
 | - decoder memorisation | 84.00 ± 1.39 (n=3) |
 | - frozen codes, - memorisation = literal Alg. 1-4 (herding selection) | 75.01 ± 1.48 (n=3) |
 | literal Alg. 1-4, Rank selection | 70.06 ± 0.96 (n=3) |

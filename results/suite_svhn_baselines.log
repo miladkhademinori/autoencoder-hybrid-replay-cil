@@ -5,3 +5,4 @@ done  svhn/icarl_s0 in 162.0 min: ok
 start svhn/ft_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset svhn --method ft --seed 0 --threads 1 --out results
 done  svhn/ft_s0 in 136.0 min: ok
 start svhn/joint_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset svhn --method joint --seed 0 --threads 1 --out results
+done  svhn/joint_s0 in 141.6 min: ok

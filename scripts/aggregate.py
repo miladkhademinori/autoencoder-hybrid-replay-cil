@@ -60,6 +60,7 @@ def fmt(ms, n=None):
 ABLATION_TAGS = [
     ("ahr", "", "AHR (final configuration)"),
     ("ahr", "recon_new", "+ latent loss on reconstructions of new samples"),
+    ("ahr", "recon_domain", "+ classification in the decoder's output domain (as used for SVHN/CIFAR)"),
     ("ahr", "no_memorize", "- decoder memorisation"),
     ("ahr", "literal_herding", "- frozen codes, - memorisation = literal Alg. 1-4 (herding selection)"),
     ("ahr", "literal_rank", "literal Alg. 1-4, Rank selection"),

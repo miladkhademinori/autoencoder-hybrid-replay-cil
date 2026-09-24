@@ -5,3 +5,7 @@ args: {"alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.1, "augme
   task 1 epoch 10/50 (364 it) ce=0.169 kd=0.000 [1707s]
   task 1 epoch 20/50 (364 it) ce=0.090 kd=0.000 [3397s]
   task 1 epoch 30/50 (364 it) ce=0.033 kd=0.000 [5080s]
+  task 1 epoch 40/50 (364 it) ce=0.011 kd=0.000 [6752s]
+  task 1 epoch 50/50 (364 it) ce=0.006 kd=0.000 [8436s]
+joint: acc=95.43 per-task=[95.3, 93.7, 96.1, 96.0, 96.0] [8491s]
+FINAL svhn joint seed=0: final acc=95.43 avg inc acc=95.43 time=141.5min
