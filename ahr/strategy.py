@@ -13,12 +13,25 @@ For every new task ``l``:
        ||x - psi(phi(x))||^2 + lambda ||phi(x) - p_y||^2                 (Eq. 1)
        + a_z ||phi_old(x) - phi(x)|| + a_x ||psi_old(phi_old(x)) - psi(phi(x))||
 
-3. ``Memory_Population`` (Alg. 4): new data and the old exemplars (decoded with
-   the previous decoder) are encoded with the new encoder; per class the
-   ``M / #classes`` samples with the smallest latent loss are kept, and their
-   latent codes are stored.
+3. ``Memory_Population`` (Alg. 4): exemplars are selected per class
+   (``M / #classes`` each) and stored as latent codes.
 
 Inference: ``argmin_{c} ||phi(x) - p_c||`` over all classes seen so far.
+
+Implementation options (see REPRODUCTION.md for why they exist):
+
+* ``memory_mode="reencode"``: every task, the old exemplars are decoded with the
+  previous decoder and re-encoded with the new encoder (literal reading of
+  Alg. 4, line 4). ``memory_mode="frozen"``: a code ``phi(w_i, x)`` is stored once
+  at task ``i`` and never re-encoded (Alg. 4, line 11); ``alpha_mem`` then applies
+  the decoder distillation directly to the stored codes,
+  ``||psi(m) - psi_old(m)||^2``, so that they stay decodable.
+* ``memorize_epochs``: after selection, the decoder alone is fitted to map the
+  new exemplars' codes to their original images (the "memorisation" the paper
+  relies on) while old codes keep their previous decoding.
+* ``lam_recon_new``: the latent loss is also applied to the previous HAE's
+  reconstructions of the new samples, so that "looks decoded" is not a cue for
+  "belongs to an old task".
 """
 import copy
 import math
@@ -135,12 +148,14 @@ class AHR:
                     loss = loss + a.alpha_z * l_dz + a.alpha_x * l_dx
                     tot["dz"] += l_dz.item()
                     tot["dx"] += l_dx.item()
-                    if a.lam_recon_new > 0:
-                        # new-task samples also presented through the (old) AE, so that
-                        # "reconstructed-looking" is not a cue for "old class"
-                        with autocast(a.bf16):
-                            z_rn = model.encoder(x_old[:len(idx)].float())
-                        loss = loss + a.lam * a.lam_recon_new * _sq(z_rn.float(), cces[y[:len(idx)]]).mean()
+                if a.lam_recon_new > 0 and (old is not None or a.recon_new_source == "current"):
+                    # new-task samples are also presented as reconstructions, so that
+                    # "looks decoded" is not a cue for "belongs to an old class"
+                    n = len(idx)
+                    x_rn = (xh[:n] if a.recon_new_source == "current" else x_old[:n]).detach()
+                    with autocast(a.bf16):
+                        z_rn = model.encoder(x_rn.float())
+                    loss = loss + a.lam * a.lam_recon_new * _sq(z_rn.float(), cces[y[:n]]).mean()
                 if codes is not None:
                     # decoder distillation on the stored codes: psi(m) must keep decoding
                     # every stored latent into the same exemplar as psi_old(m)

@@ -38,10 +38,10 @@ PRESETS = {
 # AHR hyper-parameters that the paper does not report; chosen on MNIST / a CIFAR-10
 # validation run (see REPRODUCTION.md).
 AHR_DEFAULTS = {
-    "mnist":    dict(lam=1.0, alpha_z=1.0, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=10.0),
-    "svhn":     dict(lam=1.0, alpha_z=1.0, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=10.0),
-    "cifar10":  dict(lam=1.0, alpha_z=1.0, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=10.0),
-    "cifar100": dict(lam=1.0, alpha_z=1.0, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=10.0),
+    "mnist":    dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=5.0),
+    "svhn":     dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0),
+    "cifar10":  dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0),
+    "cifar100": dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0),
 }
 
 METHODS = ["ahr", "ahr_lossless", "ahr_lossy_mini", "ahr_lossless_mini",
@@ -87,16 +87,18 @@ def parse_args(argv=None):
     ap.add_argument("--alpha-z", type=float)
     ap.add_argument("--alpha-x", type=float)
     ap.add_argument("--distill-norm", default="sq", choices=["sq", "l2"])
-    ap.add_argument("--memory-mode", default="reencode", choices=["reencode", "frozen"],
+    ap.add_argument("--memory-mode", default="frozen", choices=["reencode", "frozen"],
                     help="reencode: Alg. 4 re-encodes decoded old exemplars with the new "
                     "encoder every task; frozen: codes are kept as stored")
-    ap.add_argument("--alpha-mem", type=float, default=0.0,
+    ap.add_argument("--alpha-mem", type=float, default=1.0,
                     help="weight of ||psi(m) - psi_old(m)||^2 on stored codes m")
-    ap.add_argument("--memorize-epochs", type=int, default=0,
+    ap.add_argument("--memorize-epochs", type=int, default=20,
                     help="decoder-only memorisation epochs over the stored exemplars (frozen codes)")
     ap.add_argument("--memorize-lr", type=float, default=1e-3)
-    ap.add_argument("--lam-recon-new", type=float, default=0.0,
-                    help="latent loss (x lambda) on old-AE reconstructions of new samples")
+    ap.add_argument("--lam-recon-new", type=float, default=1.0,
+                    help="latent loss (x lambda) on reconstructions of the new samples")
+    ap.add_argument("--recon-new-source", default="current", choices=["current", "old"],
+                    help="reconstructions from the HAE being trained (detached) or the previous one")
     ap.add_argument("--selection", default="herding", choices=["rank", "herding", "random"])
     ap.add_argument("--rfa-zeta", type=float)
     ap.add_argument("--rfa-mass", type=float, default=1.0)
