@@ -37,3 +37,8 @@ after task 4: acc=91.49 per-task=[96.4, 80.0, 91.7, 97.9] memory-PSNR=18.53dB ac
   task 5 epoch 1/40 (454 it, b_new=26) rec=4.410 lat=5.682 dz=9.739 dx=1.812 mem=0.539 [798s]
   task 5 epoch 10/40 (454 it, b_new=26) rec=3.208 lat=1.654 dz=12.324 dx=1.373 mem=0.204 [885s]
   task 5 epoch 20/40 (454 it, b_new=26) rec=2.881 lat=1.101 dz=12.389 dx=1.220 mem=0.134 [981s]
+  task 5 epoch 30/40 (454 it, b_new=26) rec=2.714 lat=0.898 dz=12.454 dx=1.139 mem=0.102 [1080s]
+  task 5 epoch 40/40 (454 it, b_new=26) rec=2.652 lat=0.845 dz=12.481 dx=1.098 mem=0.091 [1180s]
+  memory (frozen codes): 7840 exemplars (784/class), 156,800 scalars, 627,200 bytes
+after task 5: acc=86.59 per-task=[96.7, 59.9, 89.3, 93.1, 94.3] memory-PSNR=18.69dB acc(recon test)=92.0 acc(memory)=99.9 [1181s]
+FINAL mnist ahr seed=2: final acc=86.59 avg inc acc=94.12 time=19.7min

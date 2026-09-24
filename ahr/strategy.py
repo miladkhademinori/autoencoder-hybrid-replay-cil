@@ -53,7 +53,10 @@ class AHR:
     def __init__(self, bench, args, log=print):
         self.bench, self.args, self.log = bench, args, log
         self.model = make_hae(bench.name, bench.input_shape, args.latent_dim,
-                              decoder_width=args.decoder_width, enc_pool=args.enc_pool)
+                              decoder_width=args.decoder_width, enc_pool=args.enc_pool,
+                              input_blur=args.input_blur, latent_kind=args.latent_kind)
+        if args.latent_kind == "spatial" and bench.name != "mnist":
+            args.latent_dim = self.model.encoder.head.conv.out_channels * 64
         self.cces = torch.zeros(0, args.latent_dim)
         self.lossless = args.memory_kind == "raw"
         if self.lossless:
@@ -61,6 +64,8 @@ class AHR:
         else:
             self.memory = mem.LatentMemory(args.n_exemplars, bits=args.latent_bits)
         self.n_seen = 0
+        from .models import GaussianBlur
+        self._hf_blur = GaussianBlur(bench.input_shape[0], args.hf_sigma)
         self.mem_src = torch.zeros(0, dtype=torch.long)  # (task * 1e6 + index) of each exemplar
         self.log(f"[AHR] encoder params={n_params(self.model.encoder):,} "
                  f"decoder params={n_params(self.model.decoder):,} "
@@ -137,9 +142,17 @@ class AHR:
                     if not self.lossless and a.alpha_mem > 0:
                         codes, xm_target = self.memory.get(midx)[0], xm
                     x, y = torch.cat([x, xm]), torch.cat([y, ym])
+                n = len(idx)
+                if b_mem > 0 and a.hf_transplant > 0 and not self.lossless:
+                    # give decoded exemplars the high-frequency residual of random real
+                    # new-task images, so that "sharp" is not a cue for "new class"
+                    with torch.no_grad():
+                        donors = x[torch.randint(0, n, (len(x) - n,))]
+                        hf = donors - self._hf_blur(donors)
+                        use = (torch.rand(len(x) - n, 1, 1, 1) < a.hf_transplant).float()
+                        x = torch.cat([x[:n], (x[n:] + use * hf).clamp(0, 1)])
                 if a.augment:
                     x = augment(x, pad=a.crop_pad, flip=flip)
-                n = len(idx)
                 use_rn = a.lam_recon_new > 0 and (old is not None or a.recon_new_source == "current")
                 x_in = x
                 if use_rn:
@@ -304,7 +317,13 @@ class AHR:
             targets[old_idx] = batched(old.decoder, codes[old_idx], a.eval_batch, uint8=False)
         dec = self.model.decoder
         dec.train()
-        opt = torch.optim.Adam(dec.parameters(), lr=a.memorize_lr)
+        params = list(dec.parameters())
+        if a.memorize_codes:
+            # the stored codes are memory contents: refine them jointly with the decoder
+            # (auto-decoder style) so that they decode to their exemplars more faithfully
+            codes = codes.clone().requires_grad_(True)
+            params.append(codes)
+        opt = torch.optim.Adam(params, lr=a.memorize_lr)
         n, B = len(codes), a.batch_size
         iters = math.ceil(n / B)
         epochs = a.memorize_epochs
@@ -324,6 +343,8 @@ class AHR:
                 opt.step()
                 sched.step()
                 tot += loss.item()
+        if a.memorize_codes:
+            self.memory.set(codes.detach(), self.memory.labels)
         self.log(f"  memorisation: {epochs} decoder epochs ({epochs * iters} steps) over {n} exemplars, "
                  f"final loss={tot / iters:.3f}")
 

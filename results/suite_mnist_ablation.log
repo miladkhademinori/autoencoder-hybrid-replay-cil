@@ -9,3 +9,28 @@ done  mnist/ahr_s0_no_memorize in 19.6 min: ok
 start mnist/ahr_s1_no_memorize: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 1 --threads 1 --out results --tag no_memorize --memorize-epochs 0
 done  mnist/ahr_s1_no_memorize in 19.5 min: ok
 start mnist/ahr_s2_no_memorize: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 2 --threads 1 --out results --tag no_memorize --memorize-epochs 0
+done  mnist/ahr_s2_no_memorize in 19.7 min: ok
+start mnist/ahr_s0_no_recon_new: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 0 --threads 1 --out results --tag no_recon_new --lam-recon-new 0
+done  mnist/ahr_s0_no_recon_new in 18.0 min: ok
+start mnist/ahr_s1_no_recon_new: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 1 --threads 1 --out results --tag no_recon_new --lam-recon-new 0
+done  mnist/ahr_s1_no_recon_new in 19.0 min: ok
+start mnist/ahr_s2_no_recon_new: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 2 --threads 1 --out results --tag no_recon_new --lam-recon-new 0
+done  mnist/ahr_s2_no_recon_new in 18.3 min: ok
+start mnist/ahr_s0_reencode: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 0 --threads 1 --out results --tag reencode --memory-mode reencode --alpha-mem 0 --memorize-epochs 0
+done  mnist/ahr_s0_reencode in 17.1 min: ok
+start mnist/ahr_s1_reencode: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 1 --threads 1 --out results --tag reencode --memory-mode reencode --alpha-mem 0 --memorize-epochs 0
+done  mnist/ahr_s1_reencode in 16.9 min: ok
+start mnist/ahr_s2_reencode: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 2 --threads 1 --out results --tag reencode --memory-mode reencode --alpha-mem 0 --memorize-epochs 0
+done  mnist/ahr_s2_reencode in 16.9 min: ok
+start mnist/ahr_s0_literal_herding: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 0 --threads 1 --out results --tag literal_herding --memory-mode reencode --alpha-mem 0 --memorize-epochs 0 --lam-recon-new 0
+done  mnist/ahr_s0_literal_herding in 14.3 min: ok
+start mnist/ahr_s1_literal_herding: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 1 --threads 1 --out results --tag literal_herding --memory-mode reencode --alpha-mem 0 --memorize-epochs 0 --lam-recon-new 0
+done  mnist/ahr_s1_literal_herding in 14.5 min: ok
+start mnist/ahr_s2_literal_herding: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 2 --threads 1 --out results --tag literal_herding --memory-mode reencode --alpha-mem 0 --memorize-epochs 0 --lam-recon-new 0
+done  mnist/ahr_s2_literal_herding in 14.6 min: ok
+start mnist/ahr_s0_literal_rank: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 0 --threads 1 --out results --tag literal_rank --memory-mode reencode --alpha-mem 0 --memorize-epochs 0 --lam-recon-new 0 --selection rank
+done  mnist/ahr_s0_literal_rank in 14.5 min: ok
+start mnist/ahr_s1_literal_rank: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 1 --threads 1 --out results --tag literal_rank --memory-mode reencode --alpha-mem 0 --memorize-epochs 0 --lam-recon-new 0 --selection rank
+done  mnist/ahr_s1_literal_rank in 14.7 min: ok
+start mnist/ahr_s2_literal_rank: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 2 --threads 1 --out results --tag literal_rank --memory-mode reencode --alpha-mem 0 --memorize-epochs 0 --lam-recon-new 0 --selection rank
+done  mnist/ahr_s2_literal_rank in 14.6 min: ok

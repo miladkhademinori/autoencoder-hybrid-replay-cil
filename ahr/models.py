@@ -154,14 +154,69 @@ class ConvDecoder(nn.Module):
         return torch.sigmoid(self.deconv(h))
 
 
+class SpatialHead(nn.Module):
+    """1x1 convolution of the ResNet feature map to ``c`` channels, flattened: a
+    spatially laid-out latent (e.g. 8x8x5 = 320 numbers for a ~307-d budget)."""
+
+    def __init__(self, in_channels, c, init_std=1e-3):
+        super().__init__()
+        self.conv = nn.Conv2d(in_channels, c, 1)
+        nn.init.normal_(self.conv.weight, std=init_std)
+        nn.init.zeros_(self.conv.bias)
+
+    def forward(self, f):
+        return torch.flatten(self.conv(f), 1)
+
+
+class SpatialConvDecoder(nn.Module):
+    """Three convolutional layers from a c x 8 x 8 latent to C x 32 x 32:
+    Conv3x3(c->w1) -> ConvT(w1->w2, x2) -> ConvT(w2->C, x2)."""
+
+    def __init__(self, c, out_channels=3, base=8, w1=384, w2=192):
+        super().__init__()
+        self.c, self.base = c, base
+        self.net = nn.Sequential(
+            nn.Conv2d(c, w1, 3, 1, 1), nn.ReLU(inplace=True),
+            nn.ConvTranspose2d(w1, w2, 4, 2, 1), nn.ReLU(inplace=True),
+            nn.ConvTranspose2d(w2, out_channels, 4, 2, 1))
+
+    def forward(self, z):
+        h = _fp32(lambda t: t, z).view(-1, self.c, self.base, self.base)
+        return torch.sigmoid(self.net(h))
+
+
 # --------------------------------------------------------------------------- #
 # Model wrappers
 # --------------------------------------------------------------------------- #
-class Encoder(nn.Module):
-    """Backbone followed by a linear map to the ``latent_dim``-d latent space."""
+class GaussianBlur(nn.Module):
+    """Fixed depthwise Gaussian low-pass filter (no parameters)."""
 
-    def __init__(self, backbone, latent_dim, head_init_std=1e-3):
+    def __init__(self, channels, sigma):
         super().__init__()
+        r = max(1, int(round(2 * sigma)))
+        t = torch.arange(-r, r + 1, dtype=torch.float32)
+        g = torch.exp(-t ** 2 / (2 * sigma ** 2))
+        g = g / g.sum()
+        k = (g[:, None] * g[None, :]).expand(channels, 1, 2 * r + 1, 2 * r + 1).clone()
+        self.register_buffer("kernel", k)
+        self.pad, self.channels = r, channels
+
+    def forward(self, x):
+        x = F.pad(x, (self.pad,) * 4, mode="replicate")
+        return F.conv2d(x, self.kernel.to(x.dtype), groups=self.channels)
+
+
+class Encoder(nn.Module):
+    """Backbone followed by a linear map to the ``latent_dim``-d latent space.
+
+    ``input_blur > 0`` puts a fixed Gaussian low-pass in front of the backbone so that
+    the high-frequency detail that distinguishes real from decoded images is not
+    visible to the encoder (see REPRODUCTION.md).
+    """
+
+    def __init__(self, backbone, latent_dim, head_init_std=1e-3, input_blur=0.0, channels=3):
+        super().__init__()
+        self.blur = GaussianBlur(channels, input_blur) if input_blur > 0 else nn.Identity()
         self.backbone = backbone
         self.head = nn.Linear(backbone.out_dim, latent_dim)
         # Start with (almost) all inputs mapped close to the origin so that the latent
@@ -171,7 +226,7 @@ class Encoder(nn.Module):
         nn.init.zeros_(self.head.bias)
 
     def forward(self, x):
-        return _fp32(self.head, self.backbone(x))
+        return _fp32(self.head, self.backbone(self.blur(x)))
 
 
 class HybridAutoencoder(nn.Module):
@@ -228,14 +283,33 @@ def make_backbone(dataset, in_shape, pool=1):
     return ResNet32Backbone(in_shape[0], mean, std, pool=pool)
 
 
-def make_hae(dataset, in_shape, latent_dim, decoder_width=1.0, enc_pool=4):
+def make_hae(dataset, in_shape, latent_dim, decoder_width=1.0, enc_pool=4, input_blur=0.0,
+             latent_kind="vector"):
+    if dataset != "mnist" and latent_kind == "spatial":
+        c = max(1, round(latent_dim / 64))  # 8x8 spatial latent
+        backbone = make_backbone(dataset, in_shape, pool=8)
+        backbone.pool = nn.Identity()
+        backbone.forward = _feature_map_forward.__get__(backbone)
+        enc = Encoder(backbone, c * 64, input_blur=input_blur, channels=in_shape[0])
+        enc.head = SpatialHead(64, c)
+        dec = SpatialConvDecoder(c, in_shape[0], in_shape[1] // 4,
+                                 int(384 * decoder_width), int(192 * decoder_width))
+        return HybridAutoencoder(enc, dec)
     if dataset == "mnist":
-        enc = Encoder(MLPBackbone(in_shape), latent_dim)
+        enc = Encoder(MLPBackbone(in_shape), latent_dim, input_blur=input_blur, channels=in_shape[0])
         dec = MLPDecoder(latent_dim, in_shape)
     else:
-        enc = Encoder(make_backbone(dataset, in_shape, pool=enc_pool), latent_dim)
+        enc = Encoder(make_backbone(dataset, in_shape, pool=enc_pool), latent_dim,
+                      input_blur=input_blur, channels=in_shape[0])
         dec = ConvDecoder(latent_dim, in_shape[0], in_shape[1], width=decoder_width)
     return HybridAutoencoder(enc, dec)
+
+
+def _feature_map_forward(self, x):
+    """ResNet forward that returns the last feature map (no pooling / flattening)."""
+    x = self.norm(x)
+    x = F.relu(self.bn1(self.conv1(x)), inplace=True)
+    return self.layer3(self.layer2(self.layer1(x)))
 
 
 def n_params(module):

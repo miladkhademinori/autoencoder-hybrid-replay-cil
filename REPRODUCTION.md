@@ -94,3 +94,43 @@ applying the decoder distillation directly on the stored codes
 new exemplars (`--memorize-epochs 20`) raises MNIST accuracy from 85.6% to 91.8%
 (with `lambda = 1`) and to 93.7% (with `lambda = 0.3`).
 
+### 3.6 CIFAR: the decoded-vs-real shortcut is total
+On CIFAR-10(5/2) the decoder's output (17-18 dB PSNR for a 307-d code and the
+3-layer decoder) is trivially distinguishable from real images. After task 2 the
+encoder maps the *decoded* airplane/automobile exemplars to their CCEs (92% correct)
+but maps *real* airplane/automobile test images to the bird/cat CCEs (0-7%
+correct). Controls (2 tasks, 40% of the data, 20 epochs):
+
+| Variant | task-1 acc. after task 2 | task-2 acc. |
+|---|---|---|
+| AHR (decoded exemplars) | 0.0 | 81.7 |
+| AHR without the reconstruction term | 1.6 | 84.8 |
+| AHR + KD on distances to the old CCEs (weight 1 / 10) | 0.1 / 0.0 | 82.1 / 82.7 |
+| AHR-lossless (same method, raw exemplars) | **84.5** | 75.4 |
+| AHR, classification only on decoder outputs (`--latent-domain recon`) | 72.2 | 24.3 |
+
+With perfect exemplars the method works; with decoded ones every real image is
+"new". Classifying only decoder outputs removes the shortcut but a classifier
+trained only on blurry reconstructions learns the new classes poorly.
+
+### 3.7 BatchNorm and separate forward passes
+A first version passed the reconstructions of the new samples through the encoder
+in a separate forward pass. In train mode that all-reconstruction batch gets its
+own BatchNorm statistics, which the network can exploit and which vanish in eval
+mode. All samples of a step now share one forward pass (§3.6 numbers are with the
+fix).
+
+### 3.8 How far can "memorisation" go?
+Fidelity of the 2,000 stored CIFAR-10 exemplars after task 1 (40% data, 20 epochs),
+continuing to train on the stored (code, image) pairs only:
+
+| Steps (batch 128) | decoder only | decoder + stored codes |
+|---|---|---|
+| 0 | 15.1 dB | 15.1 dB |
+| 1,500 | 16.6 dB | 20.3 dB |
+| 3,000 | 17.1 dB | 22.4 dB |
+| 6,000 | 18.2 dB | |
+
+Refining the stored codes together with the decoder (auto-decoder style,
+`--memorize-codes 1`) memorises far better than fitting the decoder alone; the
+memory footprint is unchanged (the codes are the memory).

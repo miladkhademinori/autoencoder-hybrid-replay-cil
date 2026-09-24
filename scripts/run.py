@@ -84,7 +84,16 @@ def parse_args(argv=None):
     # AHR
     ap.add_argument("--latent-dim", type=int)
     ap.add_argument("--enc-pool", type=int, default=4)
+    ap.add_argument("--latent-kind", default="vector", choices=["vector", "spatial"],
+                    help="vector: pooled features -> linear -> m; spatial: 1x1 conv of the 8x8 "
+                    "feature map to round(m/64) channels (m ~ 64*round(m/64))")
     ap.add_argument("--decoder-width", type=float, default=1.0)
+    ap.add_argument("--hf-transplant", type=float, default=0.0,
+                    help="probability of adding a real new image's high-frequency residual to a "
+                    "decoded exemplar")
+    ap.add_argument("--hf-sigma", type=float, default=1.0)
+    ap.add_argument("--input-blur", type=float, default=0.0,
+                    help="sigma of a fixed Gaussian low-pass in front of the AHR encoder (0: off)")
     ap.add_argument("--lam", type=float)
     ap.add_argument("--alpha-z", type=float)
     ap.add_argument("--alpha-x", type=float)
@@ -103,6 +112,8 @@ def parse_args(argv=None):
     ap.add_argument("--memorize-steps", type=int, default=None,
                     help="memorisation length in optimisation steps (overrides --memorize-epochs)")
     ap.add_argument("--memorize-lr", type=float, default=1e-3)
+    ap.add_argument("--memorize-codes", type=int, default=0, choices=[0, 1],
+                    help="also optimise the stored codes during memorisation")
     ap.add_argument("--lam-recon-new", type=float, default=1.0,
                     help="latent loss (x lambda) on reconstructions of the new samples")
     ap.add_argument("--latent-domain", default="input", choices=["input", "recon"],
@@ -176,8 +187,11 @@ def main(argv=None):
     args.memory_kind = "raw" if args.method in ("ahr_lossless", "ahr_lossless_mini") else "latent"
     if args.method.startswith("ahr"):
         from ahr.models import make_hae
+        if args.latent_kind == "spatial" and args.dataset != "mnist":
+            args.latent_dim = 64 * max(1, round(args.latent_dim / 64))
         dec_params = n_params(make_hae(args.dataset, bench.input_shape, args.latent_dim,
-                                       args.decoder_width, args.enc_pool).decoder)
+                                       args.decoder_width, args.enc_pool,
+                                       latent_kind=args.latent_kind).decoder)
     else:
         dec_params = 0
     args.n_exemplars = exemplar_count(args, bench, dec_params)
