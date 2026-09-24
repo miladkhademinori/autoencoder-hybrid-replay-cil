@@ -101,6 +101,30 @@ def write_status(root, jobs, me, failures=None):
     with open(tmp, "w") as f:
         json.dump(dict(updated=time.strftime("%Y-%m-%d %H:%M:%S"), jobs=rows), f, indent=1)
     os.replace(tmp, os.path.join(root, "queue_status.json"))
+    # one compact file with every run's numbers (finished or partial), for easy collection
+    compact = {}
+    for j in jobs:
+        p = os.path.join(job_dir(root, j), "result.json")
+        if not os.path.exists(p):
+            continue
+        try:
+            r = json.load(open(p))
+        except Exception:
+            continue
+        key = f"{j['profile']}/{j['benchmark']}/{j['variant']}_seed{j['seed']}"
+        rnd = lambda x, k=2: None if x is None else round(x, k)  # noqa: E731
+        compact[key] = dict(finished=r["finished"], overrides=j["overrides"],
+                            final_acc=rnd(r["final_acc"]), avg_acc=rnd(r["avg_acc"]),
+                            avg_forgetting=rnd(r["avg_forgetting"]),
+                            acc_per_task=[rnd(a) for a in r["acc_per_task"]],
+                            acc_matrix=[[rnd(a) for a in row] for row in r["acc_matrix"]],
+                            rec_mse=[rnd(h["rec_mse"], 4) for h in r["history"]],
+                            mem_mean=[rnd(h["mem_mean"], 1) for h in r["history"]],
+                            elapsed_min=rnd(r["elapsed_min"], 1))
+    tmp = os.path.join(root, f".all_results.{me}.tmp")
+    with open(tmp, "w") as f:
+        json.dump(compact, f)
+    os.replace(tmp, os.path.join(root, "all_results.json"))
 
 
 def main():
