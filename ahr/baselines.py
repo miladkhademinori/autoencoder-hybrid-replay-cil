@@ -7,9 +7,10 @@
   classifier at test time.
 * ``joint`` - one model trained on all tasks jointly (upper bound).
 
-Replay minibatches follow the same task-balanced composition as AHR
-(``B / l`` new samples, ``B (l-1) / l`` exemplars), so all replay methods get the
-same number of gradient steps per task.
+By default (``replay_sampling="union"``) the replay baselines train on the shuffled
+union of the new data and the exemplars, as in FACIL (Masana et al., 2022).
+``replay_sampling="balanced"`` uses AHR's task-balanced minibatches instead
+(``B / l`` new samples, ``B (l-1) / l`` exemplars).
 """
 import copy
 import math
@@ -47,8 +48,13 @@ class SoftmaxLearner:
         a = self.args
         model = self.model
         opt = make_optimizer(model.parameters(), a)
-        n_new = len(y_new)
         replay = self.use_memory and len(self.memory) > 0
+        if replay and a.replay_sampling == "union":
+            # FACIL-style: shuffle the union of the new data and the exemplars
+            x_new = torch.cat([x_new, self.memory.data])
+            y_new = torch.cat([y_new, self.memory.labels])
+            replay = False
+        n_new = len(y_new)
         b_new = max(1, round(a.batch_size / (t + 1))) if replay else a.batch_size
         b_mem = a.batch_size - b_new if replay else 0
         iters = math.ceil(n_new / b_new)

@@ -72,8 +72,17 @@ class AHR:
         model.eval()
         return batched(model.encoder, x_uint8, self.args.eval_batch)
 
+    def class_features(self, x_uint8):
+        """Latent features used for classification: phi(x) (paper), or phi(psi(phi(x)))
+        when classification operates in the decoder's output domain (--latent-domain recon)."""
+        if self.args.latent_domain != "recon":
+            return self.encode(x_uint8)
+        m = self.model
+        m.eval()
+        return batched(lambda b: m.encoder(m.decoder(m.encoder(b))), x_uint8, self.args.eval_batch)
+
     def predict(self, x_uint8):
-        z = self.encode(x_uint8)
+        z = self.class_features(x_uint8)
         return torch.cdist(z, self.cces).argmin(1)
 
     def decode_memory(self, idx, decoder):
@@ -88,7 +97,7 @@ class AHR:
     # ------------------------------------------------------------------ #
     def cce_placement(self, task):
         a = self.args
-        z = self.encode(task.x_train)
+        z = self.class_features(task.x_train)
         init = torch.stack([z[task.y_train == c].mean(0) for c in task.classes])
         new, n_steps = place_cces(init, self.cces, zeta=a.rfa_zeta, mass=a.rfa_mass, dt=a.rfa_dt,
                                   steps=a.rfa_steps, damping=a.rfa_damping,
@@ -130,15 +139,39 @@ class AHR:
                     x, y = torch.cat([x, xm]), torch.cat([y, ym])
                 if a.augment:
                     x = augment(x, pad=a.crop_pad, flip=flip)
+                n = len(idx)
+                use_rn = a.lam_recon_new > 0 and (old is not None or a.recon_new_source == "current")
+                x_in = x
+                if use_rn:
+                    # new-task samples are also presented as reconstructions, so that "looks
+                    # decoded" is not a cue for "belongs to an old class". They go through the
+                    # encoder in the *same* forward pass as the rest of the minibatch: a separate
+                    # all-reconstruction batch would get its own BatchNorm statistics in train
+                    # mode, which the network can exploit and which disappears in eval mode.
+                    with torch.no_grad(), autocast(a.bf16):
+                        if a.recon_new_source == "current":
+                            model.eval()
+                            x_rn = model(x[:n])[1].float()
+                            model.train()
+                        else:
+                            x_rn = old(x[:n])[1].float()
+                    x_in = torch.cat([x, x_rn])
                 with autocast(a.bf16):
-                    z, xh = model(x)
+                    z_all = model.encoder(x_in)
+                    z = z_all[:len(x)]
+                    xh = model.decoder(z)
                     if old is not None:
                         with torch.no_grad():
                             z_old = old.encoder(x)
                             x_old = old.decoder(z_old)
                 z, xh = z.float(), xh.float()
                 l_rec = _sq(xh, x).mean()
-                l_lat = _sq(z, cces[y]).mean()
+                if a.latent_domain == "recon":
+                    # the latent (classification) loss only sees decoder outputs: decoded
+                    # exemplars here and reconstructions of the new samples below
+                    l_lat = _sq(z[n:], cces[y[n:]]).mean() if len(x) > n else z.new_zeros(())
+                else:
+                    l_lat = _sq(z, cces[y]).mean()
                 loss = l_rec + a.lam * l_lat
                 if old is not None:
                     dz, dx = _sq(z, z_old.float()), _sq(xh, x_old.float())
@@ -148,14 +181,23 @@ class AHR:
                     loss = loss + a.alpha_z * l_dz + a.alpha_x * l_dx
                     tot["dz"] += l_dz.item()
                     tot["dx"] += l_dx.item()
-                if a.lam_recon_new > 0 and (old is not None or a.recon_new_source == "current"):
-                    # new-task samples are also presented as reconstructions, so that
-                    # "looks decoded" is not a cue for "belongs to an old class"
-                    n = len(idx)
-                    x_rn = (xh[:n] if a.recon_new_source == "current" else x_old[:n]).detach()
-                    with autocast(a.bf16):
-                        z_rn = model.encoder(x_rn.float())
-                    loss = loss + a.lam * a.lam_recon_new * _sq(z_rn.float(), cces[y[:n]]).mean()
+                if old is not None and a.alpha_kd > 0:
+                    # knowledge distillation on the relative distances to the old CCEs
+                    # (softmax over -||z - p_c||^2 of the old classes), in the spirit of
+                    # iCaRL/LwF: preserves how the old encoder related each (real or decoded)
+                    # image to the old classes without pinning new samples to their old codes
+                    n_old = self.n_seen - len(task.classes)
+                    p_old = cces[:n_old]
+                    scale = a.kd_scale * a.rfa_target ** 2
+                    lo = -torch.cdist(z_old.float(), p_old) ** 2 / scale
+                    ln = -torch.cdist(z, p_old) ** 2 / scale
+                    l_kd = torch.nn.functional.kl_div(ln.log_softmax(1), lo.softmax(1),
+                                                      reduction="batchmean")
+                    loss = loss + a.alpha_kd * l_kd
+                    tot["kd"] = tot.get("kd", 0.0) + l_kd.item()
+                if use_rn:
+                    z_rn = z_all[len(x):].float()
+                    loss = loss + a.lam * a.lam_recon_new * _sq(z_rn, cces[y[:n]]).mean()
                 if codes is not None:
                     # decoder distillation on the stored codes: psi(m) must keep decoding
                     # every stored latent into the same exemplar as psi_old(m)
@@ -265,8 +307,11 @@ class AHR:
         opt = torch.optim.Adam(dec.parameters(), lr=a.memorize_lr)
         n, B = len(codes), a.batch_size
         iters = math.ceil(n / B)
-        sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, a.memorize_epochs * iters)
-        for ep in range(a.memorize_epochs):
+        epochs = a.memorize_epochs
+        if a.memorize_steps:  # a fixed number of optimisation steps instead of epochs
+            epochs = max(1, math.ceil(a.memorize_steps / iters))
+        sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, epochs * iters)
+        for ep in range(epochs):
             perm = torch.randperm(n)
             tot = 0.0
             for it in range(iters):
@@ -279,7 +324,7 @@ class AHR:
                 opt.step()
                 sched.step()
                 tot += loss.item()
-        self.log(f"  memorisation: {a.memorize_epochs} decoder epochs over {n} exemplars, "
+        self.log(f"  memorisation: {epochs} decoder epochs ({epochs * iters} steps) over {n} exemplars, "
                  f"final loss={tot / iters:.3f}")
 
     # ------------------------------------------------------------------ #
@@ -331,4 +376,4 @@ class AHR:
         orig = to_float(torch.stack([self.bench.tasks[int(s) // 10**6].x_train[int(s) % 10**6]
                                      for s in self.mem_src[idx]]))
         mse = ((dec - orig) ** 2).flatten(1).mean(1).clamp_min(1e-10)
-        return float((10 * torch.log10(1.0 / mse)).mean()), orig[:16], dec[:16]
+        return float((10 * torch.log10(1.0 / mse)).mean()), orig[:16].clone(), dec[:16].clone()

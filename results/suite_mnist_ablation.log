@@ -1,0 +1,11 @@
+start mnist/ft_e_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ft_e --seed 0 --threads 1 --out results
+done  mnist/ft_e_s0 in 1.8 min: ok
+start mnist/ft_e_s1: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ft_e --seed 1 --threads 1 --out results
+done  mnist/ft_e_s1 in 1.8 min: ok
+start mnist/ft_e_s2: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ft_e --seed 2 --threads 1 --out results
+done  mnist/ft_e_s2 in 1.8 min: ok
+start mnist/ahr_s0_no_memorize: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 0 --threads 1 --out results --tag no_memorize --memorize-epochs 0
+done  mnist/ahr_s0_no_memorize in 19.6 min: ok
+start mnist/ahr_s1_no_memorize: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 1 --threads 1 --out results --tag no_memorize --memorize-epochs 0
+done  mnist/ahr_s1_no_memorize in 19.5 min: ok
+start mnist/ahr_s2_no_memorize: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 2 --threads 1 --out results --tag no_memorize --memorize-epochs 0

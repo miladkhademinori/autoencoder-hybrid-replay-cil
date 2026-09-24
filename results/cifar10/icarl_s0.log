@@ -1,0 +1,19 @@
+benchmark cifar10(5/2) input=(3, 32, 32) method=icarl seed=0
+args: {"alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.01, "augment": true, "batch_size": 128, "bf16": true, "class_order": "natural", "crop_pad": 4, "data_root": "data", "dataset": "cifar10", "decoder_in_budget": 0, "decoder_width": 1.0, "distill_norm": "sq", "enc_pool": 4, "epochs": 50, "eval_batch": 1000, "flush_denormal": 1, "kd_lambda": 1.0, "kd_scale": 0.25, "kd_temperature": 2.0, "lam": 1.0, "lam_recon_new": 1.0, "latent_bits": 32, "latent_dim": 307, "log_every": 10, "lr": 0.001, "lr_schedule": "cosine", "memorize_epochs": 20, "memorize_lr": 0.001, "memorize_steps": 1500, "memory_kind": "latent", "memory_mode": "frozen", "method": "icarl", "momentum": 0.9, "n_exemplars": 200, "n_tasks": null, "out": "results", "raw_exemplars": 200, "recon_new_source": "current", "replay_sampling": "union", "rfa_damping": 0.0, "rfa_dt": 0.01, "rfa_mass": 1.0, "rfa_softening": 0.001, "rfa_steps": 20000, "rfa_target": 20.0, "rfa_zeta": 1.0, "seed": 0, "selection": "herding", "stop_after": null, "tag": "", "threads": 1, "train_fraction": 1.0, "weight_decay": 0.0}
+[icarl] backbone params=466,256 memory=raw x 200
+  task 1 epoch 1/50 (79 it) ce=0.378 kd=0.000 [34s]
+  task 1 epoch 10/50 (79 it) ce=0.086 kd=0.000 [327s]
+  task 1 epoch 20/50 (79 it) ce=0.041 kd=0.000 [655s]
+  task 1 epoch 30/50 (79 it) ce=0.025 kd=0.000 [982s]
+  task 1 epoch 40/50 (79 it) ce=0.008 kd=0.000 [1315s]
+  task 1 epoch 50/50 (79 it) ce=0.005 kd=0.000 [1646s]
+after task 1: acc=98.25 per-task=[98.3] [1688s]
+  task 2 epoch 1/50 (80 it) ce=0.985 kd=0.653 [1732s]
+  task 2 epoch 10/50 (80 it) ce=0.339 kd=0.135 [2133s]
+  task 2 epoch 20/50 (80 it) ce=0.241 kd=0.121 [2580s]
+  task 2 epoch 30/50 (80 it) ce=0.169 kd=0.099 [3025s]
+  task 2 epoch 40/50 (80 it) ce=0.114 kd=0.083 [3471s]
+  task 2 epoch 50/50 (80 it) ce=0.098 kd=0.073 [3916s]
+after task 2: acc=83.50 per-task=[81.1, 85.9] [3965s]
+  task 3 epoch 1/50 (80 it) ce=1.382 kd=0.535 [4011s]
+  task 3 epoch 10/50 (80 it) ce=0.256 kd=0.175 [4421s]

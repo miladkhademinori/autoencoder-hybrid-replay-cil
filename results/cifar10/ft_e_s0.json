@@ -1,0 +1,101 @@
+{
+ "dataset": "cifar10",
+ "method": "ft_e",
+ "seed": 0,
+ "tag": "",
+ "final_acc": 43.950000405311584,
+ "avg_inc_acc": 62.85083293914795,
+ "accs": [
+  98.1000006198883,
+  75.42499899864197,
+  53.21666598320007,
+  43.562498688697815,
+  43.950000405311584
+ ],
+ "acc_matrix": [
+  [
+   98.1000006198883
+  ],
+  [
+   59.64999794960022,
+   91.20000004768372
+  ],
+  [
+   53.60000133514404,
+   11.900000274181366,
+   94.15000081062317
+  ],
+  [
+   50.40000081062317,
+   9.650000184774399,
+   15.800000727176666,
+   98.4000027179718
+  ],
+  [
+   17.29999929666519,
+   21.199999749660492,
+   33.89999866485596,
+   49.799999594688416,
+   97.54999876022339
+  ]
+ ],
+ "time_s": 8825.994529247284,
+ "n_exemplars": 200,
+ "args": {
+  "dataset": "cifar10",
+  "method": "ft_e",
+  "seed": 0,
+  "data_root": "data",
+  "out": "results",
+  "tag": "",
+  "n_tasks": null,
+  "class_order": "natural",
+  "train_fraction": 1.0,
+  "threads": 1,
+  "stop_after": null,
+  "epochs": 50,
+  "batch_size": 128,
+  "lr": 0.001,
+  "momentum": 0.9,
+  "weight_decay": 0.0,
+  "lr_schedule": "cosine",
+  "augment": true,
+  "crop_pad": 4,
+  "bf16": true,
+  "eval_batch": 1000,
+  "flush_denormal": 1,
+  "log_every": 10,
+  "raw_exemplars": 200,
+  "n_exemplars": 200,
+  "decoder_in_budget": 0,
+  "latent_bits": 32,
+  "latent_dim": 307,
+  "enc_pool": 4,
+  "decoder_width": 1.0,
+  "lam": 1.0,
+  "alpha_z": 0.01,
+  "alpha_x": 1.0,
+  "distill_norm": "sq",
+  "memory_mode": "frozen",
+  "alpha_mem": 1.0,
+  "memorize_epochs": 20,
+  "memorize_steps": 1500,
+  "memorize_lr": 0.001,
+  "lam_recon_new": 1.0,
+  "recon_new_source": "current",
+  "selection": "herding",
+  "rfa_zeta": 1.0,
+  "rfa_mass": 1.0,
+  "rfa_dt": 0.01,
+  "rfa_steps": 20000,
+  "rfa_damping": 0.0,
+  "rfa_softening": 0.001,
+  "rfa_target": 20.0,
+  "replay_sampling": "union",
+  "kd_lambda": 1.0,
+  "kd_temperature": 2.0,
+  "memory_kind": "latent"
+ },
+ "memory_scalars": 614400,
+ "memory_bytes": 614400
+}

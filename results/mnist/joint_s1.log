@@ -1,0 +1,10 @@
+benchmark mnist(5/2) input=(1, 28, 28) method=joint seed=1
+args: {"alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.01, "augment": false, "batch_size": 128, "bf16": false, "class_order": "natural", "crop_pad": 4, "data_root": "data", "dataset": "mnist", "decoder_in_budget": 0, "decoder_width": 1.0, "distill_norm": "sq", "enc_pool": 4, "epochs": 40, "eval_batch": 1000, "flush_denormal": 1, "kd_lambda": 1.0, "kd_temperature": 2.0, "lam": 0.3, "lam_recon_new": 1.0, "latent_bits": 32, "latent_dim": 20, "log_every": 10, "lr": 0.001, "lr_schedule": "cosine", "memorize_epochs": 20, "memorize_lr": 0.001, "memorize_steps": null, "memory_kind": "latent", "memory_mode": "frozen", "method": "joint", "momentum": 0.9, "n_exemplars": 0, "n_tasks": null, "out": "results", "raw_exemplars": 200, "recon_new_source": "current", "replay_sampling": "union", "rfa_damping": 0.0, "rfa_dt": 0.01, "rfa_mass": 1.0, "rfa_softening": 0.001, "rfa_steps": 20000, "rfa_target": 5.0, "rfa_zeta": 1.0, "seed": 1, "selection": "herding", "stop_after": null, "tag": "", "threads": 1, "train_fraction": 1.0, "weight_decay": 0.0}
+[joint] backbone params=474,400
+  task 1 epoch 1/40 (469 it) ce=0.283 kd=0.000 [3s]
+  task 1 epoch 10/40 (469 it) ce=0.011 kd=0.000 [24s]
+  task 1 epoch 20/40 (469 it) ce=0.000 kd=0.000 [47s]
+  task 1 epoch 30/40 (469 it) ce=0.000 kd=0.000 [70s]
+  task 1 epoch 40/40 (469 it) ce=0.000 kd=0.000 [93s]
+joint: acc=98.60 per-task=[99.3, 98.3, 98.5, 98.4, 98.4] [93s]
+FINAL mnist joint seed=1: final acc=98.60 avg inc acc=98.60 time=1.5min

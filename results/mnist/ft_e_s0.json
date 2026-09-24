@@ -1,0 +1,103 @@
+{
+ "dataset": "mnist",
+ "method": "ft_e",
+ "seed": 0,
+ "tag": "",
+ "final_acc": 71.03999853134155,
+ "avg_inc_acc": 88.20025205612183,
+ "accs": [
+  99.95272159576416,
+  97.8830873966217,
+  89.18918967247009,
+  82.93626308441162,
+  71.03999853134155
+ ],
+ "acc_matrix": [
+  [
+   99.95272159576416
+  ],
+  [
+   96.21749520301819,
+   99.60822463035583
+  ],
+  [
+   91.4893627166748,
+   77.03232169151306,
+   99.83991384506226
+  ],
+  [
+   84.16075706481934,
+   72.0372200012207,
+   75.5069375038147,
+   99.84894394874573
+  ],
+  [
+   76.97399258613586,
+   54.26052808761597,
+   56.08324408531189,
+   67.52265691757202,
+   99.64699745178223
+  ]
+ ],
+ "time_s": 106.08284258842468,
+ "n_exemplars": 200,
+ "args": {
+  "dataset": "mnist",
+  "method": "ft_e",
+  "seed": 0,
+  "data_root": "data",
+  "out": "results",
+  "tag": "",
+  "n_tasks": null,
+  "class_order": "natural",
+  "train_fraction": 1.0,
+  "threads": 1,
+  "stop_after": null,
+  "epochs": 40,
+  "batch_size": 128,
+  "lr": 0.001,
+  "momentum": 0.9,
+  "weight_decay": 0.0,
+  "lr_schedule": "cosine",
+  "augment": false,
+  "crop_pad": 4,
+  "bf16": false,
+  "eval_batch": 1000,
+  "flush_denormal": 1,
+  "log_every": 10,
+  "raw_exemplars": 200,
+  "n_exemplars": 200,
+  "decoder_in_budget": 0,
+  "latent_bits": 32,
+  "latent_dim": 20,
+  "enc_pool": 4,
+  "decoder_width": 1.0,
+  "lam": 0.3,
+  "alpha_z": 0.01,
+  "alpha_x": 1.0,
+  "distill_norm": "sq",
+  "alpha_kd": 0.0,
+  "kd_scale": 0.25,
+  "memory_mode": "frozen",
+  "alpha_mem": 1.0,
+  "memorize_epochs": 20,
+  "memorize_steps": null,
+  "memorize_lr": 0.001,
+  "lam_recon_new": 1.0,
+  "recon_new_source": "current",
+  "selection": "herding",
+  "rfa_zeta": 1.0,
+  "rfa_mass": 1.0,
+  "rfa_dt": 0.01,
+  "rfa_steps": 20000,
+  "rfa_damping": 0.0,
+  "rfa_softening": 0.001,
+  "rfa_target": 5.0,
+  "replay_sampling": "union",
+  "kd_lambda": 1.0,
+  "kd_temperature": 2.0,
+  "memory_kind": "latent"
+ },
+ "memory_scalars": 156800,
+ "memory_bytes": 156800
+}

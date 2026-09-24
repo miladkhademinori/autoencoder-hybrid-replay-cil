@@ -1,0 +1,3 @@
+start cifar10/ft_e_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar10 --method ft_e --seed 0 --threads 1 --out results
+done  cifar10/ft_e_s0 in 147.2 min: ok
+start cifar10/icarl_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar10 --method icarl --seed 0 --threads 1 --out results

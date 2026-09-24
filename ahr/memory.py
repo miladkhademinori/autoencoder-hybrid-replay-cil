@@ -55,15 +55,19 @@ class LatentMemory(_Memory):
             self.data = z.clone()
         elif self.bits == 16:
             self.data = z.half()
-        else:  # per-dimension affine uint8 quantisation
-            self.lo = z.min(0).values
-            self.scale = (z.max(0).values - self.lo).clamp_min(1e-8) / 255.0
-            self.data = ((z - self.lo) / self.scale).round().clamp(0, 255).to(torch.uint8)
+        else:
+            # per-code affine uint8 quantisation (min and step stored in fp16 per code);
+            # re-quantising already-quantised codes is lossless up to fp16 rounding
+            self.lo = z.min(1, keepdim=True).values.half()
+            hi = z.max(1, keepdim=True).values
+            self.scale = ((hi - self.lo.float()).clamp_min(1e-6) / 255.0).half()
+            q = (z - self.lo.float()) / self.scale.float()
+            self.data = q.round().clamp(0, 255).to(torch.uint8)
 
     def get(self, idx):
         d = self.data[idx]
         if self.bits == 8:
-            z = d.float() * self.scale + self.lo
+            z = d.float() * self.scale[idx].float() + self.lo[idx].float()
         else:
             z = d.float()
         return z, self.labels[idx]
@@ -74,7 +78,7 @@ class LatentMemory(_Memory):
     def nbytes(self):
         if self.data is None:
             return 0
-        extra = 0 if self.lo is None else 2 * self.lo.numel() * 4
+        extra = 0 if self.lo is None else (self.lo.numel() + self.scale.numel()) * 2
         return self.data.numel() * self.data.element_size() + extra
 
 

@@ -1,0 +1,48 @@
+start mnist/ahr_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 0 --threads 1 --out results
+done  mnist/ahr_s0 in 26.8 min: ok
+start mnist/ahr_s1: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 1 --threads 1 --out results
+done  mnist/ahr_s1 in 20.1 min: ok
+start mnist/ahr_s2: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 2 --threads 1 --out results
+done  mnist/ahr_s2 in 20.2 min: ok
+start mnist/ft_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ft --seed 0 --threads 1 --out results
+done  mnist/ft_s0 in 1.9 min: ok
+start mnist/ft_s1: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ft --seed 1 --threads 1 --out results
+done  mnist/ft_s1 in 1.9 min: ok
+start mnist/ft_s2: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ft --seed 2 --threads 1 --out results
+done  mnist/ft_s2 in 1.8 min: ok
+start mnist/ft_e_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ft_e --seed 0 --threads 1 --out results
+done  mnist/ft_e_s0 in 5.1 min: ok
+start mnist/ft_e_s1: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ft_e --seed 1 --threads 1 --out results
+done  mnist/ft_e_s1 in 5.1 min: ok
+start mnist/ft_e_s2: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ft_e --seed 2 --threads 1 --out results
+done  mnist/ft_e_s2 in 5.0 min: ok
+start mnist/icarl_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method icarl --seed 0 --threads 1 --out results
+done  mnist/icarl_s0 in 2.2 min: ok
+start mnist/icarl_s1: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method icarl --seed 1 --threads 1 --out results
+done  mnist/icarl_s1 in 2.2 min: ok
+start mnist/icarl_s2: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method icarl --seed 2 --threads 1 --out results
+done  mnist/icarl_s2 in 2.2 min: ok
+start mnist/joint_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method joint --seed 0 --threads 1 --out results
+done  mnist/joint_s0 in 1.6 min: ok
+start mnist/joint_s1: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method joint --seed 1 --threads 1 --out results
+done  mnist/joint_s1 in 1.6 min: ok
+start mnist/joint_s2: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method joint --seed 2 --threads 1 --out results
+done  mnist/joint_s2 in 1.6 min: ok
+start mnist/ahr_lossless_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr_lossless --seed 0 --threads 1 --out results
+done  mnist/ahr_lossless_s0 in 15.3 min: ok
+start mnist/ahr_lossless_s1: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr_lossless --seed 1 --threads 1 --out results
+done  mnist/ahr_lossless_s1 in 15.2 min: ok
+start mnist/ahr_lossless_s2: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr_lossless --seed 2 --threads 1 --out results
+done  mnist/ahr_lossless_s2 in 15.3 min: ok
+start mnist/ahr_lossy_mini_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr_lossy_mini --seed 0 --threads 1 --out results
+done  mnist/ahr_lossy_mini_s0 in 20.1 min: ok
+start mnist/ahr_lossy_mini_s1: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr_lossy_mini --seed 1 --threads 1 --out results
+done  mnist/ahr_lossy_mini_s1 in 19.8 min: ok
+start mnist/ahr_lossy_mini_s2: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr_lossy_mini --seed 2 --threads 1 --out results
+done  mnist/ahr_lossy_mini_s2 in 19.6 min: ok
+start mnist/ahr_lossless_mini_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr_lossless_mini --seed 0 --threads 1 --out results
+done  mnist/ahr_lossless_mini_s0 in 15.7 min: ok
+start mnist/ahr_lossless_mini_s1: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr_lossless_mini --seed 1 --threads 1 --out results
+done  mnist/ahr_lossless_mini_s1 in 15.4 min: ok
+start mnist/ahr_lossless_mini_s2: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr_lossless_mini --seed 2 --threads 1 --out results
+done  mnist/ahr_lossless_mini_s2 in 15.6 min: ok

@@ -39,9 +39,9 @@ PRESETS = {
 # validation run (see REPRODUCTION.md).
 AHR_DEFAULTS = {
     "mnist":    dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=5.0),
-    "svhn":     dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0),
-    "cifar10":  dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0),
-    "cifar100": dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0),
+    "svhn":     dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0, memorize_steps=1500),
+    "cifar10":  dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0, memorize_steps=1500),
+    "cifar100": dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0, memorize_steps=1500),
 }
 
 METHODS = ["ahr", "ahr_lossless", "ahr_lossy_mini", "ahr_lossless_mini",
@@ -72,6 +72,8 @@ def parse_args(argv=None):
     ap.add_argument("--crop-pad", type=int, default=4)
     ap.add_argument("--bf16", type=int, choices=[0, 1], help="bf16 autocast (default: on for ResNet)")
     ap.add_argument("--eval-batch", type=int, default=1000)
+    ap.add_argument("--flush-denormal", type=int, default=1, choices=[0, 1],
+                    help="flush denormal floats to zero (avoids large CPU slowdowns)")
     ap.add_argument("--log-every", type=int, default=10)
     # memory
     ap.add_argument("--raw-exemplars", type=int, help="total raw exemplars of the baselines")
@@ -87,6 +89,10 @@ def parse_args(argv=None):
     ap.add_argument("--alpha-z", type=float)
     ap.add_argument("--alpha-x", type=float)
     ap.add_argument("--distill-norm", default="sq", choices=["sq", "l2"])
+    ap.add_argument("--alpha-kd", type=float, default=0.0,
+                    help="weight of the KD loss on distances to the old CCEs (off by default)")
+    ap.add_argument("--kd-scale", type=float, default=0.25,
+                    help="KD logits are -||z-p||^2 / (kd_scale * rfa_target^2)")
     ap.add_argument("--memory-mode", default="frozen", choices=["reencode", "frozen"],
                     help="reencode: Alg. 4 re-encodes decoded old exemplars with the new "
                     "encoder every task; frozen: codes are kept as stored")
@@ -94,9 +100,15 @@ def parse_args(argv=None):
                     help="weight of ||psi(m) - psi_old(m)||^2 on stored codes m")
     ap.add_argument("--memorize-epochs", type=int, default=20,
                     help="decoder-only memorisation epochs over the stored exemplars (frozen codes)")
+    ap.add_argument("--memorize-steps", type=int, default=None,
+                    help="memorisation length in optimisation steps (overrides --memorize-epochs)")
     ap.add_argument("--memorize-lr", type=float, default=1e-3)
     ap.add_argument("--lam-recon-new", type=float, default=1.0,
                     help="latent loss (x lambda) on reconstructions of the new samples")
+    ap.add_argument("--latent-domain", default="input", choices=["input", "recon"],
+                    help="input: L_z on phi(x) and test on phi(x) (paper); recon: L_z only on decoder "
+                    "outputs (decoded exemplars, reconstructions of new samples) and test on "
+                    "phi(psi(phi(x)))")
     ap.add_argument("--recon-new-source", default="current", choices=["current", "old"],
                     help="reconstructions from the HAE being trained (detached) or the previous one")
     ap.add_argument("--selection", default="herding", choices=["rank", "herding", "random"])
@@ -108,6 +120,8 @@ def parse_args(argv=None):
     ap.add_argument("--rfa-softening", type=float, default=1e-3)
     ap.add_argument("--rfa-target", type=float, help="stop RFA once new CCEs are this far apart "
                     "from all other CCEs (<=0: run the full --rfa-steps)")
+    ap.add_argument("--replay-sampling", default="union", choices=["union", "balanced"],
+                    help="baselines: shuffle new data U exemplars (FACIL) or AHR-style balanced batches")
     # iCaRL
     ap.add_argument("--kd-lambda", type=float, default=1.0)
     ap.add_argument("--kd-temperature", type=float, default=2.0)
@@ -140,6 +154,7 @@ def main(argv=None):
     args = parse_args(argv)
     if args.threads:
         torch.set_num_threads(args.threads)
+    torch.set_flush_denormal(bool(args.flush_denormal))
     set_seed(args.seed)
     bench = CILBenchmark(args.dataset, args.data_root, args.n_tasks, args.class_order,
                          args.seed, args.train_fraction)
@@ -149,7 +164,11 @@ def main(argv=None):
     log_path = os.path.join(out_dir, name + ".log")
     log_f = open(log_path, "w")
 
+    t_start = time.time()
+
     def log(msg):
+        if msg.startswith("  task"):
+            msg += f" [{time.time() - t_start:.0f}s]"
         print(msg, flush=True)
         log_f.write(msg + "\n")
         log_f.flush()

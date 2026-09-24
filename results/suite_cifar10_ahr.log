@@ -1,0 +1,1 @@
+start cifar10/ahr_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar10 --method ahr --seed 0 --threads 2 --out results

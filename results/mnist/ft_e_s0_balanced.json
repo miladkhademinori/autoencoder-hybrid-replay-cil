@@ -1,0 +1,100 @@
+{
+ "dataset": "mnist",
+ "method": "ft_e",
+ "seed": 0,
+ "tag": "balanced",
+ "final_acc": 74.1100013256073,
+ "avg_inc_acc": 90.55582284927368,
+ "accs": [
+  99.95272159576416,
+  98.46042990684509,
+  92.65461564064026,
+  87.6013457775116,
+  74.1100013256073
+ ],
+ "acc_matrix": [
+  [
+   99.95272159576416
+  ],
+  [
+   97.44681119918823,
+   99.51028227806091
+  ],
+  [
+   93.85342597961426,
+   84.76983308792114,
+   99.89327788352966
+  ],
+  [
+   88.41607570648193,
+   79.82370257377625,
+   82.39060640335083,
+   99.6475338935852
+  ],
+  [
+   79.19621467590332,
+   63.124388456344604,
+   52.18783617019653,
+   75.1762330532074,
+   99.64699745178223
+  ]
+ ],
+ "time_s": 304.33043456077576,
+ "n_exemplars": 200,
+ "args": {
+  "dataset": "mnist",
+  "method": "ft_e",
+  "seed": 0,
+  "data_root": "data",
+  "out": "results",
+  "tag": "",
+  "n_tasks": null,
+  "class_order": "natural",
+  "train_fraction": 1.0,
+  "threads": 1,
+  "stop_after": null,
+  "epochs": 40,
+  "batch_size": 128,
+  "lr": 0.001,
+  "momentum": 0.9,
+  "weight_decay": 0.0,
+  "lr_schedule": "cosine",
+  "augment": false,
+  "crop_pad": 4,
+  "bf16": false,
+  "eval_batch": 1000,
+  "flush_denormal": 1,
+  "log_every": 10,
+  "raw_exemplars": 200,
+  "n_exemplars": 200,
+  "decoder_in_budget": 0,
+  "latent_bits": 32,
+  "latent_dim": 20,
+  "enc_pool": 4,
+  "decoder_width": 1.0,
+  "lam": 0.3,
+  "alpha_z": 0.01,
+  "alpha_x": 1.0,
+  "distill_norm": "sq",
+  "memory_mode": "frozen",
+  "alpha_mem": 1.0,
+  "memorize_epochs": 20,
+  "memorize_steps": null,
+  "memorize_lr": 0.001,
+  "lam_recon_new": 1.0,
+  "recon_new_source": "current",
+  "selection": "herding",
+  "rfa_zeta": 1.0,
+  "rfa_mass": 1.0,
+  "rfa_dt": 0.01,
+  "rfa_steps": 20000,
+  "rfa_damping": 0.0,
+  "rfa_softening": 0.001,
+  "rfa_target": 5.0,
+  "kd_lambda": 1.0,
+  "kd_temperature": 2.0,
+  "memory_kind": "latent"
+ },
+ "memory_scalars": 156800,
+ "memory_bytes": 156800
+}
