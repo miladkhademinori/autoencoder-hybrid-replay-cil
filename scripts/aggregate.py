@@ -61,8 +61,7 @@ ABLATION_TAGS = [
     ("ahr", "", "AHR (final configuration)"),
     ("ahr", "recon_new", "+ latent loss on reconstructions of new samples"),
     ("ahr", "no_memorize", "- decoder memorisation"),
-    ("ahr", "reencode", "- frozen codes, - memorisation (memory re-encoded every task)"),
-    ("ahr", "literal_herding", "literal Alg. 1-4, herding selection"),
+    ("ahr", "literal_herding", "- frozen codes, - memorisation = literal Alg. 1-4 (herding selection)"),
     ("ahr", "literal_rank", "literal Alg. 1-4, Rank selection"),
     ("ft_e", "balanced", "FT-E with AHR's balanced minibatches"),
 ]

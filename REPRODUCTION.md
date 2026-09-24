@@ -6,6 +6,51 @@ numbers compare with Table 2 of the paper
 ([arXiv:2505.05926](https://arxiv.org/abs/2505.05926)).
 
 <!-- RESULTS -->
+## 0. Results
+
+
+Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_acc`, tag: `main`).
+
+| Method | MNIST (5/2) ours | paper | Balanced SVHN (5/2) ours | paper | CIFAR-10 (5/2) ours | paper |
+|---|---|---|---|---|---|---|
+| FT | 19.76 ± 0.01 (n=3) | 19.93 ± 0.03 | - | 19.19 ± 0.04 | 19.57 (n=1) | 18.72 ± 0.30 |
+| FT-E | 72.18 ± 0.81 (n=3) | 92.17 ± 0.16 | 55.61 (n=1) | 87.13 ± 0.37 | 43.95 (n=1) | 72.17 ± 0.84 |
+| Joint | 98.54 ± 0.04 (n=3) | 98.48 ± 0.06 | - | 95.88 ± 0.04 | 89.02 (n=1) | 92.37 ± 0.09 |
+| iCaRL | 88.60 ± 0.10 (n=3) | 93.06 ± 0.33 | - | 89.63 ± 0.61 | 62.82 (n=1) | 73.29 ± 0.73 |
+| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | - | 93.02 ± 0.65 | - | 77.12 ± 0.75 |
+| AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 |
+| AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 |
+| AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | - | 94.21 ± 0.23 | - | 78.35 ± 0.37 |
+
+Epochs / exemplars / wall-clock per run:
+
+| Dataset | Method | epochs | stored exemplars | memory (scalars) | minutes/run |
+|---|---|---|---|---|---|
+| mnist | FT | 40 | 0 | 0 | 2 |
+| mnist | FT-E | 40 | 200 | 156,800 | 2 |
+| mnist | Joint | 40 | 0 | 0 | 2 |
+| mnist | iCaRL | 40 | 200 | 156,800 | 2 |
+| mnist | AHR | 40 | 7840 | 156,800 | 18 |
+| mnist | AHR-lossy-mini | 40 | 200 | 4,000 | 20 |
+| mnist | AHR-lossless-mini | 40 | 200 | 156,800 | 13 |
+| mnist | AHR-lossless | 40 | 7840 | 6,146,560 | 15 |
+| svhn | FT-E | 50 | 200 | 614,400 | 137 |
+| cifar10 | FT | 50 | 0 | 0 | 143 |
+| cifar10 | FT-E | 50 | 200 | 614,400 | 147 |
+| cifar10 | Joint | 50 | 0 | 0 | 155 |
+| cifar10 | iCaRL | 50 | 200 | 614,400 | 186 |
+
+mnist ablations (final accuracy %, mean ± SEM):
+
+| Variant | Final acc. |
+|---|---|
+| AHR (final configuration) | 94.57 ± 0.61 (n=3) |
+| + latent loss on reconstructions of new samples | 93.42 ± 0.38 (n=3) |
+| - decoder memorisation | 84.00 ± 1.39 (n=3) |
+| - frozen codes, - memorisation = literal Alg. 1-4 (herding selection) | 75.01 ± 1.48 (n=3) |
+| literal Alg. 1-4, Rank selection | 70.06 ± 0.96 (n=3) |
+| FT-E with AHR's balanced minibatches | 75.10 ± 0.57 (n=3) |
+<!-- /RESULTS -->
 
 ## 1. What is implemented
 
@@ -21,7 +66,7 @@ numbers compare with Table 2 of the paper
 | Benchmarks MNIST(5/2), Balanced SVHN(5/2), CIFAR-10(5/2), CIFAR-100(10/10) | `ahr/data.py` |
 | Dense 400-400 network + mirror decoder (MNIST); ResNet-32 + 3-layer CNN decoder (others) | `ahr/models.py` |
 | Adam, lr 1e-3, momentum 0.9, epochs 40/50/50/50, batch 128/128/128/256, latent 20/307/307/307, 200/200/200/2000 raw exemplars (Table 4) | `scripts/run.py` (`PRESETS`) |
-| Fixed exemplar memory; AHR stores `budget x input size / latent size` codes (7,840 / 2,001 / 2,001 / 20,013) | `scripts/run.py` (`exemplar_count`) |
+| Fixed exemplar memory; AHR stores `budget x input size / latent size` codes (MNIST 7,840; SVHN / CIFAR-10 1,920 and CIFAR-100 19,200 with the 320-number latent) | `scripts/run.py` (`exemplar_count`) |
 | Ablations AHR-lossless, AHR-lossy-mini, AHR-lossless-mini | `--method ahr_lossless / ahr_lossy_mini / ahr_lossless_mini` |
 | Baselines FT, FT-E, iCaRL, Joint | `ahr/baselines.py` |
 
@@ -33,18 +78,22 @@ their paper numbers are quoted for reference only.
 
 | Item | Choice | Why |
 |---|---|---|
-| `lambda` (Eq. 1) | 0.3 (MNIST), 1.0 (SVHN / CIFAR) | MNIST sweep over {0.1, 0.3, 1, 10, 100}; 0.3 best (93.0 vs 91.8 for 1.0) |
-| Distillation weights `a_z`, `a_x` and form | `a_z = 0.01`, `a_x = 1`, squared L2 | Strong encoder distillation (`a_z >= 1`) keeps new-task samples away from their shifted CCEs (see §3.4) |
-| RFA constants `zeta, m, dt` | 1, 1, 0.01, softening 1e-3, no damping | Scale-free once the duration is chosen as below |
-| RFA duration `tau` | integrate Alg. 2 until every new CCE is `>= d` from every other CCE; `d = 5` (m = 20) and `d = 20` (m = 307), i.e. `d ~ sqrt(m)` | With a fixed `tau` the spacing depends on how close the initial class means are, which differs by an order of magnitude between the first task (random encoder) and later ones (§3.3) |
-| Encoder latent head | ResNet-32 feature map pooled to 64x4x4, linear map to the 307-d latent; head initialised with std 1e-3 | Global pooling would cap the latent at 64 informative dimensions; the small init keeps the latent scale set by RFA rather than by the backbone's activation scale (~500) |
-| Decoder (CIFAR / SVHN) | Linear(307 -> 192x4x4), ConvT 192->128->64->3 (k4 s2), ReLU, sigmoid; 1.47M params | "3 layers of CNNs", ~1.4M params (Table 3) |
+| `lambda` (Eq. 1) | 0.3 | MNIST sweep over {0.1, 0.3, 1, 10, 100} (0.3: 93.0 vs 91.8 for 1.0); CIFAR sweep over {0.3, 0.5, 1} (§3.9) |
+| Distillation weights `a_z`, `a_x` and form | `a_z` = 0.01 (MNIST) / 0.1 (SVHN, CIFAR), `a_x = 1`, squared L2 | strong encoder distillation keeps new-class samples away from their shifted CCEs (§3.4); on CIFAR at full scale 0.1 retains more of the old task than 0.01 (32.4% vs 6.6% after task 2) |
+| RFA constants `zeta, m, dt` | 1, 1, 0.01, softening 1e-3, no damping | scale-free once the duration is chosen as below |
+| RFA duration `tau` | integrate Alg. 2 until every new CCE is `>= d` from every other CCE; `d = 5` (MNIST, m = 20) and `d = 20` (m = 320), i.e. `d ~ sqrt(m)` | with a fixed `tau` the spacing depends on how close the initial class means are, which differs by an order of magnitude between the first task (random encoder) and later ones (§3.3) |
+| Encoder / latent (MNIST) | 784-400-400 ReLU + linear to 20 | paper |
+| Encoder / latent (SVHN, CIFAR) | ResNet-32 up to its 8x8x64 feature map + 1x1 conv to 5 channels: an 8x8x5 = 320-number spatial latent (paper: 307); head initialised with std 1e-3 | a pooled 307-d vector latent reconstructs only colour blobs (§3.6, §3.9); the small init keeps the latent scale set by RFA rather than by the backbone's activation scale |
+| Decoder (MNIST) | mirror MLP 20-400-400-784, sigmoid | paper |
+| Decoder (SVHN, CIFAR) | Conv3x3(5->384), ConvT(384->192, x2), ConvT(192->3, x2), ReLU, sigmoid; 1.21M params | "3 layers of CNNs", ~1.4M params (Table 3) |
+| Memory | codes stored once with the encoder of their task (Alg. 4 `phi(w_i, D)`) and never re-encoded; decoder distillation also applied to the stored codes; after each task the decoder alone is fitted to the new exemplars' (code, image) pairs for 20 epochs (MNIST) / 1,500 steps (others) | §3.5 |
 | Minibatch composition | `round(B/l)` new samples + `B - round(B/l)` exemplars sampled uniformly from the class-balanced memory; one epoch = one pass over the new task's data | Sec. 2 ("1/l fraction ... (l-1)/l fraction"); gives the O(t) compute of Table 1 |
-| Exemplar selection | herding in latent space | The text says Alg. 4 is "based on Herding as in iCaRL"; the literal `Rank` of `L_z` (smallest distance to the CCE first) was also implemented, see §3.1 |
+| Exemplar selection | herding in latent space | the text says Alg. 4 is "based on Herding as in iCaRL"; the literal `Rank` of `L_z` is implemented too (§3.1) |
+| Baselines' replay | shuffled union of new data and exemplars (FACIL) | AHR's balanced minibatches over-replay the 200 raw exemplars (MNIST FT-E: 75.1% balanced vs 72.2% union, both far below the paper's 92.2%) |
 | Learning-rate schedule | cosine annealing within each task (all methods) | not specified |
 | Augmentation | random crop (pad 4) for SVHN/CIFAR, + horizontal flip for CIFAR; none for MNIST | standard |
 | Class order | natural (0,1 / 2,3 / ...) | not specified |
-| Precision | bf16 autocast for convolutions on CPU (AMX); latent maps in fp32 | compute budget |
+| Precision | bf16 autocast for convolutions on CPU (AMX); latent maps in fp32 | compute budget (no GPU was available) |
 
 ## 3. Findings while implementing (what did *not* work as described)
 

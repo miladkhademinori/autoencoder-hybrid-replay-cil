@@ -40,11 +40,11 @@ PRESETS = {
 AHR_DEFAULTS = {
     "mnist":    dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=5.0,
                      lam_recon_new=0.0, latent_kind="vector"),
-    "svhn":     dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
+    "svhn":     dict(lam=0.3, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
                      memorize_steps=1500, lam_recon_new=0.0, latent_kind="spatial"),
-    "cifar10":  dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
+    "cifar10":  dict(lam=0.3, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
                      memorize_steps=1500, lam_recon_new=0.0, latent_kind="spatial"),
-    "cifar100": dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
+    "cifar100": dict(lam=0.3, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
                      memorize_steps=1500, lam_recon_new=0.0, latent_kind="spatial"),
 }
 
