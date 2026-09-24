@@ -21,3 +21,4 @@ hae_lam300 epoch 2: acc 36.10 rec_mse 0.0656 (181s)
 hae_lam300 epoch 3: acc 49.90 rec_mse 0.0708 (270s)
 hae_lam1 epoch 1: acc 26.60 rec_mse 0.1292 (88s)  [stopped after 2 epochs: clearly worst]
 hae_lam1 epoch 2: acc 28.70 rec_mse 0.1206 (176s)  [stopped after 2 epochs: clearly worst]
+hae_lam300 epoch 4: acc 51.10 rec_mse 0.0616 (364s)
