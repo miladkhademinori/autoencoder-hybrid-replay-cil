@@ -1,0 +1,5 @@
+# threads  run.py arguments   (consumed in order by scripts/jobqueue.py)
+2 --dataset svhn --method ahr --seed 0 --save-ckpt 1
+2 --dataset cifar10 --method ahr_lossless --seed 0
+2 --dataset cifar100 --method ahr --seed 0 --save-ckpt 1
+2 --dataset svhn --method ahr_lossless --seed 0
