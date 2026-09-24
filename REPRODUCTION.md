@@ -220,3 +220,23 @@ At full scale (all data, 50 epochs) the plasticity side wins: the spatial latent
 lambda = 0.3 reached 97.2% after task 1 (decoded exemplars at 24.1 dB, 98.5% of them
 correctly classified) but after task 2 kept only 6.6% on the first task (87.9% on the
 second), i.e. the longer training drifts the encoder away from the old classes.
+
+### 3.10 At full scale the encoder becomes a real-vs-decoded detector
+Full CIFAR-10(5/2) run with the spatial latent (lambda = 0.3, a_z = 0.1, paper epochs
+and data): 97.2% after task 1, 53.3% after task 2 ([32.4, 74.2]), 31.8% after task 3
+([0.4, 0.4, 94.6]), i.e. fine-tuning behaviour. The task-3 checkpoint shows why:
+
+| Images | classified correctly |
+|---|---|
+| decoded exemplars of the old classes (0-3) | 98.3% |
+| decoded exemplars of the newest classes (4-5) | 0.3% (all go to classes 0-3) |
+| real test images of the old classes | 0.5% (all go to classes 4-5) |
+| real test images of the newest classes | 94.6% |
+
+Recomputing BatchNorm statistics, fp32 inference or test-time augmentation change
+none of this. Even at 24 dB PSNR the network separates decoded from real images
+perfectly and uses that as the task label: whatever looks decoded is "old", whatever
+looks real is "new". With 6x fewer iterations (40% of the data, 20 epochs) the same
+configuration still retained 76.6% of the first task after the second, so the
+shortcut is learned gradually and the paper's training length is enough to learn
+it completely.
