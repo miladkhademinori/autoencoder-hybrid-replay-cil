@@ -1,9 +1,104 @@
 # Job queue for scripts/run_queue.py (re-read every loop; the Colab runner git-pulls it every 10 min).
 # format: <profile> <benchmark> <variant> <seed> [KEY=VALUE overrides]
-# Finished jobs are skipped automatically, so this file only ever grows.
+# Finished jobs are skipped; removing a running job from this file stops it (checkpoint kept).
+# profiles: paper        = exemplar counts per client (memory_size 20000 latent / client)
+#           paper_fedmem = exemplar counts per class across the federation (400 latent / client)
+#           calib_*      = first two tasks only, to check the first-task accuracy (paper: 84.8)
 
-# ---- stage 0: GPU calibration on the first two tasks (~5% of a full run each) ----------------
-calib_lam10_E5   cifar100_10_10_50_5 hr 0 num_tasks=2 lam=10 local_epochs=5
-calib_lam100_E5  cifar100_10_10_50_5 hr 0 num_tasks=2 lam=100 local_epochs=5
-calib_lam10_E10  cifar100_10_10_50_5 hr 0 num_tasks=2 lam=10 local_epochs=10
-calib_lam100_E10 cifar100_10_10_50_5 hr 0 num_tasks=2 lam=100 local_epochs=10
+calib_lam100_E5  cifar100_10_10_50_5 hr 0 num_tasks=2 local_epochs=5
+paper cifar100_10_10_50_5 hr 0
+calib_lam100_E10 cifar100_10_10_50_5 hr 0 num_tasks=2 local_epochs=10
+calib_lam30_E5   cifar100_10_10_50_5 hr 0 num_tasks=2 lam=30
+
+# ---- stage 1: Table 2 rows, CIFAR-100 10/10/50/5, seed 0 ------------------------------------
+paper_fedmem cifar100_10_10_50_5 hr 0 memory_size=400
+paper cifar100_10_10_50_5 hr_no_global 0
+paper_fedmem cifar100_10_10_50_5 hr_no_global 0 memory_size=400
+paper cifar100_10_10_50_5 hr_no_latent 0
+paper cifar100_10_10_50_5 hr_mini 0
+paper_fedmem cifar100_10_10_50_5 hr_mini 0 memory_size=40
+paper cifar100_10_10_50_5 hr_no_kd 0
+paper_fedmem cifar100_10_10_50_5 hr_no_kd 0 memory_size=400
+paper cifar100_10_10_50_5 hr_perfect 0
+paper_fedmem cifar100_10_10_50_5 hr_perfect 0 memory_size=400
+paper cifar100_10_10_50_5 hr_rfa 0
+paper_fedmem cifar100_10_10_50_5 hr_rfa 0 memory_size=400
+paper cifar100_10_10_50_5 fedavg_ft 0   # lower bound, not in the paper (cheap)
+
+# ---- stage 2: seeds 1-2 (mean +- SEM) -------------------------------------------------------
+paper cifar100_10_10_50_5 hr 1
+paper_fedmem cifar100_10_10_50_5 hr 1 memory_size=400
+paper cifar100_10_10_50_5 hr_no_global 1
+paper_fedmem cifar100_10_10_50_5 hr_no_global 1 memory_size=400
+paper cifar100_10_10_50_5 hr_no_latent 1
+paper cifar100_10_10_50_5 hr_mini 1
+paper_fedmem cifar100_10_10_50_5 hr_mini 1 memory_size=40
+paper cifar100_10_10_50_5 hr_no_kd 1
+paper_fedmem cifar100_10_10_50_5 hr_no_kd 1 memory_size=400
+paper cifar100_10_10_50_5 hr_perfect 1
+paper_fedmem cifar100_10_10_50_5 hr_perfect 1 memory_size=400
+paper cifar100_10_10_50_5 hr_rfa 1
+paper_fedmem cifar100_10_10_50_5 hr_rfa 1 memory_size=400
+paper cifar100_10_10_50_5 hr 2
+paper_fedmem cifar100_10_10_50_5 hr 2 memory_size=400
+paper cifar100_10_10_50_5 hr_no_global 2
+paper_fedmem cifar100_10_10_50_5 hr_no_global 2 memory_size=400
+paper cifar100_10_10_50_5 hr_no_latent 2
+paper cifar100_10_10_50_5 hr_mini 2
+paper_fedmem cifar100_10_10_50_5 hr_mini 2 memory_size=40
+paper cifar100_10_10_50_5 hr_no_kd 2
+paper_fedmem cifar100_10_10_50_5 hr_no_kd 2 memory_size=400
+paper cifar100_10_10_50_5 hr_perfect 2
+paper_fedmem cifar100_10_10_50_5 hr_perfect 2 memory_size=400
+paper cifar100_10_10_50_5 hr_rfa 2
+paper_fedmem cifar100_10_10_50_5 hr_rfa 2 memory_size=400
+
+# ---- stage 3: Table 2, CIFAR-100 20/5/50/5, seed 0 ------------------------------------------
+paper cifar100_20_5_50_5 hr 0
+paper_fedmem cifar100_20_5_50_5 hr 0 memory_size=400
+paper cifar100_20_5_50_5 hr_no_global 0
+paper_fedmem cifar100_20_5_50_5 hr_no_global 0 memory_size=400
+paper cifar100_20_5_50_5 hr_no_latent 0
+paper cifar100_20_5_50_5 hr_mini 0
+paper_fedmem cifar100_20_5_50_5 hr_mini 0 memory_size=40
+paper cifar100_20_5_50_5 hr_no_kd 0
+paper_fedmem cifar100_20_5_50_5 hr_no_kd 0 memory_size=400
+paper cifar100_20_5_50_5 hr_perfect 0
+paper_fedmem cifar100_20_5_50_5 hr_perfect 0 memory_size=400
+paper cifar100_20_5_50_5 hr_rfa 0
+paper_fedmem cifar100_20_5_50_5 hr_rfa 0 memory_size=400
+
+# ---- stage 4: Figure 3 (top) memory sweep: n raw-equivalent exemplars/class, federation-wide
+memsweep_n1 cifar100_10_10_50_5 hr 0 memory_size=20
+memsweep_n2 cifar100_10_10_50_5 hr 0 memory_size=40
+memsweep_n4 cifar100_10_10_50_5 hr 0 memory_size=80
+memsweep_n8 cifar100_10_10_50_5 hr 0 memory_size=160
+memsweep_n16 cifar100_10_10_50_5 hr 0 memory_size=320
+memsweep_n32 cifar100_10_10_50_5 hr 0 memory_size=640
+memsweep_n64 cifar100_10_10_50_5 hr 0 memory_size=1280
+memsweep_n128 cifar100_10_10_50_5 hr 0 memory_size=2560
+
+# ---- stage 5: Table 2, TinyImageNet 10/5/300/30 (64x64, ~2x CIFAR cost), seed 0 -------------
+paper tinyimagenet_10_5_300_30 hr 0
+paper tinyimagenet_10_5_300_30 hr_no_global 0
+paper tinyimagenet_10_5_300_30 hr_no_latent 0
+paper tinyimagenet_10_5_300_30 hr_mini 0
+paper tinyimagenet_10_5_300_30 hr_no_kd 0
+paper tinyimagenet_10_5_300_30 hr_perfect 0
+paper tinyimagenet_10_5_300_30 hr_rfa 0
+
+# ---- stage 6: seeds 3-4 -------------------------------------------------------------------
+paper cifar100_10_10_50_5 hr 3
+paper cifar100_10_10_50_5 hr_no_global 3
+paper cifar100_10_10_50_5 hr_no_latent 3
+paper cifar100_10_10_50_5 hr_mini 3
+paper cifar100_10_10_50_5 hr_no_kd 3
+paper cifar100_10_10_50_5 hr_perfect 3
+paper cifar100_10_10_50_5 hr_rfa 3
+paper cifar100_10_10_50_5 hr 4
+paper cifar100_10_10_50_5 hr_no_global 4
+paper cifar100_10_10_50_5 hr_no_latent 4
+paper cifar100_10_10_50_5 hr_mini 4
+paper cifar100_10_10_50_5 hr_no_kd 4
+paper cifar100_10_10_50_5 hr_perfect 4
+paper cifar100_10_10_50_5 hr_rfa 4

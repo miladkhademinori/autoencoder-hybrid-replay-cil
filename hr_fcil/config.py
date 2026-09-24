@@ -38,7 +38,7 @@ class Config:
     latent_dim: int = 0                  # 0 -> input_dim / 10 (307 for 32x32x3, as in AHR Tab. 4)
     encoder: str = "resnet18"            # paper
     decoder_channels: int = 64           # 4-layer CNN decoder, ~1.4M params for CIFAR (paper Tab. 3)
-    lam: float = 10.0                    # lambda: weight of ||z - p||^2 (paper Eq. 7)
+    lam: float = 100.0                   # lambda: weight of ||z - p||^2 (paper Eq. 7); see calibrate.py
     beta_kl: float = 1.0                 # ELBO KL weight (standard VAE = 1)
     kd_z: float = 1.0                    # latent distillation  ||f_{h-1}(x) - f_h(x)||^2
     kd_x: float = 1.0                    # decoder distillation ||g_{h-1}(f_{h-1}(x)) - g_h(f_h(x))||^2

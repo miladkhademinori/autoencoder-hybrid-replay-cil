@@ -1,0 +1,23 @@
+# scripts/calibrate.py: centralised training on task 1 (10 classes, 5000 images), 4 epochs, SGD 0.1->0.01, batch 32, CPU, seed 0
+# metric: nearest-centroid test accuracy (HAE) or softmax accuracy (ce); rec_mse on test images
+ce epoch 1: acc 29.30 rec_mse nan (78s)
+ce epoch 2: acc 32.70 rec_mse nan (488s)
+ce epoch 3: acc 37.90 rec_mse nan (815s)
+ce epoch 4: acc 38.20 rec_mse nan (890s)
+hae_lam10 epoch 1: acc 37.30 rec_mse 0.0721 (144s)
+hae_lam10 epoch 2: acc 45.20 rec_mse 0.0588 (264s)
+hae_lam10 epoch 3: acc 47.20 rec_mse 0.0582 (354s)
+hae_lam10 epoch 4: acc 46.90 rec_mse 0.0500 (542s)
+hae_lam100 epoch 1: acc 39.30 rec_mse 0.0600 (89s)
+hae_lam100 epoch 2: acc 45.50 rec_mse 0.0505 (178s)
+hae_lam100 epoch 3: acc 50.80 rec_mse 0.0490 (266s)
+hae_lam100 epoch 4: acc 54.30 rec_mse 0.0542 (354s)
+hae_lam1000 epoch 1: acc 28.70 rec_mse 0.0806 (93s)
+hae_lam1000 epoch 2: acc 38.60 rec_mse 0.0615 (183s)
+hae_lam1000 epoch 3: acc 47.10 rec_mse 0.0621 (272s)
+hae_lam1000 epoch 4: acc 50.00 rec_mse 0.0726 (362s)
+hae_lam300 epoch 1: acc 32.90 rec_mse 0.0773 (91s)
+hae_lam300 epoch 2: acc 36.10 rec_mse 0.0656 (181s)
+hae_lam300 epoch 3: acc 49.90 rec_mse 0.0708 (270s)
+hae_lam1 epoch 1: acc 26.60 rec_mse 0.1292 (88s)  [stopped after 2 epochs: clearly worst]
+hae_lam1 epoch 2: acc 28.70 rec_mse 0.1206 (176s)  [stopped after 2 epochs: clearly worst]

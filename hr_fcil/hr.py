@@ -141,6 +141,10 @@ class HRTrainer:
         self.y_test = torch.from_numpy(self.data.y_test).to(self.dev)
 
         self.model = HybridAutoencoder(cfg.dataset, h, self.latent_dim, cfg.decoder_channels).to(self.dev)
+        self.channels_last = self.dev.type == "cuda"
+        if self.channels_last:  # faster fp16 convolutions on tensor cores
+            self.model = self.model.to(memory_format=torch.channels_last)
+            torch.backends.cudnn.benchmark = True
         self.local = copy.deepcopy(self.model)
         self.old = None                                           # theta_{h-1} (frozen)
         self.centroids = torch.zeros(self.n_classes, self.latent_dim, device=self.dev)
@@ -329,6 +333,8 @@ class HRTrainer:
                 if len(bi) < 2:
                     continue  # BatchNorm needs >1 sample
                 x = augment(x_all[bi], self.gen)
+                if self.channels_last:
+                    x = x.contiguous(memory_format=torch.channels_last)
                 y = y_all[bi]
                 eps = torch.randn((len(bi), self.latent_dim), generator=self.gen).to(self.dev)
                 with torch.autocast(self.dev.type, dtype=self.amp_dtype, enabled=self.use_amp):
