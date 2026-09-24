@@ -77,7 +77,7 @@ def release(d):
         pass
 
 
-def write_status(root, jobs, me):
+def write_status(root, jobs, me, failures=None):
     rows = []
     for j in jobs:
         d = job_dir(root, j)
@@ -93,6 +93,8 @@ def write_status(root, jobs, me):
                 r = json.load(open(os.path.join(d, "result.json")))
                 extra = dict(tasks_done=r["tasks_done"], acc_per_task=r["acc_per_task"],
                              minutes=r["elapsed_min"])
+        if st == "pending" and failures and failures.get(d):
+            st = f"failed x{failures[d]} (see stdout.txt)"
         rows.append(dict(job=f"{j['profile']}/{j['benchmark']}/{j['variant']}_seed{j['seed']}",
                          status=st, **extra))
     tmp = os.path.join(root, f".queue_status.{me}.tmp")
@@ -120,6 +122,7 @@ def main():
     os.makedirs(args.results_root, exist_ok=True)
     t_start = time.time()
     running = {}  # dir -> (Popen, logfile)
+    failures = {}  # dir -> number of crashes in this session (give up after 2)
     last_pull = 0.0
     idle_since = None
     while True:
@@ -130,8 +133,13 @@ def main():
                 print(f"[queue] git pull failed: {r.stderr.strip()}", flush=True)
             last_pull = time.time()
         jobs = read_queue(args.queue)
-        # reap finished processes
+        wanted = {job_dir(args.results_root, j) for j in jobs}
+        # reap finished processes; stop jobs that were removed from the queue (checkpoint is kept)
         for d, (p, lf) in list(running.items()):
+            if p.poll() is None and d not in wanted:
+                p.terminate()
+                p.wait()
+                print(f"[queue] cancelled (removed from queue): {d}", flush=True)
             if p.poll() is not None:
                 lf.close()
                 release(d)
@@ -139,19 +147,21 @@ def main():
                     ck = os.path.join(d, "checkpoint.pt")
                     if os.path.exists(ck):
                         os.remove(ck)
-                print(f"[queue] {'done' if finished(d) else 'FAILED (exit %d)' % p.returncode}: {d}",
+                if not finished(d) and d in wanted:
+                    failures[d] = failures.get(d, 0) + 1
+                print(f"[queue] {'done' if finished(d) else 'stopped (exit %d)' % p.returncode}: {d}",
                       flush=True)
                 del running[d]
             else:
                 heartbeat(d, me)
-        write_status(args.results_root, jobs, me)
+        write_status(args.results_root, jobs, me, failures)
         out_of_time = time.time() - t_start > args.max_hours * 3600
         # launch new jobs
         while len(running) < args.parallel and not out_of_time:
             nxt = None
             for j in jobs:
                 d = job_dir(args.results_root, j)
-                if d in running or finished(d):
+                if d in running or finished(d) or failures.get(d, 0) >= 2:
                     continue
                 if try_claim(d, me):
                     nxt = (j, d)
@@ -171,7 +181,7 @@ def main():
             print(f"[queue] start: {' '.join(cmd[2:])}", flush=True)
             running[d] = (subprocess.Popen(cmd, stdout=lf, stderr=subprocess.STDOUT, cwd=ROOT), lf)
         if not running:
-            write_status(args.results_root, jobs, me)
+            write_status(args.results_root, jobs, me, failures)
             idle_since = idle_since or time.time()
             if out_of_time or time.time() - idle_since > args.idle_exit_minutes * 60:
                 print("[queue] nothing left to run", flush=True)
