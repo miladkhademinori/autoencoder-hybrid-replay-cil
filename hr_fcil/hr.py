@@ -100,13 +100,13 @@ class ClientMemory:
     def classes(self) -> set:
         return set(self.labels.tolist())
 
-    def reduce(self, per_class: int):
-        """Fixed-memory policy (iCaRL): keep at most `per_class` exemplars per class."""
+    def reduce(self, quota: np.ndarray):
+        """Fixed-memory policy (iCaRL): keep at most `quota[k]` exemplars of class k."""
         if len(self) == 0:
             return
         keep = []
         for c in self.labels.unique().tolist():
-            keep.append(torch.where(self.labels == c)[0][:per_class])
+            keep.append(torch.where(self.labels == c)[0][:int(quota[c])])
         keep = torch.cat(keep).sort().values
         self.labels = self.labels[keep]
         if self.kind == "latent":
@@ -145,6 +145,9 @@ class HRTrainer:
         self.old = None                                           # theta_{h-1} (frozen)
         self.centroids = torch.zeros(self.n_classes, self.latent_dim, device=self.dev)
         self.memories = [ClientMemory(cfg.memory) for _ in range(cfg.num_clients)]
+        # persistent per-(client, class) uniforms that assign the fractional part of the
+        # per-class quota (needed when the budget is below one exemplar per class)
+        self.slot_u = np.random.default_rng(cfg.seed + 777).random((cfg.num_clients, self.n_classes))
         self.use_amp = cfg.amp and self.dev.type == "cuda"
         # bf16 only on Ampere or newer (T4/V100 would emulate it slowly); fp16 + GradScaler otherwise
         self.amp_dtype = (torch.bfloat16 if self.use_amp and torch.cuda.get_device_capability(self.dev)[0] >= 8
@@ -375,21 +378,24 @@ class HRTrainer:
         if cfg.memory == "none":
             return
         seen = (t + 1) * cfg.classes_per_task
-        per_class = max(1, cfg.memory_size // seen)
+        q = cfg.memory_size / seen                      # per-class quota m = K / #classes
         for c in range(cfg.num_clients):
             mem = self.memories[c]
+            quota = np.floor(q) + (self.slot_u[c] < q - np.floor(q))
             # re-encode old latent exemplars: M <- f_h(g_{h-1}(M))
             if mem.kind == "latent" and len(mem) > 0 and self.old is not None:
                 x_dec = self.decode(self.old, mem.codes.to(self.dev))
                 mem.codes = self.encode_mu(self.model, x_dec).cpu()
-            mem.reduce(per_class)
+            mem.reduce(quota)
             # add randomly sampled exemplars of the current task
             idx = self.data.client_indices[t][c]
             if len(idx) == 0:
                 continue
             idx = idx[self.np_rng.permutation(len(idx))]
             labels = self.data.y_train[idx]
-            sel = np.concatenate([np.where(labels == k)[0][:per_class] for k in np.unique(labels)])
+            sel = np.concatenate([np.where(labels == k)[0][:int(quota[k])] for k in np.unique(labels)])
+            if len(sel) == 0:
+                continue
             idx, labels = idx[sel], labels[sel]
             if mem.kind == "latent":
                 codes = self.encode_mu(self.model, self.x_train[torch.from_numpy(idx).to(self.dev)]).cpu()

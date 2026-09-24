@@ -52,7 +52,8 @@ accuracy, average forgetting and the whole per-task curve.
 | Unaligned centroids | Collected from the round's I selected clients (Alg. 1 l. 5–6). If a class is missing among them, one more client is asked until every new class is covered. | Alg. 1. |
 | Noise for synthetic samples, σ | 1/√(1 + 2λ) | The posterior std that minimises KL + λ·E‖z − p‖², i.e. the spread the decoder was trained on. |
 | Number of synthetic samples per absent class | Mean number of exemplars per class in that client's memory (balanced replay); without memory, the client's mean number of samples per class of the current task | Not specified. |
-| Which exemplars enter memory | Random (Alg. 2 l. 25); per-class quota = memory_size / #classes seen (fixed memory) | Paper. |
+| Which exemplars enter memory | Random (Alg. 2 l. 25); per-class quota = memory_size / #classes seen (fixed memory; fractional quotas are assigned to a fixed random subset of classes) | Paper. |
+| **What "200 latent exemplars per class" counts** | Two readings, both run: **`paper`** = per client (memory_size 20000 latent codes per client, as GLFC's per-client memory of 2000 raw images = 20/class); **`paper_fedmem`** = per class across the whole federation (200 × 100 classes / 50 clients = 400 latent codes per client; HR-mini 40; perfect exemplars 400 raw) | See §3, item 6. |
 | Augmentation | Random crop (pad 4) + horizontal flip on all training images, real and replayed | Standard for CIFAR. |
 | Client selection | I clients drawn uniformly at random **every round** | Alg. 1 draws the clients once per task (l. 5, outside the round loop). Then only 10% of each task's data would ever be used, which cannot give the 84.8% first-task accuracy of Fig. 3, so we read l. 5 as the usual per-round sampling (MFCL). |
 | Class order | Seeded random permutation per run | Standard. |
@@ -76,6 +77,15 @@ accuracy, average forgetting and the whole per-task curve.
    generation"), but the ablation paragraph describes it as a 10× smaller memory budget. We use
    the latter (memory_size 2000 instead of 20000); the data-free variant is "HR w/o Latent
    Exemplars".
+6. **The memory budget does not bind under the stated data split if it is per client.** With
+   LDA(α = 1) over 50 clients, a client holds ~100 images per task: the median client/class
+   pair has 8 images, the 90th percentile 25, and 12.6% of pairs are empty (measured with
+   `lda_partition`). A per-client memory of 200 (HR) or even 20 (HR-mini, raw baselines)
+   exemplars per class therefore stores almost all local data, so memory size would barely
+   matter. Yet Figure 3 shows accuracy rising steadily from 1 to 128 exemplars per class, and
+   Table 2 shows a 5.4-point gap between HR and HR-mini. Both patterns are consistent with
+   counting exemplars per class across the whole federation. The paper does not say which
+   convention it uses, so we run both.
 
 ## 4. Compute, and how to run
 

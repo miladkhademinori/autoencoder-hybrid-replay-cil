@@ -43,3 +43,29 @@ Key ideas to expect in the release:
   doi     = {10.48550/arXiv.2505.05926},
   url     = {https://arxiv.org/abs/2505.05926}
 }
+```
+
+---
+
+## Reproduction: Hybrid Replay for Federated Class-Incremental Learning (ICLR 2025)
+
+This branch also contains an independent re-implementation of the companion federated paper,
+*Federated Class-Incremental Learning: A Hybrid Approach Using Latent Exemplars and Data-Free
+Techniques to Address Local and Global Forgetting* (Khademi Nori, Kim, Wang, ICLR 2025,
+[arXiv:2501.15356](https://arxiv.org/abs/2501.15356)), together with the scripts used to
+reproduce its Table 2 and Figure 3.
+
+- `hr_fcil/`: HR (ResNet-18 VAE encoder, 4-layer CNN decoder, Lennard-Jones centroid placement,
+  latent-exemplar and centroid-based global replay, KD, FedAvg over LDA client splits) and all
+  Table 2 ablations
+- `run.py`: a single run; `scripts/run_queue.py`: resumable experiment queue;
+  `scripts/aggregate.py`: comparison with the paper's numbers
+- `notebooks/HR_FCIL_colab.ipynb`: runs the queue on a Colab GPU and saves results to Google Drive
+- [`REPRODUCTION.md`](REPRODUCTION.md): protocol, every implementation choice, deviations,
+  and issues found in the paper
+- [`results/RESULTS.md`](results/RESULTS.md): reproduced numbers against the paper
+
+```bash
+pip install -r requirements.txt
+python run.py --benchmark cifar100_10_10_50_5 --variant hr --seed 0 --amp
+```
