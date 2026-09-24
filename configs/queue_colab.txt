@@ -1,0 +1,9 @@
+# Job queue for scripts/run_queue.py (re-read every loop; the Colab runner git-pulls it every 10 min).
+# format: <profile> <benchmark> <variant> <seed> [KEY=VALUE overrides]
+# Finished jobs are skipped automatically, so this file only ever grows.
+
+# ---- stage 0: GPU calibration on the first two tasks (~5% of a full run each) ----------------
+calib_lam10_E5   cifar100_10_10_50_5 hr 0 num_tasks=2 lam=10 local_epochs=5
+calib_lam100_E5  cifar100_10_10_50_5 hr 0 num_tasks=2 lam=100 local_epochs=5
+calib_lam10_E10  cifar100_10_10_50_5 hr 0 num_tasks=2 lam=10 local_epochs=10
+calib_lam100_E10 cifar100_10_10_50_5 hr 0 num_tasks=2 lam=100 local_epochs=10

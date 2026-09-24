@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+data/
+results/**/checkpoint.pt
+results/**/checkpoint.pt.tmp
+results/**/running.lock
+results/**/stdout.txt
+*.part
