@@ -54,10 +54,11 @@ class AHR:
         self.bench, self.args, self.log = bench, args, log
         self.model = make_hae(bench.name, bench.input_shape, args.latent_dim,
                               decoder_width=args.decoder_width, enc_pool=args.enc_pool,
-                              input_blur=args.input_blur, latent_kind=args.latent_kind)
+                              input_blur=args.input_blur, latent_kind=args.latent_kind,
+                              cls_dim=args.cls_dim)
         if args.latent_kind == "spatial" and bench.name != "mnist":
             args.latent_dim = self.model.encoder.head.conv.out_channels * 64
-        self.cces = torch.zeros(0, args.latent_dim)
+        self.cces = torch.zeros(0, args.cls_dim if args.latent_kind == "split" else args.latent_dim)
         self.lossless = args.memory_kind == "raw"
         if self.lossless:
             self.memory = mem.RawMemory(args.n_exemplars)
@@ -81,10 +82,10 @@ class AHR:
         """Latent features used for classification: phi(x) (paper), or phi(psi(phi(x)))
         when classification operates in the decoder's output domain (--latent-domain recon)."""
         if self.args.latent_domain != "recon":
-            return self.encode(x_uint8)
+            return self.model.cls(self.encode(x_uint8))
         m = self.model
         m.eval()
-        return batched(lambda b: m.encoder(m.decoder(m.encoder(b))), x_uint8, self.args.eval_batch)
+        return m.cls(batched(lambda b: m.encoder(m.decoder(m.encoder(b))), x_uint8, self.args.eval_batch))
 
     def predict(self, x_uint8):
         z = self.class_features(x_uint8)
@@ -126,6 +127,7 @@ class AHR:
         iters = math.ceil(n_new / b_new)
         sched = make_scheduler(opt, a, a.epochs * iters)
         cces = self.cces
+        C = self.model.cls
         flip = self.bench.flip
         for ep in range(a.epochs):
             model.train()
@@ -182,9 +184,9 @@ class AHR:
                 if a.latent_domain == "recon":
                     # the latent (classification) loss only sees decoder outputs: decoded
                     # exemplars here and reconstructions of the new samples below
-                    l_lat = _sq(z[n:], cces[y[n:]]).mean() if len(x) > n else z.new_zeros(())
+                    l_lat = _sq(C(z[n:]), cces[y[n:]]).mean() if len(x) > n else z.new_zeros(())
                 else:
-                    l_lat = _sq(z, cces[y]).mean()
+                    l_lat = _sq(C(z), cces[y]).mean()
                 loss = l_rec + a.lam * l_lat
                 if old is not None:
                     dz, dx = _sq(z, z_old.float()), _sq(xh, x_old.float())
@@ -202,15 +204,15 @@ class AHR:
                     n_old = self.n_seen - len(task.classes)
                     p_old = cces[:n_old]
                     scale = a.kd_scale * a.rfa_target ** 2
-                    lo = -torch.cdist(z_old.float(), p_old) ** 2 / scale
-                    ln = -torch.cdist(z, p_old) ** 2 / scale
+                    lo = -torch.cdist(C(z_old.float()), p_old) ** 2 / scale
+                    ln = -torch.cdist(C(z), p_old) ** 2 / scale
                     l_kd = torch.nn.functional.kl_div(ln.log_softmax(1), lo.softmax(1),
                                                       reduction="batchmean")
                     loss = loss + a.alpha_kd * l_kd
                     tot["kd"] = tot.get("kd", 0.0) + l_kd.item()
                 if use_rn:
                     z_rn = z_all[len(x):].float()
-                    loss = loss + a.lam * a.lam_recon_new * _sq(z_rn, cces[y[:n]]).mean()
+                    loss = loss + a.lam * a.lam_recon_new * _sq(C(z_rn), cces[y[:n]]).mean()
                 if codes is not None:
                     # decoder distillation on the stored codes: psi(m) must keep decoding
                     # every stored latent into the same exemplar as psi_old(m)
@@ -259,8 +261,8 @@ class AHR:
         x, y, src = torch.cat(xs), torch.cat(ys), torch.cat(src)
         self.model.eval()
         z = batched(self.model.encoder, x, a.eval_batch, uint8=False)
-        scores = _sq(z, self.cces[y])
-        keep = self._select(z, y, scores, per_class)
+        zc = self.model.cls(z)
+        keep = self._select(zc, y, _sq(zc, self.cces[y]), per_class)
         if self.lossless:
             self.memory.set((x[keep] * 255).round().to(torch.uint8), y[keep])
         else:
@@ -278,7 +280,8 @@ class AHR:
         per_class = self.memory.per_class(self.n_seen)
         self.model.eval()
         z = self.encode(task.x_train)
-        keep_new = self._select(z, task.y_train, _sq(z, self.cces[task.y_train]), per_class)
+        zc = self.model.cls(z)
+        keep_new = self._select(zc, task.y_train, _sq(zc, self.cces[task.y_train]), per_class)
         new_data = task.x_train[keep_new] if self.lossless else z[keep_new]
         new_src = t * 10**6 + keep_new
         if len(self.memory) > 0:
@@ -376,13 +379,13 @@ class AHR:
         self.model.eval()
         rec = batched(lambda b: self.model.decoder(self.model.encoder(b)), x_uint8, self.args.eval_batch)
         z = batched(self.model.encoder, rec, self.args.eval_batch, uint8=False)
-        acc_rec = float((torch.cdist(z, self.cces).argmin(1) == y).float().mean()) * 100
+        acc_rec = float((torch.cdist(self.model.cls(z), self.cces).argmin(1) == y).float().mean()) * 100
         acc_mem = None
         if len(self.memory):
             idx = torch.arange(len(self.memory))
             xm, ym = self.decode_memory(idx, self.model.decoder)
             zm = batched(self.model.encoder, xm, self.args.eval_batch, uint8=False)
-            acc_mem = float((torch.cdist(zm, self.cces).argmin(1) == ym).float().mean()) * 100
+            acc_mem = float((torch.cdist(self.model.cls(zm), self.cces).argmin(1) == ym).float().mean()) * 100
         return acc_rec, acc_mem
 
     @torch.no_grad()

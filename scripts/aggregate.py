@@ -57,12 +57,39 @@ def fmt(ms, n=None):
     return txt + (f" (n={n})" if n else "")
 
 
+ABLATION_TAGS = [
+    ("ahr", "", "AHR (final configuration)"),
+    ("ahr", "recon_new", "+ latent loss on reconstructions of new samples"),
+    ("ahr", "no_memorize", "- decoder memorisation"),
+    ("ahr", "reencode", "- frozen codes, - memorisation (memory re-encoded every task)"),
+    ("ahr", "literal_herding", "literal Alg. 1-4, herding selection"),
+    ("ahr", "literal_rank", "literal Alg. 1-4, Rank selection"),
+    ("ft_e", "balanced", "FT-E with AHR's balanced minibatches"),
+]
+
+
+def ablation_table(results, dataset):
+    rows = []
+    for method, tag, label in ABLATION_TAGS:
+        rs = [r for (d, m), lst in load(results, tag).items() if d == dataset and m == method for r in lst]
+        if rs:
+            rows.append(f"| {label} | {fmt(mean_sem([r['final_acc'] for r in rs]), len(rs))} |")
+    if rows:
+        print(f"\n{dataset} ablations (final accuracy %, mean ± SEM):\n")
+        print("| Variant | Final acc. |\n|---|---|")
+        print("\n".join(rows))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", default="results")
     ap.add_argument("--tag", default="")
     ap.add_argument("--metric", default="final_acc", choices=["final_acc", "avg_inc_acc"])
+    ap.add_argument("--ablations", default="", help="dataset for which to print the ablation table")
     args = ap.parse_args()
+    if args.ablations:
+        ablation_table(args.results, args.ablations)
+        return
     runs = load(args.results, args.tag)
     datasets = [d for d in DATASETS if any(k[0] == d for k in runs)]
     print(f"Final accuracy (%) after the last task, mean ± SEM over seeds "

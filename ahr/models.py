@@ -185,6 +185,43 @@ class SpatialConvDecoder(nn.Module):
         return torch.sigmoid(self.net(h))
 
 
+class SplitHead(nn.Module):
+    """Latent = [spatial part (1x1 conv of the feature map, free for reconstruction),
+    class part (pooled features -> linear, structured by the CCEs)]."""
+
+    def __init__(self, in_channels, c_rec, cls_dim, init_std=1e-3):
+        super().__init__()
+        self.conv = nn.Conv2d(in_channels, c_rec, 1)
+        self.fc = nn.Linear(in_channels, cls_dim)
+        for w in (self.conv.weight, self.fc.weight):
+            nn.init.normal_(w, std=init_std)
+        nn.init.zeros_(self.conv.bias)
+        nn.init.zeros_(self.fc.bias)
+
+    def forward(self, f):
+        return torch.cat([torch.flatten(self.conv(f), 1), self.fc(f.mean((2, 3)))], 1)
+
+
+class SplitConvDecoder(nn.Module):
+    """Decoder for the split latent: the class part is mapped to one extra 8x8 channel
+    and concatenated with the spatial part before the three convolutional layers."""
+
+    def __init__(self, c_rec, cls_dim, out_channels=3, base=8, w1=384, w2=192):
+        super().__init__()
+        self.c_rec, self.base = c_rec, base
+        self.fc = nn.Linear(cls_dim, base * base)
+        self.net = nn.Sequential(
+            nn.Conv2d(c_rec + 1, w1, 3, 1, 1), nn.ReLU(inplace=True),
+            nn.ConvTranspose2d(w1, w2, 4, 2, 1), nn.ReLU(inplace=True),
+            nn.ConvTranspose2d(w2, out_channels, 4, 2, 1))
+
+    def forward(self, z):
+        n = self.c_rec * self.base * self.base
+        zs = z[:, :n].reshape(-1, self.c_rec, self.base, self.base)
+        zc = _fp32(self.fc, z[:, n:]).view(-1, 1, self.base, self.base)
+        return torch.sigmoid(self.net(torch.cat([zs.to(zc.dtype), zc], 1)))
+
+
 # --------------------------------------------------------------------------- #
 # Model wrappers
 # --------------------------------------------------------------------------- #
@@ -232,10 +269,15 @@ class Encoder(nn.Module):
 class HybridAutoencoder(nn.Module):
     """HAE: encoder phi (classification in latent space) + decoder psi (replay)."""
 
-    def __init__(self, encoder, decoder):
+    def __init__(self, encoder, decoder, cls_dim=None):
         super().__init__()
         self.encoder = encoder
         self.decoder = decoder
+        self.cls_dim = cls_dim
+
+    def cls(self, z):
+        """Part of the latent used for classification (all of it unless split)."""
+        return z if self.cls_dim is None else z[:, -self.cls_dim:]
 
     def forward(self, x):
         z = self.encoder(x)
@@ -284,7 +326,17 @@ def make_backbone(dataset, in_shape, pool=1):
 
 
 def make_hae(dataset, in_shape, latent_dim, decoder_width=1.0, enc_pool=4, input_blur=0.0,
-             latent_kind="vector"):
+             latent_kind="vector", cls_dim=64):
+    if dataset != "mnist" and latent_kind == "split":
+        c_rec = max(1, round((latent_dim - cls_dim) / 64))
+        backbone = make_backbone(dataset, in_shape, pool=8)
+        backbone.pool = nn.Identity()
+        backbone.forward = _feature_map_forward.__get__(backbone)
+        enc = Encoder(backbone, 1, input_blur=input_blur, channels=in_shape[0])
+        enc.head = SplitHead(64, c_rec, cls_dim)
+        dec = SplitConvDecoder(c_rec, cls_dim, in_shape[0], in_shape[1] // 4,
+                               int(384 * decoder_width), int(192 * decoder_width))
+        return HybridAutoencoder(enc, dec, cls_dim=cls_dim)
     if dataset != "mnist" and latent_kind == "spatial":
         c = max(1, round(latent_dim / 64))  # 8x8 spatial latent
         backbone = make_backbone(dataset, in_shape, pool=8)

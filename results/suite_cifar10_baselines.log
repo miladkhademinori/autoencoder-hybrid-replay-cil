@@ -3,3 +3,6 @@ done  cifar10/ft_e_s0 in 147.2 min: ok
 start cifar10/icarl_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar10 --method icarl --seed 0 --threads 1 --out results
 done  cifar10/icarl_s0 in 186.5 min: ok
 start cifar10/ft_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar10 --method ft --seed 0 --threads 1 --out results
+done  cifar10/ft_s0 in 143.2 min: ok
+start cifar10/joint_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar10 --method joint --seed 0 --threads 1 --out results
+done  cifar10/joint_s0 in 155.2 min: ok

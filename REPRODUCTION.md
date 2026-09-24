@@ -134,3 +134,22 @@ continuing to train on the stored (code, image) pairs only:
 Refining the stored codes together with the decoder (auto-decoder style,
 `--memorize-codes 1`) memorises far better than fitting the decoder alone; the
 memory footprint is unchanged (the codes are the memory).
+
+### 3.9 The latent must keep spatial layout (CIFAR)
+With the latent formed by pooling the ResNet-32 feature map and a linear map to a
+307-d vector, decoded CIFAR exemplars are colour blobs (17-18 dB): even after
+memorisation they carry little class evidence, so no replay trick can transfer them
+to real test images (§3.6). The paper only fixes the latent *size* (307) and a
+"3-layer CNN" decoder, so the latent is instead taken as a 1x1 convolution of the
+8x8x64 ResNet-32 feature map to 5 channels (8x8x5 = 320 numbers, 1,920 codes for
+the CIFAR-10 budget) and decoded by Conv3x3(5->384), ConvT(384->192), ConvT(192->3)
+(1.2M parameters). The encoder is then exactly ResNet-32 plus a 1x1 convolution
+(467k parameters, the same as the baselines' ResNet-32). Decoded exemplars become
+recognisable (20-22 dB), and for the first time real images of the first task
+survive the second task (2 tasks, 40% data, 20 epochs):
+
+| Latent | lambda | task-1 acc. after task 2 | task-2 acc. |
+|---|---|---|---|
+| vector (pooled -> linear 307) | 1 | 0.0 | 81.7 |
+| spatial 8x8x5 | 1 | 19.9 | 71.6 |
+| spatial 8x8x5 | 0.3 | **73.4** | 44.2 |

@@ -38,10 +38,14 @@ PRESETS = {
 # AHR hyper-parameters that the paper does not report; chosen on MNIST / a CIFAR-10
 # validation run (see REPRODUCTION.md).
 AHR_DEFAULTS = {
-    "mnist":    dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=5.0),
-    "svhn":     dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0, memorize_steps=1500),
-    "cifar10":  dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0, memorize_steps=1500),
-    "cifar100": dict(lam=1.0, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0, memorize_steps=1500),
+    "mnist":    dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=5.0,
+                     lam_recon_new=0.0, latent_kind="vector"),
+    "svhn":     dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
+                     memorize_steps=1500, lam_recon_new=0.0, latent_kind="spatial"),
+    "cifar10":  dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
+                     memorize_steps=1500, lam_recon_new=0.0, latent_kind="spatial"),
+    "cifar100": dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
+                     memorize_steps=1500, lam_recon_new=0.0, latent_kind="spatial"),
 }
 
 METHODS = ["ahr", "ahr_lossless", "ahr_lossy_mini", "ahr_lossless_mini",
@@ -61,6 +65,8 @@ def parse_args(argv=None):
     ap.add_argument("--train-fraction", type=float, default=1.0)
     ap.add_argument("--threads", type=int, default=None)
     ap.add_argument("--stop-after", type=int, default=None, help="only learn the first N tasks")
+    ap.add_argument("--save-ckpt", type=int, default=0, choices=[0, 1],
+                    help="save model, CCEs and memory after every task (for debugging)")
     # optimisation (Table 4: Adam, lr 1e-3, momentum 0.9)
     ap.add_argument("--epochs", type=int)
     ap.add_argument("--batch-size", type=int)
@@ -84,7 +90,8 @@ def parse_args(argv=None):
     # AHR
     ap.add_argument("--latent-dim", type=int)
     ap.add_argument("--enc-pool", type=int, default=4)
-    ap.add_argument("--latent-kind", default="vector", choices=["vector", "spatial"],
+    ap.add_argument("--cls-dim", type=int, default=64, help="class part of a split latent")
+    ap.add_argument("--latent-kind", default=None, choices=["vector", "spatial", "split"],
                     help="vector: pooled features -> linear -> m; spatial: 1x1 conv of the 8x8 "
                     "feature map to round(m/64) channels (m ~ 64*round(m/64))")
     ap.add_argument("--decoder-width", type=float, default=1.0)
@@ -114,7 +121,7 @@ def parse_args(argv=None):
     ap.add_argument("--memorize-lr", type=float, default=1e-3)
     ap.add_argument("--memorize-codes", type=int, default=0, choices=[0, 1],
                     help="also optimise the stored codes during memorisation")
-    ap.add_argument("--lam-recon-new", type=float, default=1.0,
+    ap.add_argument("--lam-recon-new", type=float, default=None,
                     help="latent loss (x lambda) on reconstructions of the new samples")
     ap.add_argument("--latent-domain", default="input", choices=["input", "recon"],
                     help="input: L_z on phi(x) and test on phi(x) (paper); recon: L_z only on decoder "
@@ -189,9 +196,11 @@ def main(argv=None):
         from ahr.models import make_hae
         if args.latent_kind == "spatial" and args.dataset != "mnist":
             args.latent_dim = 64 * max(1, round(args.latent_dim / 64))
+        if args.latent_kind == "split" and args.dataset != "mnist":
+            args.latent_dim = 64 * max(1, round((args.latent_dim - args.cls_dim) / 64)) + args.cls_dim
         dec_params = n_params(make_hae(args.dataset, bench.input_shape, args.latent_dim,
                                        args.decoder_width, args.enc_pool,
-                                       latent_kind=args.latent_kind).decoder)
+                                       latent_kind=args.latent_kind, cls_dim=args.cls_dim).decoder)
     else:
         dec_params = 0
     args.n_exemplars = exemplar_count(args, bench, dec_params)
@@ -218,6 +227,11 @@ def main(argv=None):
         psnr = []
         for t, task in enumerate(bench.tasks[:args.stop_after]):
             learner.learn_task(t, task)
+            if args.save_ckpt and args.method.startswith("ahr"):
+                torch.save({"model": learner.model.state_dict(), "cces": learner.cces,
+                            "mem_data": learner.memory.data, "mem_labels": learner.memory.labels,
+                            "mem_src": learner.mem_src},
+                           os.path.join(out_dir, f"{name}_ckpt_t{t + 1}.pt"))
             x, y = bench.test_upto(t)
             acc, per_task = accuracy_report(learner.predict(x), y, bench.classes_per_task, t + 1)
             accs.append(acc)
