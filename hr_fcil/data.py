@@ -1,82 +1,80 @@
 """Datasets, class-incremental task splits and LDA (Dirichlet) client partitions."""
 from __future__ import annotations
 
+import io
 import os
 import pickle
-import tarfile
 import urllib.request
-import zipfile
 
 import numpy as np
 
-CIFAR100_URL = "https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz"
-TINY_URL = "http://cs231n.stanford.edu/tiny-imagenet-200.zip"
+# Datasets are fetched from the Hugging Face CDN (fast everywhere, incl. Colab). The HF copy of
+# CIFAR-100 is bit-identical to the original release (same pixels, order and fine labels).
+# The original hosts (cs.toronto.edu, cs231n.stanford.edu) are deliberately NOT used: they
+# serve at ~100 KB/s.
+HF = "https://huggingface.co/datasets"
+CIFAR100_HF = {
+    "train": f"{HF}/uoft-cs/cifar100/resolve/main/cifar100/train-00000-of-00001.parquet",
+    "test": f"{HF}/uoft-cs/cifar100/resolve/main/cifar100/test-00000-of-00001.parquet",
+}
+TINY_HF = {
+    "train": f"{HF}/zh-plus/tiny-imagenet/resolve/main/data/train-00000-of-00001-1359597a978bc4fa.parquet",
+    "test": f"{HF}/zh-plus/tiny-imagenet/resolve/main/data/valid-00000-of-00001-70d52db3c749a935.parquet",
+}
 
 
 def _download(url: str, dst: str) -> None:
     if os.path.exists(dst):
         return
-    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    os.makedirs(os.path.dirname(dst) or ".", exist_ok=True)
     tmp = dst + ".part"
-    print(f"downloading {url} -> {dst}", flush=True)
+    print(f"downloading {url}", flush=True)
     urllib.request.urlretrieve(url, tmp)
     os.replace(tmp, dst)
+
+
+def _read_parquet_images(path: str, image_col: str, label_col: str):
+    import pyarrow.parquet as pq
+    from PIL import Image
+
+    t = pq.read_table(path, columns=[image_col, label_col]).to_pydict()
+    x = np.stack([np.asarray(Image.open(io.BytesIO(d["bytes"])).convert("RGB"), dtype=np.uint8)
+                  .transpose(2, 0, 1) for d in t[image_col]])
+    return x, np.asarray(t[label_col], dtype=np.int64)
+
+
+def _load_hf(root: str, name: str, urls: dict, image_col: str, label_col: str):
+    cache = os.path.join(root, f"{name}_uint8.npz")
+    if os.path.exists(cache):
+        d = np.load(cache)
+        return d["xtr"], d["ytr"], d["xte"], d["yte"]
+    out = {}
+    for split, key in (("train", "tr"), ("test", "te")):
+        pq_path = os.path.join(root, f"{name}_{split}.parquet")
+        _download(urls[split], pq_path)
+        out["x" + key], out["y" + key] = _read_parquet_images(pq_path, image_col, label_col)
+    tmp = cache + ".part.npz"
+    np.savez(tmp, **out)
+    os.replace(tmp, cache)
+    return out["xtr"], out["ytr"], out["xte"], out["yte"]
 
 
 def load_cifar100(root: str):
     """Returns (x_train uint8 [N,3,32,32], y_train int64, x_test, y_test)."""
     base = os.path.join(root, "cifar-100-python")
-    if not os.path.isdir(base):
-        arc = os.path.join(root, "cifar-100-python.tar.gz")
-        _download(CIFAR100_URL, arc)
-        with tarfile.open(arc) as t:
-            t.extractall(root)
-
-    def read(split):
-        with open(os.path.join(base, split), "rb") as f:
-            d = pickle.load(f, encoding="latin1")
-        x = np.asarray(d["data"], dtype=np.uint8).reshape(-1, 3, 32, 32)
-        y = np.asarray(d["fine_labels"], dtype=np.int64)
-        return x, y
-
-    return (*read("train"), *read("test"))
+    if os.path.isdir(base):  # an existing copy of the original pickles is used as is
+        def read(split):
+            with open(os.path.join(base, split), "rb") as f:
+                d = pickle.load(f, encoding="latin1")
+            return (np.asarray(d["data"], dtype=np.uint8).reshape(-1, 3, 32, 32),
+                    np.asarray(d["fine_labels"], dtype=np.int64))
+        return (*read("train"), *read("test"))
+    return _load_hf(root, "cifar100", CIFAR100_HF, "img", "fine_label")
 
 
 def load_tinyimagenet(root: str):
-    """TinyImageNet-200 (64x64). The official validation split is used as the test set."""
-    cache = os.path.join(root, "tinyimagenet200_uint8.npz")
-    if os.path.exists(cache):
-        d = np.load(cache)
-        return d["xtr"], d["ytr"], d["xte"], d["yte"]
-    from PIL import Image
-
-    base = os.path.join(root, "tiny-imagenet-200")
-    if not os.path.isdir(base):
-        arc = os.path.join(root, "tiny-imagenet-200.zip")
-        _download(TINY_URL, arc)
-        with zipfile.ZipFile(arc) as z:
-            z.extractall(root)
-    wnids = sorted(open(os.path.join(base, "wnids.txt")).read().split())
-    cls = {w: i for i, w in enumerate(wnids)}
-
-    def img(p):
-        return np.asarray(Image.open(p).convert("RGB"), dtype=np.uint8).transpose(2, 0, 1)
-
-    xtr, ytr = [], []
-    for w in wnids:
-        d = os.path.join(base, "train", w, "images")
-        for fn in sorted(os.listdir(d)):
-            xtr.append(img(os.path.join(d, fn)))
-            ytr.append(cls[w])
-    xte, yte = [], []
-    for line in open(os.path.join(base, "val", "val_annotations.txt")):
-        fn, w = line.split("\t")[:2]
-        xte.append(img(os.path.join(base, "val", "images", fn)))
-        yte.append(cls[w])
-    out = dict(xtr=np.stack(xtr), ytr=np.asarray(ytr, np.int64),
-               xte=np.stack(xte), yte=np.asarray(yte, np.int64))
-    np.savez(cache, **out)
-    return out["xtr"], out["ytr"], out["xte"], out["yte"]
+    """TinyImageNet-200 (64x64); the official validation split is the test set."""
+    return _load_hf(root, "tinyimagenet200", TINY_HF, "image", "label")
 
 
 def load_dataset(name: str, root: str):

@@ -3,3 +3,4 @@ torchvision
 numpy
 pillow
 matplotlib
+pyarrow
