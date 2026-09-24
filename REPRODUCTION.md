@@ -153,3 +153,21 @@ survive the second task (2 tasks, 40% data, 20 epochs):
 | vector (pooled -> linear 307) | 1 | 0.0 | 81.7 |
 | spatial 8x8x5 | 1 | 19.9 | 71.6 |
 | spatial 8x8x5 | 0.3 | **73.4** | 44.2 |
+| spatial 8x8x5, no reconstruction term | 0.3 | **76.6** | 41.4 |
+| spatial 8x8x5, CCE spacing 40 | 0.3 | 33.8 | 67.6 |
+| spatial 8x8x5, CCE spacing 40 | 0.5 | 19.4 | 74.4 |
+| split: 8x8x4 spatial + 64-d class part, spacing 10 | 1 | 23.8 | 79.4 |
+| split: 8x8x4 spatial + 64-d class part, spacing 20 | 1 | 21.3 | 75.7 |
+| *reference: AHR-lossless (raw exemplars, vector latent)* | 1 | *84.5* | *75.4* |
+
+A checkpoint analysis of the best spatial run rules out BatchNorm statistics,
+augmentation and bf16 as causes (recomputing the BN statistics, fp32 inference and
+augmented inputs all change the accuracies by < 1 point): with the spatial latent the
+same 320 numbers must both reconstruct the image and sit next to a fixed class
+centroid, so a weak latent pull (lambda = 0.3) under-learns the new classes and a
+strong one (lambda >= 0.5, or a larger spacing) forgets the old ones.
+
+At full scale (all data, 50 epochs) the plasticity side wins: the spatial latent with
+lambda = 0.3 reached 97.2% after task 1 (decoded exemplars at 24.1 dB, 98.5% of them
+correctly classified) but after task 2 kept only 6.6% on the first task (87.9% on the
+second), i.e. the longer training drifts the encoder away from the old classes.

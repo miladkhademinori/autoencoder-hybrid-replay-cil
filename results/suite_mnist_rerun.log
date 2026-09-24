@@ -17,3 +17,14 @@ done  mnist/ahr_lossless_mini_s1 in 12.8 min: ok
 start mnist/ahr_lossless_mini_s2: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr_lossless_mini --seed 2 --threads 1 --out results
 done  mnist/ahr_lossless_mini_s2 in 12.9 min: ok
 start mnist/ahr_s0_no_memorize: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 0 --threads 1 --out results --tag no_memorize --memorize-epochs 0
+done  mnist/ahr_s0_no_memorize in 15.8 min: ok
+start mnist/ahr_s1_no_memorize: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 1 --threads 1 --out results --tag no_memorize --memorize-epochs 0
+done  mnist/ahr_s1_no_memorize in 16.0 min: ok
+start mnist/ahr_s2_no_memorize: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 2 --threads 1 --out results --tag no_memorize --memorize-epochs 0
+done  mnist/ahr_s2_no_memorize in 16.1 min: ok
+start mnist/ahr_s0_reencode: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 0 --threads 1 --out results --tag reencode --memory-mode reencode --alpha-mem 0 --memorize-epochs 0
+done  mnist/ahr_s0_reencode in 13.3 min: ok
+start mnist/ahr_s1_reencode: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 1 --threads 1 --out results --tag reencode --memory-mode reencode --alpha-mem 0 --memorize-epochs 0
+done  mnist/ahr_s1_reencode in 13.2 min: ok
+start mnist/ahr_s2_reencode: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 2 --threads 1 --out results --tag reencode --memory-mode reencode --alpha-mem 0 --memorize-epochs 0
+done  mnist/ahr_s2_reencode in 13.0 min: ok

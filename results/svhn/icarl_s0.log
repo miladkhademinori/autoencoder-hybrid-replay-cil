@@ -1,0 +1,21 @@
+benchmark svhn(5/2) input=(3, 32, 32) method=icarl seed=0
+args: {"alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.01, "augment": true, "batch_size": 128, "bf16": true, "class_order": "natural", "cls_dim": 64, "crop_pad": 4, "data_root": "data", "dataset": "svhn", "decoder_in_budget": 0, "decoder_width": 1.0, "distill_norm": "sq", "enc_pool": 4, "epochs": 50, "eval_batch": 1000, "flush_denormal": 1, "hf_sigma": 1.0, "hf_transplant": 0.0, "input_blur": 0.0, "kd_lambda": 1.0, "kd_scale": 0.25, "kd_temperature": 2.0, "lam": 0.3, "lam_recon_new": 0.0, "latent_bits": 32, "latent_dim": 307, "latent_domain": "input", "latent_kind": "spatial", "log_every": 10, "lr": 0.001, "lr_schedule": "cosine", "memorize_codes": 0, "memorize_epochs": 20, "memorize_lr": 0.001, "memorize_steps": 1500, "memory_kind": "latent", "memory_mode": "frozen", "method": "icarl", "momentum": 0.9, "n_exemplars": 200, "n_tasks": null, "out": "results", "raw_exemplars": 200, "recon_new_source": "current", "replay_sampling": "union", "rfa_damping": 0.0, "rfa_dt": 0.01, "rfa_mass": 1.0, "rfa_softening": 0.001, "rfa_steps": 20000, "rfa_target": 20.0, "rfa_zeta": 1.0, "save_ckpt": 0, "seed": 0, "selection": "herding", "stop_after": null, "tag": "", "threads": 1, "train_fraction": 1.0, "weight_decay": 0.0}
+[icarl] backbone params=466,256 memory=raw x 200
+  task 1 epoch 1/50 (73 it) ce=0.568 kd=0.000 [33s]
+  task 1 epoch 10/50 (73 it) ce=0.052 kd=0.000 [318s]
+  task 1 epoch 20/50 (73 it) ce=0.017 kd=0.000 [627s]
+  task 1 epoch 30/50 (73 it) ce=0.004 kd=0.000 [935s]
+  task 1 epoch 40/50 (73 it) ce=0.001 kd=0.000 [1243s]
+  task 1 epoch 50/50 (73 it) ce=0.001 kd=0.000 [1554s]
+after task 1: acc=98.15 per-task=[98.2] [1595s]
+  task 2 epoch 1/50 (75 it) ce=0.657 kd=0.436 [1635s]
+  task 2 epoch 10/50 (75 it) ce=0.076 kd=0.145 [1990s]
+  task 2 epoch 20/50 (75 it) ce=0.037 kd=0.109 [2383s]
+  task 2 epoch 30/50 (75 it) ce=0.018 kd=0.078 [2787s]
+  task 2 epoch 40/50 (75 it) ce=0.008 kd=0.052 [3182s]
+  task 2 epoch 50/50 (75 it) ce=0.006 kd=0.045 [3576s]
+after task 2: acc=92.13 per-task=[89.4, 94.9] [3629s]
+  task 3 epoch 1/50 (75 it) ce=1.063 kd=0.573 [3668s]
+  task 3 epoch 10/50 (75 it) ce=0.079 kd=0.163 [4025s]
+  task 3 epoch 20/50 (75 it) ce=0.046 kd=0.121 [4417s]
+  task 3 epoch 30/50 (75 it) ce=0.023 kd=0.088 [4816s]

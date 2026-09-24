@@ -1,0 +1,1 @@
+start cifar100/ft_e_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar100 --method ft_e --seed 0 --threads 1 --out results
