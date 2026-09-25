@@ -105,6 +105,12 @@ class AHR:
         a = self.args
         z = self.class_features(task.x_train)
         init = torch.stack([z[task.y_train == c].mean(0) for c in task.classes])
+        if a.rfa_jitter > 0 and a.rfa_target:
+            # The Coulomb forces lie in the span of the CCE differences, so RFA keeps the
+            # new CCEs in the (often very anisotropic) subspace of the class means. With a
+            # min-distance stopping rule this inflates the CCE norms (see REPRODUCTION.md 3.12);
+            # a small isotropic jitter lets the CCEs spread evenly in all directions.
+            init = init + torch.randn_like(init) * (a.rfa_jitter * a.rfa_target / init.shape[1] ** 0.5)
         new, n_steps = place_cces(init, self.cces, zeta=a.rfa_zeta, mass=a.rfa_mass, dt=a.rfa_dt,
                                   steps=a.rfa_steps, damping=a.rfa_damping,
                                   softening=a.rfa_softening, target_dist=a.rfa_target)

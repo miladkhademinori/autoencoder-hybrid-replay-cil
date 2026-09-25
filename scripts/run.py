@@ -141,6 +141,9 @@ def parse_args(argv=None):
     ap.add_argument("--rfa-steps", type=int)
     ap.add_argument("--rfa-damping", type=float, default=0.0)
     ap.add_argument("--rfa-softening", type=float, default=1e-3)
+    ap.add_argument("--rfa-jitter", type=float, default=0.0,
+                    help="isotropic Gaussian jitter added to the initial CCE positions, with an expected "
+                         "norm of this fraction of --rfa-target (0 = start exactly at the class means)")
     ap.add_argument("--rfa-target", type=float, help="stop RFA once new CCEs are this far apart "
                     "from all other CCEs (<=0: run the full --rfa-steps)")
     ap.add_argument("--replay-sampling", default="union", choices=["union", "balanced"],
