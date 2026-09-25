@@ -5,3 +5,4 @@
 1 --dataset cifar10 --method ahr_lossless --seed 0 --latent-domain input --lam-recon-new 0
 1 --dataset svhn --method ahr --seed 0 --save-ckpt 1
 2 --dataset cifar100 --method ahr --seed 0 --save-ckpt 1
+1 --dataset cifar10 --method ahr --seed 1
