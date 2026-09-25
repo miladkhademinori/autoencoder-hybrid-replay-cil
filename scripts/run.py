@@ -48,8 +48,8 @@ AHR_DEFAULTS = {
                      memorize_steps=1500, lam_recon_new=1.0, latent_kind="spatial",
                      latent_domain="recon"),
     # CIFAR-100: 10 classes per task and only ~1,000 steps on the first task, see REPRODUCTION.md 3.12
-    "cifar100": dict(lam=3.0, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
-                     rfa_jitter=0.25, memorize_steps=1500, lam_recon_new=1.0, latent_kind="spatial",
+    "cifar100": dict(lam=1.0, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
+                     rfa_jitter=0.25, memorize_steps=1500, lam_recon_new=1.0, latent_kind="split",
                      latent_domain="recon"),
 }
 

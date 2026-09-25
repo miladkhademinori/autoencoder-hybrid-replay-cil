@@ -127,7 +127,8 @@ their paper numbers are quoted for reference only.
 | RFA constants `zeta, m, dt` | 1, 1, 0.01, softening 1e-3, no damping | scale-free once the duration is chosen as below |
 | RFA duration `tau` | integrate Alg. 2 until every new CCE is `>= d` from every other CCE; `d = 5` (MNIST, m = 20) and `d = 20` (m = 320), i.e. `d ~ sqrt(m)` | with a fixed `tau` the spacing depends on how close the initial class means are, which differs by an order of magnitude between the first task (random encoder) and later ones (§3.3) |
 | Encoder / latent (MNIST) | 784-400-400 ReLU + linear to 20 | paper |
-| Encoder / latent (SVHN, CIFAR) | ResNet-32 up to its 8x8x64 feature map + 1x1 conv to 5 channels: an 8x8x5 = 320-number spatial latent (paper: 307); head initialised with std 1e-3 | a pooled 307-d vector latent reconstructs only colour blobs (§3.6, §3.9); the small init keeps the latent scale set by RFA rather than by the backbone's activation scale |
+| Encoder / latent (SVHN, CIFAR-10) | ResNet-32 up to its 8x8x64 feature map + 1x1 conv to 5 channels: an 8x8x5 = 320-number spatial latent (paper: 307); head initialised with std 1e-3 | a pooled 307-d vector latent reconstructs only colour blobs (§3.6, §3.9); the small init keeps the latent scale set by RFA rather than by the backbone's activation scale |
+| Encoder / latent (CIFAR-100) | split latent: 1x1 conv to 4 channels (8x8x4) + linear map of the pooled features to a 64-d class part (320 numbers); CCEs live in the 64-d part; `lambda` = 1, RFA jitter 0.25 | 10 classes per task and ~1,000 first-task steps need a pooled class code and evenly spread CCEs (§3.12) |
 | Decoder (MNIST) | mirror MLP 20-400-400-784, sigmoid | paper |
 | Decoder (SVHN, CIFAR) | Conv3x3(5->384), ConvT(384->192, x2), ConvT(192->3, x2), ReLU, sigmoid; 1.21M params | "3 layers of CNNs", ~1.4M params (Table 3) |
 | Classification domain (SVHN, CIFAR) | latent loss only on decoder outputs (decoded exemplars + reconstructions of the new samples); test on `phi(psi(phi(x)))` | removes the real-vs-decoded task cue (§3.10, §3.11); MNIST keeps the paper's rule |
@@ -344,5 +345,26 @@ First-task accuracy on CIFAR-100 (seed 0, one run each, 1 thread):
 With evenly spread CCEs the latent pull at lambda = 0.3 is too weak for the encoder
 to move away from the CCE centroid within 1,000 steps (the latent loss stays at the
 squared CCE radius, ~204, even on real images), because a spread-out code conflicts
-with the spatial reconstruction in the same 320 numbers. The full CIFAR-100 run
-therefore uses jitter 0.25 and lambda = 3 (`AHR_DEFAULTS["cifar100"]`).
+with the spatial reconstruction in the same 320 numbers.
+
+The run with jitter and lambda = 3 continued to 58.0% after task 1 but only 42.5%
+after task 2 ([49.4, 35.5]; iCaRL 62.4). The task-2 checkpoint shows that the
+reconstruction-domain features themselves are weak, not their alignment with the CCEs:
+nearest-class-mean with the *test* class means gives 43.8% (nearest CCE: 42.4%), and
+the within-class spread (8.2) is almost as large as the distance between class means
+(9.8). With the spatial latent the CCE distance is computed on the 8x8x5 map, i.e.
+every spatial position must express the class from its local features, without the
+global pooling of a normal classifier. The split latent (`--latent-kind split`: an
+8x8x4 spatial part for reconstruction plus a 64-d class part computed from the
+globally pooled ResNet features; the decoder receives both, 320 numbers in total)
+gives the class code that pooling:
+
+| Latent (jitter 0.25) | lambda | after task 1 | after task 2 [task 1, task 2] |
+|---|---|---|---|
+| spatial 8x8x5 | 3 | 58.0 | 42.5 [49.4, 35.5] |
+| split 8x8x4 + 64 | 3 | 61.1 | 44.6 [42.6, 46.5] |
+| split 8x8x4 + 64 | 1 | **63.2** | **47.5** [49.9, 45.0] |
+
+The CIFAR-100 run therefore uses the split latent with lambda = 1 and jitter 0.25
+(`AHR_DEFAULTS["cifar100"]`); it was continued from the task-2 checkpoint of the last
+row.
