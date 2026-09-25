@@ -332,9 +332,9 @@ First-task accuracy on CIFAR-100 (seed 0, one run each, 1 thread):
 
 | CCE placement | lambda | latent loss on | acc. after task 1 | memory PSNR |
 |---|---|---|---|---|
-| class means, no jitter (|p| = 42) | 0.3 | reconstructions | 33.9 | 21.4 dB |
-| jitter 0.25 (|p| = 14) | 0.3 | reconstructions | 12.6 | 23.8 dB |
-| jitter 0.25, spacing 10 (|p| = 7) | 0.3 | reconstructions | 10.4 | 23.9 dB |
+| class means, no jitter (‖p‖ = 42) | 0.3 | reconstructions | 33.9 | 21.4 dB |
+| jitter 0.25 (‖p‖ = 14) | 0.3 | reconstructions | 12.6 | 23.8 dB |
+| jitter 0.25, spacing 10 (‖p‖ = 7) | 0.3 | reconstructions | 10.4 | 23.9 dB |
 | jitter 0.25 | 0.3 | reconstructions + real images | 17.8 | 23.5 dB |
 | jitter 0.25 | **3** | reconstructions | **56.1** | 22.0 dB |
 
