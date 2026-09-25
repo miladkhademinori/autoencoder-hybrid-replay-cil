@@ -3,3 +3,4 @@ args: {"alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.1, "augme
 [AHR] encoder params=470,676 decoder params=1,210,883 memory=latent x 19200 exemplars
 resumed from results/scratch/c100/cifar100/ahr_s0_split_l1_ckpt_t2.pt after task 2: accs so far [63.2, 47.45]
   CCE placement (3210 RFA steps): |init spread|=10.701 mean shift=25.954 min/mean CCE distance=20.001/35.631 |p| mean=24.632
+  task 3 epoch 1/50 (59 it, b_new=85) rec=20.019 lat=294.435 dz=85.365 dx=8.885 mem=1.938 rn=783.509 [117s]
