@@ -19,13 +19,17 @@ import time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def running_threads():
+def running_runs():
     out = subprocess.run(["ps", "-eo", "args"], capture_output=True, text=True).stdout
+    return [line for line in out.splitlines()
+            if "scripts/run.py" in line and line.split()[0].endswith(("python3", "python"))]
+
+
+def running_threads():
     used = 0
-    for line in out.splitlines():
-        if "scripts/run.py" in line and line.split()[0].endswith(("python3", "python")):
-            m = re.search(r"--threads (\d+)", line)
-            used += int(m.group(1)) if m else 4
+    for line in running_runs():
+        m = re.search(r"--threads (\d+)", line)
+        used += int(m.group(1)) if m else 4
     return used
 
 
@@ -51,8 +55,11 @@ def main():
             if line and not line.startswith("#"):
                 threads, rest = line.split(maxsplit=1)
                 jobs.append((int(threads), rest))
+        # skip finished jobs and jobs already running (started by this or another queue)
+        running = running_runs()
         pending = [(t, r) for t, r in jobs if r not in started
-                   and not os.path.exists(result_path(shlex.split(r)))]
+                   and not os.path.exists(result_path(shlex.split(r)))
+                   and not any(f"run.py {r} --threads" in line for line in running)]
         if not pending:
             print("queue empty", flush=True)
             return
