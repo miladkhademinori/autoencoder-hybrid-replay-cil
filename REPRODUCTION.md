@@ -17,7 +17,7 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 | FT-E | 72.18 ± 0.81 (n=3) | 92.17 ± 0.16 | 55.61 (n=1) | 87.13 ± 0.37 | 43.95 (n=1) | 72.17 ± 0.84 | 27.10 (n=1) | 48.47 ± 0.83 |
 | Joint | 98.54 ± 0.04 (n=3) | 98.48 ± 0.06 | 95.43 (n=1) | 95.88 ± 0.04 | 89.02 (n=1) | 92.37 ± 0.09 | 59.43 (n=1) | 73.87 ± 0.10 |
 | iCaRL | 88.60 ± 0.10 (n=3) | 93.06 ± 0.33 | 71.07 (n=1) | 89.63 ± 0.61 | 62.82 (n=1) | 73.29 ± 0.73 | 37.99 (n=1) | 49.38 ± 0.62 |
-| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | - | 93.02 ± 0.65 | - | 77.12 ± 0.75 | - | 54.43 ± 0.93 |
+| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | - | 93.02 ± 0.65 | 50.72 (n=1) | 77.12 ± 0.75 | - | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 | - | 50.85 ± 0.81 |
 | AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | - | 94.21 ± 0.23 | - | 78.35 ± 0.37 | - | 56.71 ± 0.57 |
@@ -42,6 +42,7 @@ Epochs / exemplars / wall-clock per run:
 | cifar10 | FT-E | 50 | 200 | 614,400 | 147 |
 | cifar10 | Joint | 50 | 0 | 0 | 155 |
 | cifar10 | iCaRL | 50 | 200 | 614,400 | 186 |
+| cifar10 | AHR | 50 | 1920 | 614,400 | 580 |
 | cifar100 | FT | 50 | 0 | 0 | 134 |
 | cifar100 | FT-E | 50 | 2000 | 6,144,000 | 184 |
 | cifar100 | Joint | 50 | 0 | 0 | 123 |
@@ -88,7 +89,9 @@ the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
   blurry to carry class information (§3.6) or, once good (24 dB), the encoder learns
   "decoded = old task, real = new task" and forgets every old class (§3.10). What
   works is a spatial 8x8x5 latent plus classifying in the decoder's output domain
-  (§3.9, §3.11), which departs from the paper's test rule.
+  (§3.9, §3.11), which departs from the paper's test rule. With it, CIFAR-10(5/2)
+  AHR reaches 50.7% (paper 77.1): better than FT-E (44.0) but below iCaRL (62.8)
+  under the same protocol.
 
 ## 1. What is implemented
 
@@ -294,6 +297,13 @@ second task the model keeps **81.7%** of the first task while learning the secon
 79.3% (80.5% overall; iCaRL at the same point: 83.5%, FT-E 75.4%). With the
 vector latent (§3.6) the same idea only reached 70.7% on the first task because its
 reconstructions carried too little class information.
+
+Continued to all five tasks, the run ends at **50.7%** (after each task: 95.9, 80.5,
+60.7, 52.5, 50.7; average incremental accuracy 68.1), above FT-E (44.0) and below
+iCaRL (62.8) run with the same protocol, and 26 points below the paper's 77.1. The
+decoded exemplars keep ~26 dB PSNR throughout (figures/decoded_cifar10.png), so
+what is lost is not memory fidelity: the same pipeline with raw exemplars
+(AHR-lossless) is at 82.7 / 73.2 after tasks 2 / 3 versus 80.5 / 60.7 here.
 
 This deviates from the paper's test rule (`argmin ||phi(x) - p||`) and uses the
 reconstruction term of §3.2, but keeps every other element of Alg. 1-4.

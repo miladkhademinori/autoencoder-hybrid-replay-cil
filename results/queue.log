@@ -1,0 +1,7 @@
+22:37 started: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 0 --latent-domain recon --lam-recon-new 1 --tag recon_domain --threads 1
+22:57 started: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 1 --latent-domain recon --lam-recon-new 1 --tag recon_domain --threads 1
+23:17 started: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset mnist --method ahr --seed 2 --latent-domain recon --lam-recon-new 1 --tag recon_domain --threads 1
+23:36 started: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar10 --method ahr_lossless --seed 0 --latent-domain input --lam-recon-new 0 --threads 1
+04:32 started: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset svhn --method ahr --seed 0 --save-ckpt 1 --threads 1
+07:52 started: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar100 --method ahr --seed 0 --save-ckpt 1 --threads 2
+queue empty
