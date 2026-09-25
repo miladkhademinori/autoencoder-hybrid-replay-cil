@@ -2,3 +2,5 @@ data/
 results/scratch*/
 __pycache__/
 *.pyc
+*_ckpt_t*.pt
+*.stdout
