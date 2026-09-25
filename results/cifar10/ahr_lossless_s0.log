@@ -43,3 +43,7 @@ after task 4: acc=65.95 per-task=[81.6, 33.8, 53.9, 94.6] [33729s]
   task 5 epoch 20/50 (385 it, b_new=26) rec=14.525 lat=42.858 dz=106.651 dx=4.505 mem=0.000 [40603s]
   task 5 epoch 30/50 (385 it, b_new=26) rec=13.377 lat=33.236 dz=109.442 dx=3.779 mem=0.000 [44023s]
   task 5 epoch 40/50 (385 it, b_new=26) rec=12.390 lat=27.241 dz=110.915 dx=3.071 mem=0.000 [47507s]
+  task 5 epoch 50/50 (385 it, b_new=26) rec=12.103 lat=25.665 dz=111.442 dx=2.824 mem=0.000 [51051s]
+  memory (frozen codes): 1920 exemplars (192/class), 5,898,240 scalars, 5,898,240 bytes
+after task 5: acc=68.82 per-task=[59.4, 41.9, 65.7, 82.2, 95.0] [51120s]
+FINAL cifar10 ahr_lossless seed=0: final acc=68.82 avg inc acc=77.53 time=852.0min

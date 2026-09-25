@@ -20,7 +20,7 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 | AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | - | 93.02 ± 0.65 | 50.72 (n=1) | 77.12 ± 0.75 | - | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 | - | 50.85 ± 0.81 |
-| AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | - | 94.21 ± 0.23 | - | 78.35 ± 0.37 | - | 56.71 ± 0.57 |
+| AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | - | 94.21 ± 0.23 | 68.82 (n=1) | 78.35 ± 0.37 | - | 56.71 ± 0.57 |
 
 Epochs / exemplars / wall-clock per run:
 
@@ -43,6 +43,7 @@ Epochs / exemplars / wall-clock per run:
 | cifar10 | Joint | 50 | 0 | 0 | 155 |
 | cifar10 | iCaRL | 50 | 200 | 614,400 | 186 |
 | cifar10 | AHR | 50 | 1920 | 614,400 | 580 |
+| cifar10 | AHR-lossless | 50 | 1920 | 5,898,240 | 852 |
 | cifar100 | FT | 50 | 0 | 0 | 134 |
 | cifar100 | FT-E | 50 | 2000 | 6,144,000 | 184 |
 | cifar100 | Joint | 50 | 0 | 0 | 123 |
@@ -91,7 +92,9 @@ the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
   works is a spatial 8x8x5 latent plus classifying in the decoder's output domain
   (§3.9, §3.11), which departs from the paper's test rule. With it, CIFAR-10(5/2)
   AHR reaches 50.7% (paper 77.1): better than FT-E (44.0) but below iCaRL (62.8)
-  under the same protocol.
+  under the same protocol. The same pipeline with raw instead of decoded exemplars
+  (AHR-lossless, 1,920 images) reaches 68.8% (paper 78.4), above iCaRL: on CIFAR the
+  gap to the paper is mostly the cost of decoded replay, which on MNIST is ~0.5 points.
 
 ## 1. What is implemented
 
