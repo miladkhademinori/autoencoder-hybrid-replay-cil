@@ -307,3 +307,39 @@ what is lost is not memory fidelity: the same pipeline with raw exemplars
 
 This deviates from the paper's test rule (`argmin ||phi(x) - p||`) and uses the
 reconstruction term of §3.2, but keeps every other element of Alg. 1-4.
+
+### 3.12 CIFAR-100: RFA placement from anisotropic class means, and the latent weight
+The first CIFAR-100 run with the CIFAR-10 settings reached only **33.9%** on the
+first task (10 classes; FT reaches 78.6% with the same budget). Two causes:
+
+* **RFA keeps the CCEs in the subspace of their starting points.** The Coulomb
+  forces are sums of CCE differences, so the new CCEs never leave the affine span of
+  their initial positions (Alg. 2 line 3: the class means). Class means are strongly
+  anisotropic (singular values of the placed task-1 CCEs: 97, 67, 49, 35, 34, 13, 11,
+  7, 6), so with the minimum-distance stopping rule (§3.3) the CCEs end up spread along
+  a few directions: minimum distance 20 but mean distance 61 and |p| = 42, where an
+  even placement (regular simplex) needs |p| = 13.4. Simulated over the ten CIFAR-100
+  tasks the CCE radius grows to ~113 by the last task. Adding isotropic Gaussian
+  jitter with norm 0.25 x the target distance to the initial positions
+  (`--rfa-jitter 0.25`) keeps the radius at 14-16 for all ten tasks (min/mean
+  distance 20/21-23). The same inflation is visible on CIFAR-10 (|p| = 10, 17, 23, 29,
+  32 after tasks 1-5 for 2, 4, ..., 10 CCEs).
+* **The first task gets ~1,000 optimiser steps** (5,000 images, batch 256, 50 epochs),
+  4x fewer than CIFAR-10's first task, and in the decoder-output domain (§3.11) the
+  class signal comes only from reconstructions, which are poor early in training.
+
+First-task accuracy on CIFAR-100 (seed 0, one run each, 1 thread):
+
+| CCE placement | lambda | latent loss on | acc. after task 1 | memory PSNR |
+|---|---|---|---|---|
+| class means, no jitter (|p| = 42) | 0.3 | reconstructions | 33.9 | 21.4 dB |
+| jitter 0.25 (|p| = 14) | 0.3 | reconstructions | 12.6 | 23.8 dB |
+| jitter 0.25, spacing 10 (|p| = 7) | 0.3 | reconstructions | 10.4 | 23.9 dB |
+| jitter 0.25 | 0.3 | reconstructions + real images | 17.8 | 23.5 dB |
+| jitter 0.25 | **3** | reconstructions | **56.1** | 22.0 dB |
+
+With evenly spread CCEs the latent pull at lambda = 0.3 is too weak for the encoder
+to move away from the CCE centroid within 1,000 steps (the latent loss stays at the
+squared CCE radius, ~204, even on real images), because a spread-out code conflicts
+with the spatial reconstruction in the same 320 numbers. The full CIFAR-100 run
+therefore uses jitter 0.25 and lambda = 3 (`AHR_DEFAULTS["cifar100"]`).

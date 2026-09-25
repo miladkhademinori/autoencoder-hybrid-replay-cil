@@ -47,8 +47,9 @@ AHR_DEFAULTS = {
     "cifar10":  dict(lam=0.3, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
                      memorize_steps=1500, lam_recon_new=1.0, latent_kind="spatial",
                      latent_domain="recon"),
-    "cifar100": dict(lam=0.3, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
-                     memorize_steps=1500, lam_recon_new=1.0, latent_kind="spatial",
+    # CIFAR-100: 10 classes per task and only ~1,000 steps on the first task, see REPRODUCTION.md 3.12
+    "cifar100": dict(lam=3.0, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
+                     rfa_jitter=0.25, memorize_steps=1500, lam_recon_new=1.0, latent_kind="spatial",
                      latent_domain="recon"),
 }
 
@@ -144,7 +145,7 @@ def parse_args(argv=None):
     ap.add_argument("--rfa-steps", type=int)
     ap.add_argument("--rfa-damping", type=float, default=0.0)
     ap.add_argument("--rfa-softening", type=float, default=1e-3)
-    ap.add_argument("--rfa-jitter", type=float, default=0.0,
+    ap.add_argument("--rfa-jitter", type=float,
                     help="isotropic Gaussian jitter added to the initial CCE positions, with an expected "
                          "norm of this fraction of --rfa-target (0 = start exactly at the class means)")
     ap.add_argument("--rfa-target", type=float, help="stop RFA once new CCEs are this far apart "
@@ -158,6 +159,8 @@ def parse_args(argv=None):
     for k, v in {**PRESETS[args.dataset], **AHR_DEFAULTS[args.dataset]}.items():
         if getattr(args, k, None) is None:
             setattr(args, k, v)
+    if args.rfa_jitter is None:
+        args.rfa_jitter = 0.0
     if args.rfa_target is not None and args.rfa_target <= 0:
         args.rfa_target = None
     args.augment = bool(args.augment)
