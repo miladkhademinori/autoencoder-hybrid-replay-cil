@@ -1,3 +1,5 @@
 start cifar100/ft_e_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar100 --method ft_e --seed 0 --threads 1 --out results
 done  cifar100/ft_e_s0 in 184.2 min: ok
 start cifar100/icarl_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar100 --method icarl --seed 0 --threads 1 --out results
+done  cifar100/icarl_s0 in 248.8 min: ok
+start cifar100/ft_s0: /usr/local/bin/python3 /home/user/autoencoder-hybrid-replay-cil/scripts/run.py --dataset cifar100 --method ft --seed 0 --threads 1 --out results
