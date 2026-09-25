@@ -11,3 +11,14 @@ args: {"alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.1, "augme
   memory (frozen codes): 1920 exemplars (960/class), 614,400 scalars, 2,457,600 bytes
   memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=11.243
 after task 1: acc=96.75 per-task=[96.7] memory-PSNR=24.92dB acc(recon test)=96.7 acc(memory)=99.1 [5597s]
+  CCE placement (4728 RFA steps): |init spread|=8.885 mean shift=18.554 min/mean CCE distance=20.000/27.190 |p| mean=17.293
+  task 2 epoch 1/50 (157 it, b_new=64) rec=15.173 lat=48.922 dz=94.135 dx=7.636 mem=2.071 rn=384.939 [5898s]
+  task 2 epoch 10/50 (157 it, b_new=64) rec=13.114 lat=14.627 dz=41.366 dx=8.168 mem=1.821 rn=206.446 [7818s]
+  task 2 epoch 20/50 (157 it, b_new=64) rec=11.785 lat=8.605 dz=30.567 dx=7.077 mem=1.330 rn=164.134 [9953s]
+  task 2 epoch 30/50 (157 it, b_new=64) rec=10.879 lat=4.680 dz=26.244 dx=6.227 mem=0.842 rn=122.302 [12091s]
+  task 2 epoch 40/50 (157 it, b_new=64) rec=10.482 lat=3.218 dz=25.190 dx=5.861 mem=0.714 rn=94.589 [14218s]
+  task 2 epoch 50/50 (157 it, b_new=64) rec=10.316 lat=3.135 dz=25.112 dx=5.654 mem=0.578 rn=82.967 [16344s]
+  memory (frozen codes): 1920 exemplars (480/class), 614,400 scalars, 2,457,600 bytes
+  memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=5.107
+after task 2: acc=77.00 per-task=[79.4, 74.7] memory-PSNR=25.14dB acc(recon test)=77.0 acc(memory)=84.3 [16880s]
+  CCE placement (6775 RFA steps): |init spread|=14.397 mean shift=17.989 min/mean CCE distance=20.000/30.024 |p| mean=21.820
