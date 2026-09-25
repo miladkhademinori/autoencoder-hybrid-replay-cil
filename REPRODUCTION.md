@@ -57,6 +57,36 @@ mnist ablations (final accuracy %, mean ± SEM):
 | FT-E with AHR's balanced minibatches | 75.10 ± 0.57 (n=3) |
 <!-- /RESULTS -->
 
+## Summary
+
+**Setting.** Everything was run on a 4-core CPU without a GPU (bf16 on AMX), at the
+paper's epochs, batch sizes, optimiser and memory budgets (Table 4). MNIST results
+are 3 seeds; the image benchmarks are 1 seed. miniImageNet was not run (compute).
+The paper does not specify the loss weights, the RFA constants, the latent head or
+the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
+
+**What reproduces.**
+* FT and Joint match the paper within 1-3 points on every benchmark run.
+* On MNIST the ordering AHR (94.6) > iCaRL (88.6) > FT-E (72.2) holds, and so do both
+  ablation claims: decoded exemplars are almost as good as perfect ones
+  (AHR 94.6 vs AHR-lossless 95.1; paper 97.5 vs 98.1), and storing ~40x more
+  (compressed) exemplars matters far more than their fidelity (AHR-lossy-mini
+  68.9, AHR-lossless-mini 67.3).
+
+**What does not reproduce as described.**
+* The absolute numbers: AHR is 3 points below the paper on MNIST, and the FT-E /
+  iCaRL baselines are 5-30 points below the paper's values with the same
+  protocol (FACIL-style replay, Adam 1e-3, the paper's epochs).
+* Algorithm 4's `Rank` selection (closest-to-centroid first) and re-encoding the
+  memory every task both hurt; the literal Algorithms 1-4 give 70-75% on MNIST.
+  Frozen codes plus explicit decoder memorisation are what make AHR work (§3.5).
+* On SVHN/CIFAR the paper's recipe (a 307-d latent from ResNet-32, classification
+  of the raw image by the nearest CCE) fails: decoded exemplars are either too
+  blurry to carry class information (§3.6) or, once good (24 dB), the encoder learns
+  "decoded = old task, real = new task" and forgets every old class (§3.10). What
+  works is a spatial 8x8x5 latent plus classifying in the decoder's output domain
+  (§3.9, §3.11), which departs from the paper's test rule.
+
 ## 1. What is implemented
 
 | Paper | Code |
