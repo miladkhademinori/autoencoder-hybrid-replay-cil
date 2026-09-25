@@ -132,6 +132,9 @@ def parse_args(argv=None):
                     help="input: L_z on phi(x) and test on phi(x) (paper); recon: L_z only on decoder "
                     "outputs (decoded exemplars, reconstructions of new samples) and test on "
                     "phi(psi(phi(x)))")
+    ap.add_argument("--lat-real-first", type=int, default=0, choices=[0, 1],
+                    help="with --latent-domain recon: also apply the latent loss to the real images "
+                         "of the first task (no replay yet, so no real-vs-decoded shortcut)")
     ap.add_argument("--recon-new-source", default="current", choices=["current", "old"],
                     help="reconstructions from the HAE being trained (detached) or the previous one")
     ap.add_argument("--selection", default="herding", choices=["rank", "herding", "random"])

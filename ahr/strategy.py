@@ -187,7 +187,7 @@ class AHR:
                             x_old = old.decoder(z_old)
                 z, xh = z.float(), xh.float()
                 l_rec = _sq(xh, x).mean()
-                if a.latent_domain == "recon":
+                if a.latent_domain == "recon" and not (old is None and a.lat_real_first):
                     # the latent (classification) loss only sees decoder outputs: decoded
                     # exemplars here and reconstructions of the new samples below
                     l_lat = _sq(C(z[n:]), cces[y[n:]]).mean() if len(x) > n else z.new_zeros(())
@@ -218,7 +218,9 @@ class AHR:
                     tot["kd"] = tot.get("kd", 0.0) + l_kd.item()
                 if use_rn:
                     z_rn = z_all[len(x):].float()
-                    loss = loss + a.lam * a.lam_recon_new * _sq(C(z_rn), cces[y[:n]]).mean()
+                    l_rn = _sq(C(z_rn), cces[y[:n]]).mean()
+                    loss = loss + a.lam * a.lam_recon_new * l_rn
+                    tot["rn"] = tot.get("rn", 0.0) + l_rn.item()
                 if codes is not None:
                     # decoder distillation on the stored codes: psi(m) must keep decoding
                     # every stored latent into the same exemplar as psi_old(m)
