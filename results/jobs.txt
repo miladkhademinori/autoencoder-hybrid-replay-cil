@@ -1,9 +1,10 @@
-# threads  run.py arguments   (consumed in order by scripts/jobqueue.py)
+# threads  run.py arguments   (consumed in order by scripts/jobqueue.py; jobs whose result JSON exists are skipped)
 1 --dataset mnist --method ahr --seed 0 --latent-domain recon --lam-recon-new 1 --tag recon_domain
 1 --dataset mnist --method ahr --seed 1 --latent-domain recon --lam-recon-new 1 --tag recon_domain
 1 --dataset mnist --method ahr --seed 2 --latent-domain recon --lam-recon-new 1 --tag recon_domain
 1 --dataset cifar10 --method ahr_lossless --seed 0 --latent-domain input --lam-recon-new 0
 1 --dataset svhn --method ahr --seed 0 --save-ckpt 1
-2 --dataset cifar100 --method ahr --seed 0 --save-ckpt 1
-1 --dataset cifar10 --method ahr --seed 0 --lam 3 --rfa-jitter 0.25 --tag c100recipe
+# CIFAR-100 AHR was resumed by hand from results/scratch/c100/cifar100/ahr_s0_split_l1_ckpt_t2.pt
+# 2 --dataset cifar100 --method ahr --seed 0 --save-ckpt 1
 1 --dataset cifar10 --method ahr --seed 1
+1 --dataset svhn --method ahr_lossless --seed 0 --latent-domain input --lam-recon-new 0
