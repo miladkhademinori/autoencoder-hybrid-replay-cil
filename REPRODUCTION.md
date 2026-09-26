@@ -80,7 +80,8 @@ the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
   68.9, AHR-lossless-mini 67.3).
 * On Balanced SVHN, AHR (74.4; after each task 97.9, 86.3, 84.2, 80.7, 74.4) is above
   iCaRL (71.1) and FT-E (55.6) with the same memory budget, as in the paper, though
-  all three are well below the paper's values (93.0 / 89.6 / 87.1).
+  all three are well below the paper's values (93.0 / 89.6 / 87.1). The decoded SVHN
+  exemplars stay at ~29 dB PSNR over all five tasks (figures/decoded_svhn.png).
 
 **What does not reproduce as described.**
 * The absolute numbers: AHR is 3 points below the paper on MNIST, and the FT-E /
