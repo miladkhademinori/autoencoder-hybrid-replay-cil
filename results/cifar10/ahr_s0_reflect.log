@@ -7,3 +7,5 @@ args: {"alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.1, "augme
   task 1 epoch 20/50 (79 it, b_new=128) rec=17.742 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=13.150 [3415s]
   task 1 epoch 30/50 (79 it, b_new=128) rec=16.223 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=8.894 [5086s]
   task 1 epoch 40/50 (79 it, b_new=128) rec=14.902 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=6.316 [6761s]
+  task 1 epoch 50/50 (79 it, b_new=128) rec=14.420 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=5.254 [8417s]
+  memory (frozen codes): 1920 exemplars (960/class), 614,400 scalars, 2,457,600 bytes
