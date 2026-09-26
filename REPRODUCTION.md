@@ -433,3 +433,22 @@ settings were selected on CIFAR-100 (tasks 1-2) and run once on CIFAR-10 without
 further tuning; it was then made the CIFAR-10 default because it also did better
 there, so with one seed per variant the 5-point difference is not a held-out
 estimate. Decoded CIFAR-10 exemplars of this run: figures/decoded_cifar10.png.
+
+### 3.14 The crop augmentation's zero border is a task cue
+Found by the code audit and confirmed on the final CIFAR-10 checkpoint (split latent,
+seed 0). In the decoder-output domain (§3.11) decoded replays are augmented *after*
+decoding, so their random crops carry a sharp black zero-padding border, whereas the new
+samples are augmented *before* the autoencoder and their border comes out reconstructed.
+The encoder learns to use the kind of border as the task label (test images, every
+other sample, all 10 classes):
+
+| Classified input | overall | per task (oldest ... newest) |
+|---|---|---|
+| `phi(psi(phi(x)))` (the test rule) | 55.3 | 59.3, 32.8, 43.0, 67.4, 73.8 |
+| sharp zero border added after decoding (like a replay) | 49.6 | **83.0**, 39.1, 49.2, 71.0, **5.8** |
+| zero border added before the autoencoder (like a new sample) | 34.1 | 17.3, 14.5, 15.3, 31.6, **91.9** |
+
+Clean test images have neither kind of border, so part of the forgetting on CIFAR comes
+from this artefact rather than from the replay itself. `--pad-mode reflect` pads the
+crops by reflection instead of zeros, which removes the cue; runs with it are in
+progress (cloud sessions, `results/cloud_jobs.txt`).

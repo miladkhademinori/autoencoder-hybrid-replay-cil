@@ -10,3 +10,6 @@ session_01NGoENxpkpFKNTzePyo6FmT  claude/ahr-exp-cifar100-ft_e-s0-bft30       --
 session_01VMP6UNSSj5U2cS9kJxhKot  claude/ahr-exp-svhn-ahr_lossless-s1         --dataset svhn --method ahr_lossless --seed 1 --latent-domain input --lam-recon-new 0
 session_018r6JGAKqYU6HJEn4XRnJ1E  claude/ahr-exp-cifar10-ahr_lossless-s1      --dataset cifar10 --method ahr_lossless --seed 1 --latent-domain input --lam-recon-new 0 --latent-kind spatial --lam 0.3 --rfa-jitter 0
 session_015tDLkZNicMKzwkGvatWPwQ  claude/ahr-exp-cifar100-ahr_lossless-s1     --dataset cifar100 --method ahr_lossless --seed 1 --latent-domain input --lam-recon-new 0
+session_015EW3skCRo71ijQEzDnrAPG  claude/ahr-exp-cifar10-ahr-s0-reflect        --dataset cifar10 --method ahr --seed 0 --pad-mode reflect --tag reflect
+session_01AkNzKnDdTW3ovnGFzVWtxD  claude/ahr-exp-cifar100-ahr-s0-reflect       --dataset cifar100 --method ahr --seed 0 --pad-mode reflect --tag reflect
+session_0176bAtWVkMihA9k5xKkqHx1  claude/ahr-exp-svhn-ahr-s0-split_reflect     --dataset svhn --method ahr --seed 0 --latent-kind split --lam 1 --rfa-jitter 0.25 --pad-mode reflect --tag split_reflect
