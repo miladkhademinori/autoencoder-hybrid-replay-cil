@@ -92,7 +92,10 @@ The paper does not specify the loss weights, the RFA constants, the latent head 
 the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
 
 **What reproduces.**
-* FT and Joint match the paper within 1-3 points on every benchmark run.
+* FT matches the paper within 1 point on every benchmark, and Joint on MNIST and SVHN.
+  Joint is 3.4 points below on CIFAR-10 and 14.4 below on CIFAR-100 (§4: our Joint is one
+  from-scratch run, the cited FACIL Joint is incremental; the paper's Joint row is also
+  close to a ResNet-18 result).
 * On MNIST the ordering AHR (94.6) > iCaRL (88.6) > FT-E (72.2) holds, and so do both
   ablation claims: decoded exemplars are almost as good as perfect ones
   (AHR 94.6 vs AHR-lossless 95.1; paper 97.5 vs 98.1), and storing ~40x more
@@ -106,7 +109,12 @@ the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
 **What does not reproduce as described.**
 * The absolute numbers: AHR is 3 points below the paper on MNIST, and the FT-E /
   iCaRL baselines are 5-30 points below the paper's values with the same
-  protocol (FACIL-style replay, Adam 1e-3, the paper's epochs).
+  protocol (FACIL-style replay, Adam 1e-3, the paper's epochs). The audit (§4) found
+  that at the stated 200 / 2,000-exemplar budgets published FT-E / replay and iCaRL
+  results (e.g. DER's S-CIFAR-10 at 200: ER 44.8, iCaRL 49.0) match this repository,
+  not the paper, and that several baseline cells of Table 2 coincide with numbers from
+  other papers run under other protocols, so the baseline gap is not evidence of a bug
+  here and the baselines were not tuned towards Table 2.
 * Algorithm 4's `Rank` selection (closest-to-centroid first) and re-encoding the
   memory every task both hurt; the literal Algorithms 1-4 give 70-75% on MNIST.
   Frozen codes plus explicit decoder memorisation are what make AHR work (§3.5).
@@ -120,10 +128,14 @@ the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
   part + a 64-d class part from pooled features, §3.12-3.13) **55.8%** (paper 77.1):
   better than FT-E (44.0) but below iCaRL (62.8) under the same protocol. The same
   pipeline with raw instead of decoded exemplars (AHR-lossless, 1,920 images) reaches
-  68.8% (paper 78.4), above iCaRL: on CIFAR the gap to the paper is mostly the cost
-  of decoded replay, which on MNIST is ~0.5 points.
+  68.8% (paper 78.4), above iCaRL. That run is not the same pipeline, though: it
+  classifies real images (the paper's rule) and differs from AHR in five settings
+  (§4, K11), so the gap measures the decoder-output-domain workaround more than replay
+  fidelity (decoded replays are classified 93-99% correctly at ~25 dB).
 * CIFAR-100(10/10) needs more changes (§3.12): RFA from the anisotropic class means
-  inflates the CCE norms (fixed by jittering the initial positions), and with 10
+  inflates the CCE norms (jittering the initial positions fixes this for the first
+  task, but in the real run the per-task CCE norm still grows from 15 to 62, §4 K16),
+  and with 10
   classes per task the reconstruction-domain classifier is weak. Decoded CIFAR-100
   exemplars are at ~22 dB (figures/decoded_cifar100.png) and AHR ends at **15.3%**
   (paper 54.4; iCaRL 38.0, FT-E 27.1 here), whereas the same classifier with raw
@@ -452,3 +464,33 @@ Clean test images have neither kind of border, so part of the forgetting on CIFA
 from this artefact rather than from the replay itself. `--pad-mode reflect` pads the
 crops by reflection instead of zeros, which removes the cue; runs with it are in
 progress (cloud sessions, `results/cloud_jobs.txt`).
+
+## 4. Multi-agent audit of paper vs. implementation
+
+49 agents audited the paper's LaTeX source, the code and all logs (24 independent
+auditors, one merger, 22 adversarial verifiers, a planner and a completeness critic;
+full output in `audit/`: `findings.md`, `plan.md`, `critic.md`). 116 raw findings were
+merged into 41 clusters; of the 22 verified, 15 survived and 7 were refuted. The ones
+that change how the results should be read:
+
+| # | Verified finding | Consequence |
+|---|---|---|
+| K02 | In the decoder-output domain old classes are trained only as decodes of frozen codes, new classes only as round trips through the current autoencoder (the test path); on CIFAR-100 (task 10) decoded exemplars are 41% correct on the training path but 17% on the test path | `--recon-latent roundtrip` classifies replays through the test path as well (runs in progress) |
+| K03 | The zero-border cue of §3.14 is also present on SVHN and CIFAR-100 | `--pad-mode reflect` runs in progress |
+| K01 | The latent loss in the decoder-output domain is two separate means (replays, new reconstructions), weighting each new sample up to 8.9x an old one; Eq. 1 is one per-sample sum | `--recon-latent single` / `roundtrip` use one mean |
+| K06 | On CIFAR-100 the decoder-output-domain classifier costs ~14 points already on task 1 (63.2 vs 77.5 for the input-domain run) | `--lat-real-first 1` run in progress |
+| K17 | Herding runs in `cls(phi(x))`, which carries almost no class information in the decoder-output domain | `--herd-space class` |
+| K12 | AHR takes 2.9-4x the baselines' optimiser steps per task (epoch = one pass over the new data at B/l new samples per batch) | `--ahr-epoch union/fixed`; MNIST test in progress |
+| K15 | iCaRL's distillation is LwF-style softmax KL, not the per-class sigmoid BCE of FACIL / the original iCaRL | `--kd-form bce` runs in progress |
+| K05 | At the paper's stated budgets, independent FT-E/replay and iCaRL results match this repository, not Table 2 | baseline rows kept at the stated budgets |
+| K07-K09 | The paper's Joint row is close to PEC's ResNet-18 Joint; the cited FACIL Joint is incremental; CIFAR-100 Joint here is under-trained (train CE 0.98) | longer and incremental Joint runs in progress |
+| K11 | AHR vs AHR-lossless differ in five settings on CIFAR-10 | Summary corrected |
+| K16 | The RFA jitter bounds the CCE radius only for the first task in the real CIFAR-100 run | §3.12 / Summary corrected |
+
+Refuted (among others): that the paper's FT-E "implicit bias correction" means an
+EEIL balanced fine-tuning phase. The paper gives the same label to iCaRL, GDumb and the
+generative-replay methods and labels EEIL itself "explicit"; its own description of
+implicit bias correction is class-balanced minibatches (tex:555), which this repository
+has as `--replay-sampling balanced` (MNIST FT-E 75.1). `--balanced-ft-epochs 30` (EEIL
+fine-tuning, MNIST FT-E 84.7 +- 0.3 over 3 seeds) is therefore reported only as a
+variant, not as the paper's FT-E.

@@ -6,5 +6,23 @@
 1 --dataset svhn --method ahr --seed 0 --save-ckpt 1
 # CIFAR-100 AHR was resumed by hand from results/scratch/c100/cifar100/ahr_s0_split_l1_ckpt_t2.pt
 # 2 --dataset cifar100 --method ahr --seed 0 --save-ckpt 1
-1 --dataset cifar10 --method ahr --seed 1
+# superseded by the reflect/roundtrip runs (audit K03); stopped after task 2:
+# 1 --dataset cifar10 --method ahr --seed 1
 1 --dataset svhn --method ahr_lossless --seed 0 --latent-domain input --lam-recon-new 0
+# audit follow-ups on MNIST (audit/plan.md A4, A5, A11; audit/critic.md C1, C3)
+1 --dataset mnist --method ahr --seed 0 --latent-domain recon --lam-recon-new 1 --recon-latent roundtrip --tag recon_rt
+1 --dataset mnist --method ahr --seed 0 --latent-domain recon --lam-recon-new 1 --recon-latent single --tag recon_single
+1 --dataset mnist --method icarl --seed 0 --kd-form bce --tag bce
+1 --dataset mnist --method ahr --seed 0 --ahr-epoch union --tag union
+1 --dataset mnist --method ahr_lossy_mini --seed 0 --alpha-z 0.1 --tag az01
+1 --dataset mnist --method ahr_lossy_mini --seed 0 --alpha-z 1 --tag az1
+1 --dataset mnist --method ft_e --seed 0 --n-exemplars 7840 --tag n7840
+1 --dataset mnist --method icarl --seed 0 --n-exemplars 7840 --tag n7840
+1 --dataset mnist --method ahr --seed 1 --latent-domain recon --lam-recon-new 1 --recon-latent roundtrip --tag recon_rt
+1 --dataset mnist --method ahr --seed 2 --latent-domain recon --lam-recon-new 1 --recon-latent roundtrip --tag recon_rt
+1 --dataset mnist --method ahr --seed 1 --latent-domain recon --lam-recon-new 1 --recon-latent single --tag recon_single
+1 --dataset mnist --method ahr --seed 2 --latent-domain recon --lam-recon-new 1 --recon-latent single --tag recon_single
+1 --dataset mnist --method icarl --seed 1 --kd-form bce --tag bce
+1 --dataset mnist --method icarl --seed 2 --kd-form bce --tag bce
+1 --dataset mnist --method ahr --seed 1 --ahr-epoch union --tag union
+1 --dataset mnist --method ahr --seed 2 --ahr-epoch union --tag union

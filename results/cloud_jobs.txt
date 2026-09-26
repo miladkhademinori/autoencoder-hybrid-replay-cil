@@ -13,3 +13,13 @@ session_015tDLkZNicMKzwkGvatWPwQ  claude/ahr-exp-cifar100-ahr_lossless-s1     --
 session_015EW3skCRo71ijQEzDnrAPG  claude/ahr-exp-cifar10-ahr-s0-reflect        --dataset cifar10 --method ahr --seed 0 --pad-mode reflect --tag reflect
 session_01AkNzKnDdTW3ovnGFzVWtxD  claude/ahr-exp-cifar100-ahr-s0-reflect       --dataset cifar100 --method ahr --seed 0 --pad-mode reflect --tag reflect
 session_0176bAtWVkMihA9k5xKkqHx1  claude/ahr-exp-svhn-ahr-s0-split_reflect     --dataset svhn --method ahr --seed 0 --latent-kind split --lam 1 --rfa-jitter 0.25 --pad-mode reflect --tag split_reflect
+session_01KYmYBcNUELKuWytn3RPshQ  claude/ahr-exp-cifar10-ahr-s0-rt             --dataset cifar10 --method ahr --seed 0 --recon-latent roundtrip --herd-space class --pad-mode reflect --tag rt
+session_01RRdBbDt7VUxndEggKzzibY  claude/ahr-exp-cifar100-ahr-s0-rt            --dataset cifar100 --method ahr --seed 0 --recon-latent roundtrip --herd-space class --pad-mode reflect --tag rt
+session_01Q3FUV8ejfPPSo5AueaYmk5  claude/ahr-exp-svhn-ahr-s0-split_rt          --dataset svhn --method ahr --seed 0 --latent-kind split --lam 1 --rfa-jitter 0.25 --recon-latent roundtrip --herd-space class --pad-mode reflect --tag split_rt
+session_01LhxedVSyG621AYYdcQtfSu  claude/ahr-exp-cifar100-ahr-s0-lrf_rt        --dataset cifar100 --method ahr --seed 0 --lat-real-first 1 --recon-latent roundtrip --herd-space class --pad-mode reflect --tag lrf_rt
+session_01BZXUg9aWxW9BU9vpRKVvxp  claude/ahr-exp-cifar10-ahr-s0-single         --dataset cifar10 --method ahr --seed 0 --recon-latent single --herd-space class --pad-mode reflect --tag single
+session_015FFyYNp1GvQNN5ig5RU49p  claude/ahr-exp-cifar100-joint-s0-e100        --dataset cifar100 --method joint --seed 0 --epochs 100 --tag e100
+session_01CbNGVJ42PtDQCNRjoxSMBZ  claude/ahr-exp-cifar100-ft_e-s0-incjoint     --dataset cifar100 --method ft_e --seed 0 --n-exemplars 50000 --tag incjoint
+session_01BpDYCwrqWah82ecEQLLyc9  claude/ahr-exp-cifar100-icarl-s0-bce         --dataset cifar100 --method icarl --seed 0 --kd-form bce --tag bce
+session_01PVyWUo8yJZS2aufqpbeQj6  claude/ahr-exp-cifar10-ft_e-s0-n1920         --dataset cifar10 --method ft_e --seed 0 --n-exemplars 1920 --tag n1920
+session_01RWkEdp46JrABGTiUwbgyfh  claude/ahr-exp-cifar10-ft_e-s0-n1920_bft30   --dataset cifar10 --method ft_e --seed 0 --n-exemplars 1920 --balanced-ft-epochs 30 --tag n1920_bft30

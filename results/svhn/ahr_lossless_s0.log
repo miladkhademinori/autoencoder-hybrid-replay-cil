@@ -32,3 +32,10 @@ after task 3: acc=91.30 per-task=[90.3, 86.2, 97.4] [19840s]
   task 4 epoch 1/50 (292 it, b_new=32) rec=7.446 lat=80.226 dz=43.611 dx=5.238 mem=0.000 [20134s]
   task 4 epoch 10/50 (292 it, b_new=32) rec=4.316 lat=26.712 dz=78.916 dx=2.385 mem=0.000 [22536s]
   task 4 epoch 20/50 (292 it, b_new=32) rec=3.719 lat=19.605 dz=81.498 dx=1.944 mem=0.000 [25248s]
+  task 4 epoch 30/50 (292 it, b_new=32) rec=3.274 lat=15.652 dz=82.459 dx=1.624 mem=0.000 [28216s]
+  task 4 epoch 40/50 (292 it, b_new=32) rec=2.897 lat=13.716 dz=83.332 dx=1.296 mem=0.000 [30947s]
+  task 4 epoch 50/50 (292 it, b_new=32) rec=2.778 lat=13.429 dz=82.811 dx=1.211 mem=0.000 [33782s]
+  memory (frozen codes): 1920 exemplars (240/class), 5,898,240 scalars, 5,898,240 bytes
+after task 4: acc=88.71 per-task=[83.8, 86.1, 87.1, 97.9] [33858s]
+  CCE placement (7819 RFA steps): |init spread|=13.638 mean shift=30.536 min/mean CCE distance=20.001/33.360 |p| mean=24.025
+  task 5 epoch 1/50 (359 it, b_new=26) rec=6.941 lat=139.522 dz=66.557 dx=5.127 mem=0.000 [34206s]
