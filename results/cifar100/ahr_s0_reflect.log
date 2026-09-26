@@ -46,3 +46,10 @@ after task 4: acc=32.00 per-task=[15.7, 11.3, 32.1, 68.9] memory-PSNR=22.92dB ac
   task 5 epoch 10/50 (99 it, b_new=51) rec=11.521 lat=290.661 dz=98.052 dx=5.440 mem=0.935 rn=429.782 [8864s]
   task 5 epoch 20/50 (99 it, b_new=51) rec=10.717 lat=279.809 dz=96.255 dx=5.102 mem=0.820 rn=338.782 [9591s]
   task 5 epoch 30/50 (99 it, b_new=51) rec=10.128 lat=261.672 dz=86.062 dx=4.707 mem=0.613 rn=257.225 [10295s]
+  task 5 epoch 40/50 (99 it, b_new=51) rec=9.627 lat=250.407 dz=82.299 dx=4.220 mem=0.435 rn=218.333 [10984s]
+  task 5 epoch 50/50 (99 it, b_new=51) rec=9.591 lat=247.444 dz=80.166 dx=4.204 mem=0.407 rn=205.385 [11674s]
+  memory (frozen codes): 19200 exemplars (384/class), 6,144,000 scalars, 24,576,000 bytes
+  memorisation: 20 decoder epochs (1500 steps) over 19200 exemplars, final loss=3.715
+after task 5: acc=23.88 per-task=[8.2, 5.2, 18.0, 19.4, 68.6] memory-PSNR=22.83dB acc(recon test)=23.9 acc(memory)=43.7 [11962s]
+  CCE placement (3471 RFA steps): |init spread|=18.850 mean shift=27.307 min/mean CCE distance=20.001/39.903 |p| mean=28.413
+  task 6 epoch 1/50 (117 it, b_new=43) rec=11.851 lat=421.350 dz=99.949 dx=4.226 mem=1.073 rn=810.147 [12052s]
