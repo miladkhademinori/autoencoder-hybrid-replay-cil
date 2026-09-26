@@ -2,44 +2,44 @@
  "dataset": "cifar10",
  "method": "ahr",
  "seed": 0,
- "tag": "",
- "final_acc": 55.79000115394592,
- "avg_inc_acc": 70.09966611862183,
+ "tag": "spatial",
+ "final_acc": 50.72000026702881,
+ "avg_inc_acc": 68.05833289718628,
  "accs": [
-  96.74999713897705,
-  76.99999809265137,
-  61.783331632614136,
-  59.175002574920654,
-  55.79000115394592
+  95.9,
+  80.48,
+  60.71666479110718,
+  52.47499942779541,
+  50.72000026702881
  ],
  "acc_matrix": [
   [
-   96.74999713897705
+   95.9
   ],
   [
-   79.3500006198883,
-   74.6500015258789
+   81.7,
+   79.3
   ],
   [
-   75.44999718666077,
-   42.9500013589859,
-   66.94999933242798
+   69.9500024318695,
+   32.30000138282776,
+   79.90000247955322
   ],
   [
-   79.6500027179718,
-   37.65000104904175,
-   53.25000286102295,
-   66.14999771118164
+   64.30000066757202,
+   25.600001215934753,
+   38.55000138282776,
+   81.44999742507935
   ],
   [
-   59.64999794960022,
-   33.5999995470047,
-   44.65000033378601,
-   68.69999766349792,
-   72.35000133514404
+   33.89999866485596,
+   27.399998903274536,
+   48.649999499320984,
+   56.00000023841858,
+   87.65000104904175
   ]
  ],
- "time_s": 78626.68499326706,
+ "time_s": 34816.7171998024,
  "n_exemplars": 1920,
  "args": {
   "dataset": "cifar10",
@@ -47,13 +47,13 @@
   "seed": 0,
   "data_root": "data",
   "out": "results",
-  "tag": "",
+  "tag": "spatial",
   "n_tasks": null,
   "class_order": "natural",
   "train_fraction": 1.0,
-  "threads": 1,
+  "threads": 2,
   "stop_after": null,
-  "resume": null,
+  "resume": "results/scratch/full_rd/cifar10/ahr_s0_rd_full_ckpt_t2.pt",
   "save_ckpt": 1,
   "epochs": 50,
   "batch_size": 128,
@@ -74,12 +74,12 @@
   "latent_dim": 320,
   "enc_pool": 4,
   "cls_dim": 64,
-  "latent_kind": "split",
+  "latent_kind": "spatial",
   "decoder_width": 1.0,
   "hf_transplant": 0.0,
   "hf_sigma": 1.0,
   "input_blur": 0.0,
-  "lam": 1.0,
+  "lam": 0.3,
   "alpha_z": 0.1,
   "alpha_x": 1.0,
   "distill_norm": "sq",
@@ -93,7 +93,6 @@
   "memorize_codes": 0,
   "lam_recon_new": 1.0,
   "latent_domain": "recon",
-  "lat_real_first": 0,
   "recon_new_source": "current",
   "selection": "herding",
   "rfa_zeta": 1.0,
@@ -102,7 +101,6 @@
   "rfa_steps": 20000,
   "rfa_damping": 0.0,
   "rfa_softening": 0.001,
-  "rfa_jitter": 0.25,
   "rfa_target": 20.0,
   "replay_sampling": "union",
   "kd_lambda": 1.0,
@@ -110,15 +108,15 @@
   "memory_kind": "latent"
  },
  "memory_psnr": [
-  24.920705795288086,
-  25.135417938232422,
-  25.11534881591797,
-  25.01471519470215,
-  25.09409523010254
+  26.29,
+  26.29,
+  26.383506774902344,
+  26.1260986328125,
+  25.980730056762695
  ],
  "cces": null,
  "memory_scalars": 614400,
  "memory_bytes": 2457600,
- "decoder_params": 1210883,
- "encoder_params": 470676
+ "decoder_params": 1206723,
+ "encoder_params": 466581
 }

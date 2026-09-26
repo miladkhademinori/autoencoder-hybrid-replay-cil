@@ -28,11 +28,9 @@ def capture(argv):
 
 
 def main():
-    block = "\n\n".join([
-        "## 0. Results\n",
-        capture([]),
-        capture(["--ablations", "mnist"]),
-    ])
+    parts = ["## 0. Results\n", capture([])]
+    parts += [capture(["--ablations", d]) for d in ("mnist", "svhn", "cifar10", "cifar100")]
+    block = "\n\n".join(p for p in parts if p)
     path = os.path.join(ROOT, "REPRODUCTION.md")
     text = open(path).read()
     new = f"<!-- RESULTS -->\n{block}\n<!-- /RESULTS -->"

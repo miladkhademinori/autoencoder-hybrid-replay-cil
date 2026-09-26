@@ -65,6 +65,8 @@ ABLATION_TAGS = [
     ("ahr", "literal_herding", "- frozen codes, - memorisation = literal Alg. 1-4 (herding selection)"),
     ("ahr", "literal_rank", "literal Alg. 1-4, Rank selection"),
     ("ft_e", "balanced", "FT-E with AHR's balanced minibatches"),
+    ("ahr", "spatial", "spatial 8x8x5 latent, lambda 0.3, no RFA jitter (§3.9-3.11)"),
+    ("ahr", "split", "split 8x8x4 + 64-d latent, lambda 1, RFA jitter 0.25 (§3.12-3.13)"),
 ]
 
 

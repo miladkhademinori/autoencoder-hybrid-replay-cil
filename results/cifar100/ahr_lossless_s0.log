@@ -40,3 +40,21 @@ after task 4: acc=61.12 per-task=[67.6, 60.6, 63.0, 53.3] [16694s]
   CCE placement (3648 RFA steps): |init spread|=16.133 mean shift=28.375 min/mean CCE distance=20.002/41.297 |p| mean=28.956
   task 5 epoch 1/50 (99 it, b_new=51) rec=21.837 lat=382.514 dz=91.827 dx=3.691 mem=0.000 [16883s]
   task 5 epoch 10/50 (99 it, b_new=51) rec=21.116 lat=293.028 dz=151.004 dx=4.160 mem=0.000 [18409s]
+  task 5 epoch 20/50 (99 it, b_new=51) rec=20.134 lat=241.051 dz=170.659 dx=3.894 mem=0.000 [20080s]
+  task 5 epoch 30/50 (99 it, b_new=51) rec=19.378 lat=195.688 dz=181.532 dx=3.621 mem=0.000 [21756s]
+  task 5 epoch 40/50 (99 it, b_new=51) rec=18.843 lat=169.383 dz=189.492 dx=3.345 mem=0.000 [23433s]
+  task 5 epoch 50/50 (99 it, b_new=51) rec=18.563 lat=164.748 dz=191.968 dx=3.141 mem=0.000 [25120s]
+  memory (frozen codes): 19200 exemplars (384/class), 58,982,400 scalars, 58,982,400 bytes
+after task 5: acc=59.02 per-task=[62.8, 59.1, 61.9, 59.2, 52.1] [25154s]
+  CCE placement (4067 RFA steps): |init spread|=21.004 mean shift=31.868 min/mean CCE distance=20.002/45.482 |p| mean=31.865
+  task 6 epoch 1/50 (117 it, b_new=43) rec=20.965 lat=416.744 dz=105.749 dx=3.277 mem=0.000 [25373s]
+  task 6 epoch 10/50 (117 it, b_new=43) rec=20.559 lat=320.603 dz=166.378 dx=3.962 mem=0.000 [27211s]
+  task 6 epoch 20/50 (117 it, b_new=43) rec=19.578 lat=261.183 dz=189.615 dx=3.746 mem=0.000 [29264s]
+  task 6 epoch 30/50 (117 it, b_new=43) rec=18.898 lat=211.536 dz=201.811 dx=3.377 mem=0.000 [31331s]
+  task 6 epoch 40/50 (117 it, b_new=43) rec=18.442 lat=182.221 dz=208.979 dx=3.102 mem=0.000 [33419s]
+  task 6 epoch 50/50 (117 it, b_new=43) rec=18.171 lat=173.774 dz=211.535 dx=2.930 mem=0.000 [35501s]
+  memory (frozen codes): 19200 exemplars (320/class), 58,982,400 scalars, 58,982,400 bytes
+after task 6: acc=57.77 per-task=[62.3, 56.1, 62.3, 59.4, 54.8, 51.7] [35538s]
+  CCE placement (3846 RFA steps): |init spread|=20.768 mean shift=29.126 min/mean CCE distance=20.002/47.852 |p| mean=33.751
+  task 7 epoch 1/50 (136 it, b_new=37) rec=20.045 lat=388.068 dz=111.318 dx=3.328 mem=0.000 [35803s]
+  task 7 epoch 10/50 (136 it, b_new=37) rec=19.145 lat=304.679 dz=145.330 dx=3.136 mem=0.000 [38036s]
