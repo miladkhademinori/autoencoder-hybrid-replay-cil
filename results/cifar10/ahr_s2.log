@@ -15,3 +15,5 @@ after task 1: acc=96.70 per-task=[96.7] memory-PSNR=25.30dB acc(recon test)=96.7
   task 2 epoch 1/50 (157 it, b_new=64) rec=13.852 lat=37.568 dz=70.332 dx=6.813 mem=1.850 rn=312.056 [1984s]
   task 2 epoch 10/50 (157 it, b_new=64) rec=11.948 lat=14.735 dz=44.822 dx=7.796 mem=1.454 rn=163.962 [2640s]
   task 2 epoch 20/50 (157 it, b_new=64) rec=11.008 lat=7.171 dz=31.965 dx=7.243 mem=1.211 rn=123.046 [3372s]
+  task 2 epoch 30/50 (157 it, b_new=64) rec=10.207 lat=4.024 dz=27.546 dx=6.485 mem=0.929 rn=95.051 [4095s]
+  task 2 epoch 40/50 (157 it, b_new=64) rec=9.600 lat=2.245 dz=25.166 dx=5.885 mem=0.640 rn=68.563 [4834s]
