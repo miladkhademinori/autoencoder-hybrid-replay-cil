@@ -408,8 +408,8 @@ Continued to all ten tasks, CIFAR-100 AHR ends at **15.3%** (after each task: 63
 30.9), below FT-E (27.1) and iCaRL (38.0) and far below the paper's 54.4. The final
 per-task accuracies are [1.8, 1.5, 11.3, 3.2, 10.8, 9.6, 16.5, 16.4, 15.9, 66.2]:
 the old classes are essentially lost. The decoded memory stays at ~22.5 dB, but
-even the decoded exemplars themselves are classified correctly only 38-50% of the
-time from task 3 on (84-95% on CIFAR-10), i.e. at ~22 dB and 10 classes per task the
+even the decoded exemplars themselves are classified correctly only 38-51% of the
+time from task 3 on (82-93% on CIFAR-10), i.e. at ~22 dB and 10 classes per task the
 reconstruction-domain classifier cannot fit its own replay data. The same classifier
 on real images with raw exemplars (AHR-lossless, input domain, 19,200 images) is at
 77.5 / 63.2 / 61.8 / 61.1 / 59.0 / 57.8 after tasks 1-6, above iCaRL at every task, so
