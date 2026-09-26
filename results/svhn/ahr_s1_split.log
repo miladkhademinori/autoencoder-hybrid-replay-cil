@@ -13,3 +13,4 @@ args: {"alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.1, "augme
 after task 1: acc=98.28 per-task=[98.3] memory-PSNR=32.24dB acc(recon test)=98.3 acc(memory)=99.9 [2132s]
   CCE placement (4446 RFA steps): |init spread|=6.720 mean shift=17.556 min/mean CCE distance=20.002/25.578 |p| mean=15.912
   task 2 epoch 1/50 (146 it, b_new=64) rec=10.829 lat=45.170 dz=133.713 dx=8.940 mem=1.619 rn=195.666 [2240s]
+  task 2 epoch 10/50 (146 it, b_new=64) rec=7.269 lat=4.942 dz=60.581 dx=6.613 mem=0.768 rn=31.252 [2924s]
