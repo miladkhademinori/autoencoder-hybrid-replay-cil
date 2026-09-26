@@ -196,7 +196,11 @@ def main(argv=None):
     out_dir = os.path.join(args.out, args.dataset)
     os.makedirs(out_dir, exist_ok=True)
     log_path = os.path.join(out_dir, name + ".log")
+    # read the log of the run being resumed before (possibly) overwriting the same file
+    resume_log = open(args.resume.split("_ckpt_t")[0] + ".log").read() if args.resume else ""
     log_f = open(log_path, "w")
+    if args.resume and os.path.abspath(args.resume.split("_ckpt_t")[0] + ".log") == os.path.abspath(log_path):
+        log_f.write(resume_log)  # resuming in place: keep the earlier part of the log
 
     t_start = time.time()
 
@@ -251,12 +255,15 @@ def main(argv=None):
             learner.memory.set(ck["mem_data"].float(), ck["mem_labels"])
             learner.mem_src = ck["mem_src"]
             learner.n_seen = len(learner.cces)
-            prev = re.findall(r"after task (\d+): acc=([0-9.]+) per-task=\[([^\]]*)\].*?memory-PSNR=([0-9.]+)dB",
-                              open(args.resume.split("_ckpt_t")[0] + ".log").read())
-            for k, acc, per, p in prev[:start]:
+            prev = re.findall(r"after task (\d+): acc=([0-9.]+) per-task=\[([^\]]*)\]"
+                              r"(?:[^\n]*?memory-PSNR=([0-9.]+)dB)?[^\n]*?\[(\d+)s\]", resume_log)
+            for k, acc, per, p, secs in prev[:start]:
                 accs.append(float(acc))
                 acc_matrix.append([float(v) for v in per.split(",")])
-                psnr.append(float(p))
+                if p:
+                    psnr.append(float(p))
+            extra["resumed_from"] = args.resume
+            extra["time_s_before_resume"] = float(prev[start - 1][4]) if len(prev) >= start else None
             log(f"resumed from {args.resume} after task {start}: accs so far {accs}")
         for t, task in enumerate(bench.tasks[:args.stop_after]):
             if t < start:
