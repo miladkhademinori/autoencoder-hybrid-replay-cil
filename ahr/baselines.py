@@ -2,9 +2,10 @@
 
 * ``ft``    - fine-tuning on the new task only (lower bound).
 * ``ft_e``  - fine-tuning with raw exemplar replay (fixed memory, random selection).
-* ``icarl`` - iCaRL (Rebuffi et al., 2017) as in FACIL: exemplar replay + knowledge
-  distillation (T=2) on the old logits, herding selection, nearest-mean-of-exemplars
-  classifier at test time.
+* ``icarl`` - iCaRL (Rebuffi et al., 2017): exemplar replay + knowledge distillation on
+  the old logits (LwF-style softmax KL with T=2 by default; ``--kd-form bce`` uses the
+  per-class sigmoid BCE of the original iCaRL and FACIL), herding selection,
+  nearest-mean-of-exemplars classifier at test time.
 * ``joint`` - one model trained on all tasks jointly (upper bound).
 
 By default (``replay_sampling="union"``) the replay baselines train on the shuffled
@@ -82,9 +83,13 @@ class SoftmaxLearner:
                 loss = F.cross_entropy(out, y)
                 tot_ce += loss.item()
                 if self.method == "icarl" and old is not None:
-                    T = a.kd_temperature
-                    kd = F.kl_div(F.log_softmax(out[:, :n_old] / T, 1),
-                                  F.softmax(out_old.float() / T, 1), reduction="batchmean") * T * T
+                    if a.kd_form == "bce":  # FACIL's / the original iCaRL's per-class sigmoid BCE
+                        kd = F.binary_cross_entropy_with_logits(
+                            out[:, :n_old], torch.sigmoid(out_old.float()), reduction="none").mean(0).sum()
+                    else:  # LwF-style softmax KL
+                        T = a.kd_temperature
+                        kd = F.kl_div(F.log_softmax(out[:, :n_old] / T, 1),
+                                      F.softmax(out_old.float() / T, 1), reduction="batchmean") * T * T
                     loss = loss + a.kd_lambda * kd
                     tot_kd += kd.item()
                 opt.zero_grad(set_to_none=True)

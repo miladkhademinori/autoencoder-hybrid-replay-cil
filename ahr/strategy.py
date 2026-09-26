@@ -131,6 +131,10 @@ class AHR:
         b_new = max(1, round(a.batch_size / (t + 1))) if replay else a.batch_size
         b_mem = a.batch_size - b_new if replay else 0
         iters = math.ceil(n_new / b_new)
+        if replay and a.ahr_epoch == "union":  # one epoch = |D_l U M| / B steps
+            iters = math.ceil((n_new + len(self.memory)) / a.batch_size)
+        elif replay and a.ahr_epoch == "fixed":  # as many steps as a replay-free epoch
+            iters = math.ceil(n_new / a.batch_size)
         sched = make_scheduler(opt, a, a.epochs * iters)
         cces = self.cces
         C = self.model.cls
@@ -138,6 +142,9 @@ class AHR:
         for ep in range(a.epochs):
             model.train()
             perm = torch.randperm(n_new)
+            if replay and a.ahr_epoch == "union" and iters * b_new > n_new:
+                perm = torch.cat([perm] + [torch.randperm(n_new)
+                                           for _ in range(math.ceil(iters * b_new / n_new) - 1)])
             tot = {"rec": 0.0, "lat": 0.0, "dz": 0.0, "dx": 0.0, "mem": 0.0}
             for it in range(iters):
                 idx = perm[it * b_new:(it + 1) * b_new]
@@ -169,13 +176,16 @@ class AHR:
                     # encoder in the *same* forward pass as the rest of the minibatch: a separate
                     # all-reconstruction batch would get its own BatchNorm statistics in train
                     # mode, which the network can exploit and which disappears in eval mode.
+                    # --recon-latent roundtrip: the decoded replays take the same path too,
+                    # i.e. every sample is classified as phi(psi(phi(.))), like at test time
+                    src = x if (a.latent_domain == "recon" and a.recon_latent == "roundtrip") else x[:n]
                     with torch.no_grad(), autocast(a.bf16):
                         if a.recon_new_source == "current":
                             model.eval()
-                            x_rn = model(x[:n])[1].float()
+                            x_rn = model(src)[1].float()
                             model.train()
                         else:
-                            x_rn = old(x[:n])[1].float()
+                            x_rn = old(src)[1].float()
                     x_in = torch.cat([x, x_rn])
                 with autocast(a.bf16):
                     z_all = model.encoder(x_in)
@@ -190,7 +200,9 @@ class AHR:
                 if a.latent_domain == "recon" and not (old is None and a.lat_real_first):
                     # the latent (classification) loss only sees decoder outputs: decoded
                     # exemplars here and reconstructions of the new samples below
-                    l_lat = _sq(C(z[n:]), cces[y[n:]]).mean() if len(x) > n else z.new_zeros(())
+                    # (with --recon-latent single/roundtrip both are one mean, see below)
+                    l_lat = (_sq(C(z[n:]), cces[y[n:]]).mean()
+                             if len(x) > n and a.recon_latent == "split" else z.new_zeros(()))
                 else:
                     l_lat = _sq(C(z), cces[y]).mean()
                 loss = l_rec + a.lam * l_lat
@@ -218,8 +230,19 @@ class AHR:
                     tot["kd"] = tot.get("kd", 0.0) + l_kd.item()
                 if use_rn:
                     z_rn = z_all[len(x):].float()
-                    l_rn = _sq(C(z_rn), cces[y[:n]]).mean()
-                    loss = loss + a.lam * a.lam_recon_new * l_rn
+                    if a.latent_domain == "recon" and a.recon_latent != "split":
+                        # Eq. 1: one per-sample mean over old and new samples, instead of
+                        # separate means that weight each new sample (l-1) times an old one
+                        if a.recon_latent == "single":
+                            f, tgt = torch.cat([C(z[n:]), C(z_rn)]), torch.cat([y[n:], y[:n]])
+                        else:
+                            f, tgt = C(z_rn), y
+                        l_rn = _sq(f, cces[tgt]).mean()
+                        w = a.lam * (a.lam_recon_new + (1.0 if len(x) > n else 0.0))
+                    else:
+                        l_rn = _sq(C(z_rn), cces[y[:n]]).mean()
+                        w = a.lam * a.lam_recon_new
+                    loss = loss + w * l_rn
                     tot["rn"] = tot.get("rn", 0.0) + l_rn.item()
                 if codes is not None:
                     # decoder distillation on the stored codes: psi(m) must keep decoding
@@ -288,7 +311,9 @@ class AHR:
         per_class = self.memory.per_class(self.n_seen)
         self.model.eval()
         z = self.encode(task.x_train)
-        zc = self.model.cls(z)
+        # --herd-space class: select in the space used for classification (phi(psi(phi(x)))
+        # in the decoder-output domain) instead of the first-pass latent
+        zc = self.class_features(task.x_train) if a.herd_space == "class" else self.model.cls(z)
         keep_new = self._select(zc, task.y_train, _sq(zc, self.cces[task.y_train]), per_class)
         new_data = task.x_train[keep_new] if self.lossless else z[keep_new]
         new_src = t * 10**6 + keep_new

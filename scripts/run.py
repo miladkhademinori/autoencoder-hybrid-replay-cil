@@ -138,6 +138,18 @@ def parse_args(argv=None):
     ap.add_argument("--lat-real-first", type=int, default=0, choices=[0, 1],
                     help="with --latent-domain recon: also apply the latent loss to the real images "
                          "of the first task (no replay yet, so no real-vs-decoded shortcut)")
+    ap.add_argument("--recon-latent", default="split", choices=["split", "single", "roundtrip"],
+                    help="latent-domain recon: split = separate means over decoded replays and "
+                         "new-sample reconstructions; single = one per-sample mean (Eq. 1); "
+                         "roundtrip = one mean over current-autoencoder reconstructions of every "
+                         "sample, replays included (the test-time path)")
+    ap.add_argument("--herd-space", default="encoder", choices=["encoder", "class"],
+                    help="exemplar selection in cls(phi(x)) or in the classification space")
+    ap.add_argument("--ahr-epoch", default="new", choices=["new", "union", "fixed"],
+                    help="AHR iterations per epoch: new = |D_l| / (B/l) (default), "
+                         "union = |D_l U M| / B, fixed = |D_l| / B")
+    ap.add_argument("--kd-form", default="kl", choices=["kl", "bce"],
+                    help="iCaRL distillation: softmax KL (T) or per-class sigmoid BCE (FACIL)")
     ap.add_argument("--recon-new-source", default="current", choices=["current", "old"],
                     help="reconstructions from the HAE being trained (detached) or the previous one")
     ap.add_argument("--selection", default="herding", choices=["rank", "herding", "random"])
@@ -174,6 +186,9 @@ def parse_args(argv=None):
             setattr(args, k, v)
     if args.rfa_jitter is None:
         args.rfa_jitter = 0.0
+    if args.recon_latent != "split" and args.method.startswith("ahr"):
+        assert args.latent_domain == "recon" and args.lam_recon_new > 0, \
+            "--recon-latent single/roundtrip needs --latent-domain recon and --lam-recon-new > 0"
     if args.rfa_target is not None and args.rfa_target <= 0:
         args.rfa_target = None
     args.augment = bool(args.augment)
