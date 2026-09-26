@@ -13,3 +13,5 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
 after task 1: acc=96.30 per-task=[96.3] memory-PSNR=24.99dB acc(recon test)=96.3 acc(memory)=99.2 [1603s]
   CCE placement (4865 RFA steps): |init spread|=9.170 mean shift=17.847 min/mean CCE distance=20.000/26.616 |p| mean=16.965
   task 2 epoch 1/50 (157 it, b_new=64) rec=13.727 lat=0.000 dz=91.951 dx=6.161 mem=2.325 rn=204.252 [1703s]
+  task 2 epoch 10/50 (157 it, b_new=64) rec=11.988 lat=0.000 dz=153.616 dx=5.635 mem=1.717 rn=120.776 [2359s]
+  task 2 epoch 20/50 (157 it, b_new=64) rec=11.335 lat=0.000 dz=129.635 dx=5.356 mem=1.325 rn=94.025 [3088s]
