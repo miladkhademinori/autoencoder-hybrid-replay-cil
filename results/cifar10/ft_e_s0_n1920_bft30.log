@@ -36,3 +36,8 @@ after task 4: acc=74.62 per-task=[85.0, 50.2, 68.2, 95.1] [3037s]
   task 5 epoch 10/50 (94 it) ce=0.154 kd=0.000 [3180s]
   task 5 epoch 20/50 (94 it) ce=0.076 kd=0.000 [3322s]
   task 5 epoch 30/50 (94 it) ce=0.046 kd=0.000 [3464s]
+  task 5 epoch 40/50 (94 it) ce=0.016 kd=0.000 [3608s]
+  task 5 epoch 50/50 (94 it) ce=0.012 kd=0.000 [3753s]
+  task 5 balanced fine-tuning: 30 epochs on 1920 exemplars, ce=0.014 [3821s]
+after task 5: acc=74.41 per-task=[72.8, 53.0, 68.4, 82.2, 95.6] [3834s]
+FINAL cifar10 ft_e seed=0: final acc=74.41 avg inc acc=82.97 time=63.9min
