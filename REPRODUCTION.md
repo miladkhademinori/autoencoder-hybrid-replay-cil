@@ -17,7 +17,7 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 | FT-E | 72.18 ± 0.81 (n=3) | 92.17 ± 0.16 | 55.61 (n=1) | 87.13 ± 0.37 | 43.95 (n=1) | 72.17 ± 0.84 | 27.10 (n=1) | 48.47 ± 0.83 |
 | Joint | 98.54 ± 0.04 (n=3) | 98.48 ± 0.06 | 95.43 (n=1) | 95.88 ± 0.04 | 89.02 (n=1) | 92.37 ± 0.09 | 59.43 (n=1) | 73.87 ± 0.10 |
 | iCaRL | 88.60 ± 0.10 (n=3) | 93.06 ± 0.33 | 71.07 (n=1) | 89.63 ± 0.61 | 62.82 (n=1) | 73.29 ± 0.73 | 37.99 (n=1) | 49.38 ± 0.62 |
-| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | - | 93.02 ± 0.65 | 50.72 (n=1) | 77.12 ± 0.75 | - | 54.43 ± 0.93 |
+| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 74.43 (n=1) | 93.02 ± 0.65 | 50.72 (n=1) | 77.12 ± 0.75 | - | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 | - | 50.85 ± 0.81 |
 | AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | - | 94.21 ± 0.23 | 68.82 (n=1) | 78.35 ± 0.37 | - | 56.71 ± 0.57 |
@@ -38,6 +38,7 @@ Epochs / exemplars / wall-clock per run:
 | svhn | FT-E | 50 | 200 | 614,400 | 137 |
 | svhn | Joint | 50 | 0 | 0 | 142 |
 | svhn | iCaRL | 50 | 200 | 614,400 | 162 |
+| svhn | AHR | 50 | 1920 | 614,400 | 1232 |
 | cifar10 | FT | 50 | 0 | 0 | 143 |
 | cifar10 | FT-E | 50 | 200 | 614,400 | 147 |
 | cifar10 | Joint | 50 | 0 | 0 | 155 |
@@ -77,6 +78,9 @@ the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
   (AHR 94.6 vs AHR-lossless 95.1; paper 97.5 vs 98.1), and storing ~40x more
   (compressed) exemplars matters far more than their fidelity (AHR-lossy-mini
   68.9, AHR-lossless-mini 67.3).
+* On Balanced SVHN, AHR (74.4; after each task 97.9, 86.3, 84.2, 80.7, 74.4) is above
+  iCaRL (71.1) and FT-E (55.6) with the same memory budget, as in the paper, though
+  all three are well below the paper's values (93.0 / 89.6 / 87.1).
 
 **What does not reproduce as described.**
 * The absolute numbers: AHR is 3 points below the paper on MNIST, and the FT-E /
