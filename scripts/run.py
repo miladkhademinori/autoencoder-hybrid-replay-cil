@@ -152,6 +152,13 @@ def parse_args(argv=None):
                          "norm of this fraction of --rfa-target (0 = start exactly at the class means)")
     ap.add_argument("--rfa-target", type=float, help="stop RFA once new CCEs are this far apart "
                     "from all other CCEs (<=0: run the full --rfa-steps)")
+    ap.add_argument("--val-fraction", type=float, default=0.0,
+                    help="tuning mode: hold out this fraction of each class's training data and "
+                         "report accuracy on it instead of the test set")
+    ap.add_argument("--balanced-ft-epochs", type=int, default=0,
+                    help="baselines: EEIL-style balanced fine-tuning on the exemplar memory after "
+                         "each task (implicit bias correction by data equalisation); 0 = off")
+    ap.add_argument("--balanced-ft-lr-scale", type=float, default=0.1)
     ap.add_argument("--replay-sampling", default="union", choices=["union", "balanced"],
                     help="baselines: shuffle new data U exemplars (FACIL) or AHR-style balanced batches")
     # iCaRL
@@ -191,7 +198,7 @@ def main(argv=None):
     torch.set_flush_denormal(bool(args.flush_denormal))
     set_seed(args.seed)
     bench = CILBenchmark(args.dataset, args.data_root, args.n_tasks, args.class_order,
-                         args.seed, args.train_fraction)
+                         args.seed, args.train_fraction, args.val_fraction)
     name = f"{args.method}_s{args.seed}{('_' + args.tag) if args.tag else ''}"
     out_dir = os.path.join(args.out, args.dataset)
     os.makedirs(out_dir, exist_ok=True)

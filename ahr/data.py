@@ -40,7 +40,7 @@ def _balance(x, y, rng):
 
 class CILBenchmark:
     def __init__(self, name, root="data", n_tasks=None, class_order="natural", seed=0,
-                 train_fraction=1.0):
+                 train_fraction=1.0, val_fraction=0.0):
         file, default_tasks, flip = BENCHMARKS[name]
         self.name = name
         self.flip = flip
@@ -60,6 +60,19 @@ class CILBenchmark:
                 keep.append(rng.choice(idx, int(len(idx) * train_fraction), replace=False))
             keep = np.sort(np.concatenate(keep))
             x_tr, y_tr = x_tr[keep], y_tr[keep]
+        if val_fraction > 0:
+            # validation mode for tuning: hold out a fixed per-class part of the training set
+            # and evaluate on it instead of the test set (the test set is never touched)
+            vrng = np.random.RandomState(2024)
+            val = []
+            for c in np.unique(y_tr):
+                idx = np.where(y_tr == c)[0]
+                val.append(vrng.choice(idx, int(round(len(idx) * val_fraction)), replace=False))
+            val = np.sort(np.concatenate(val))
+            is_val = np.zeros(len(y_tr), dtype=bool)
+            is_val[val] = True
+            x_te, y_te = x_tr[is_val], y_tr[is_val]
+            x_tr, y_tr = x_tr[~is_val], y_tr[~is_val]
 
         n_classes = int(y_tr.max()) + 1
         self.n_tasks = n_tasks or default_tasks

@@ -138,8 +138,41 @@ class SoftmaxLearner:
         self._train(t, task.x_train, task.y_train, old)
         if self.use_memory:
             self._update_memory(task)
+            if t > 0 and self.args.balanced_ft_epochs > 0:
+                self._balanced_finetune(t)
         if self.method == "icarl":
             self._compute_class_means()
+
+    def _balanced_finetune(self, t):
+        """Implicit bias correction by data equalisation (EEIL, Castro et al. 2018): after
+        the task, fine-tune on the class-balanced exemplar memory (the new classes are
+        subsampled to the same number of exemplars per class as the old ones) with a
+        reduced learning rate."""
+        a = self.args
+        model = self.model
+        x_all, y_all = self.memory.data, self.memory.labels
+        opt = torch.optim.Adam(model.parameters(), lr=a.lr * a.balanced_ft_lr_scale,
+                               betas=(a.momentum, 0.999), weight_decay=a.weight_decay)
+        bs = min(a.batch_size, len(y_all))
+        iters = math.ceil(len(y_all) / bs)
+        for ep in range(a.balanced_ft_epochs):
+            model.train()
+            perm = torch.randperm(len(y_all))
+            tot = 0.0
+            for it in range(iters):
+                idx = perm[it * bs:(it + 1) * bs]
+                x = to_float(x_all[idx])
+                if a.augment:
+                    x = augment(x, pad=a.crop_pad, flip=self.bench.flip)
+                with autocast(a.bf16):
+                    out = model(x)
+                loss = F.cross_entropy(out.float(), y_all[idx])
+                opt.zero_grad(set_to_none=True)
+                loss.backward()
+                opt.step()
+                tot += loss.item()
+        self.log(f"  task {t + 1} balanced fine-tuning: {a.balanced_ft_epochs} epochs on "
+                 f"{len(y_all)} exemplars, ce={tot / iters:.3f}")
 
 
 class JointLearner(SoftmaxLearner):
