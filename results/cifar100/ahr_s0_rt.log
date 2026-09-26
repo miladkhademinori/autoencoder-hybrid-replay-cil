@@ -5,3 +5,5 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
   task 1 epoch 1/50 (20 it, b_new=256) rec=155.122 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=215.892 [105s]
   task 1 epoch 10/50 (20 it, b_new=256) rec=38.211 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=182.347 [807s]
   task 1 epoch 20/50 (20 it, b_new=256) rec=28.277 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=139.518 [1594s]
+  task 1 epoch 30/50 (20 it, b_new=256) rec=24.998 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=117.441 [2377s]
+  task 1 epoch 40/50 (20 it, b_new=256) rec=22.343 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=102.437 [3157s]
