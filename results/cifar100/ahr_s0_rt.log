@@ -9,3 +9,7 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
   task 1 epoch 40/50 (20 it, b_new=256) rec=22.343 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=102.437 [3157s]
   task 1 epoch 50/50 (20 it, b_new=256) rec=22.119 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=98.439 [3929s]
   memory (frozen codes): 5000 exemplars (1920/class), 1,600,000 scalars, 6,400,000 bytes
+  memorisation: 75 decoder epochs (1500 steps) over 5000 exemplars, final loss=18.113
+after task 1: acc=69.60 per-task=[69.6] memory-PSNR=22.82dB acc(recon test)=69.6 acc(memory)=76.4 [5578s]
+  CCE placement (2582 RFA steps): |init spread|=8.362 mean shift=21.179 min/mean CCE distance=20.000/30.664 |p| mean=20.881
+  task 2 epoch 1/50 (40 it, b_new=128) rec=19.345 lat=0.000 dz=36.764 dx=7.479 mem=3.867 rn=387.388 [5816s]
