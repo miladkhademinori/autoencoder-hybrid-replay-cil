@@ -17,7 +17,7 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 | FT-E | 72.18 ± 0.81 (n=3) | 92.17 ± 0.16 | 55.61 (n=1) | 87.13 ± 0.37 | 43.95 (n=1) | 72.17 ± 0.84 | 27.10 (n=1) | 48.47 ± 0.83 |
 | Joint | 98.54 ± 0.04 (n=3) | 98.48 ± 0.06 | 95.43 (n=1) | 95.88 ± 0.04 | 89.02 (n=1) | 92.37 ± 0.09 | 59.43 (n=1) | 73.87 ± 0.10 |
 | iCaRL | 88.60 ± 0.10 (n=3) | 93.06 ± 0.33 | 71.07 (n=1) | 89.63 ± 0.61 | 62.82 (n=1) | 73.29 ± 0.73 | 37.99 (n=1) | 49.38 ± 0.62 |
-| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 74.43 (n=1) | 93.02 ± 0.65 | 55.79 (n=1) | 77.12 ± 0.75 | - | 54.43 ± 0.93 |
+| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 74.43 (n=1) | 93.02 ± 0.65 | 55.79 (n=1) | 77.12 ± 0.75 | 15.32 (n=1) | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 | - | 50.85 ± 0.81 |
 | AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | - | 94.21 ± 0.23 | 68.82 (n=1) | 78.35 ± 0.37 | - | 56.71 ± 0.57 |
@@ -49,6 +49,7 @@ Epochs / exemplars / wall-clock per run:
 | cifar100 | FT-E | 50 | 2000 | 6,144,000 | 184 |
 | cifar100 | Joint | 50 | 0 | 0 | 123 |
 | cifar100 | iCaRL | 50 | 2000 | 6,144,000 | 249 |
+| cifar100 | AHR | 50 | 19200 | 6,144,000 | 1242 |
 
 mnist ablations (final accuracy %, mean ± SEM):
 
@@ -74,6 +75,12 @@ cifar10 ablations (final accuracy %, mean ± SEM):
 |---|---|
 | AHR (final configuration) | 55.79 (n=1) |
 | spatial 8x8x5 latent, lambda 0.3, no RFA jitter (§3.9-3.11) | 50.72 (n=1) |
+
+cifar100 ablations (final accuracy %, mean ± SEM):
+
+| Variant | Final acc. |
+|---|---|
+| AHR (final configuration) | 15.32 (n=1) |
 <!-- /RESULTS -->
 
 ## Summary
@@ -118,9 +125,9 @@ the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
 * CIFAR-100(10/10) needs more changes (§3.12): RFA from the anisotropic class means
   inflates the CCE norms (fixed by jittering the initial positions), and with 10
   classes per task the reconstruction-domain classifier is weak. Decoded CIFAR-100
-  exemplars are at ~22 dB (figures/decoded_cifar100.png) and AHR falls far below
-  the baselines, whereas the same classifier with raw exemplars (AHR-lossless) stays
-  above iCaRL throughout.
+  exemplars are at ~22 dB (figures/decoded_cifar100.png) and AHR ends at **15.3%**
+  (paper 54.4; iCaRL 38.0, FT-E 27.1 here), whereas the same classifier with raw
+  exemplars (AHR-lossless) stays above iCaRL throughout.
 
 ## 1. What is implemented
 
@@ -395,6 +402,19 @@ gives the class code that pooling:
 The CIFAR-100 run therefore uses the split latent with lambda = 1 and jitter 0.25
 (`AHR_DEFAULTS["cifar100"]`); it was continued from the task-2 checkpoint of the last
 row.
+
+Continued to all ten tasks, CIFAR-100 AHR ends at **15.3%** (after each task: 63.2,
+47.5, 38.6, 34.9, 27.7, 23.4, 22.9, 18.2, 17.4, 15.3; average incremental accuracy
+30.9), below FT-E (27.1) and iCaRL (38.0) and far below the paper's 54.4. The final
+per-task accuracies are [1.8, 1.5, 11.3, 3.2, 10.8, 9.6, 16.5, 16.4, 15.9, 66.2]:
+the old classes are essentially lost. The decoded memory stays at ~22.5 dB, but
+even the decoded exemplars themselves are classified correctly only 38-50% of the
+time from task 3 on (84-95% on CIFAR-10), i.e. at ~22 dB and 10 classes per task the
+reconstruction-domain classifier cannot fit its own replay data. The same classifier
+on real images with raw exemplars (AHR-lossless, input domain, 19,200 images) is at
+77.5 / 63.2 / 61.8 / 61.1 / 59.0 / 57.8 after tasks 1-6, above iCaRL at every task, so
+on CIFAR-100 the failure is again the decoded replay combined with the workaround
+that decoded replay forces (§3.10-3.11), not the CCE classifier itself.
 
 ### 3.13 The split latent on CIFAR-10
 The CIFAR-100 finding (§3.12) carries over. With the split latent (lambda = 1, RFA

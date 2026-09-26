@@ -55,6 +55,7 @@ def main():
             ax.axhline(j, color=NEUTRAL, lw=1.2, ls="--", zorder=1)
             ax.annotate(f"Joint {j:.1f}", (n + 0.85, j), xytext=(0, 3), textcoords="offset points",
                         color=TEXT2, fontsize=8, ha="right", va="bottom")
+        ends = []
         for key, label, color in SERIES:
             if (d, key) not in runs:
                 continue
@@ -62,7 +63,14 @@ def main():
             t = np.arange(1, len(accs) + 1)
             ax.plot(t, accs, color=color, lw=2, marker="o", ms=5, zorder=3,
                     markeredgecolor="#fcfcfb", markeredgewidth=1.5, label=label)
-            ax.annotate(f"{label} {accs[-1]:.1f}", (t[-1], accs[-1]), xytext=(5, 0), textcoords="offset points",
+            ends.append([accs[-1], f"{label} {accs[-1]:.1f}", t[-1]])
+        # spread the end labels so that close final accuracies do not overlap
+        ends.sort(key=lambda e: e[0])
+        ys = [e[0] for e in ends]
+        for i in range(1, len(ys)):
+            ys[i] = max(ys[i], ys[i - 1] + 6.5)
+        for (y, text, x), y_lab in zip(ends, ys):
+            ax.annotate(text, (x, y), xytext=(x + 0.12, y_lab), textcoords="data",
                         color=TEXT, va="center", fontsize=8)
         ax.set_title(TITLES[d], color=TEXT, fontsize=10, loc="left")
         ax.set_xticks(range(1, n + 1))
