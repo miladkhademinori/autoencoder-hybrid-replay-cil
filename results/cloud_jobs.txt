@@ -1,0 +1,12 @@
+# Experiments run in separate cloud sessions (scripts/cloud_run.py); each pushes its
+# results to the branch below, collected with: python scripts/collect_cloud.py
+# session_id                        branch                                      run.py arguments
+session_01VzcymcNL6ToRYJ3ngAWfyW  claude/ahr-exp-svhn-ahr-s1-split            --dataset svhn --method ahr --seed 1 --latent-kind split --lam 1 --rfa-jitter 0.25 --tag split
+session_01KKJsCtPrM7L9Adb1rxAksu  claude/ahr-exp-svhn-ahr-s2-split            --dataset svhn --method ahr --seed 2 --latent-kind split --lam 1 --rfa-jitter 0.25 --tag split
+session_01WTPQ7DsEwVMStdrVtjAcHb  claude/ahr-exp-cifar10-ahr-s2               --dataset cifar10 --method ahr --seed 2
+session_019oFnNeAbD1bLu3mYdvE4uA  claude/ahr-exp-svhn-ft_e-s0-bft30           --dataset svhn --method ft_e --seed 0 --balanced-ft-epochs 30 --tag bft30
+session_01WRGouRkbot5UPPCopj8zMg  claude/ahr-exp-cifar10-ft_e-s0-bft30        --dataset cifar10 --method ft_e --seed 0 --balanced-ft-epochs 30 --tag bft30
+session_01NGoENxpkpFKNTzePyo6FmT  claude/ahr-exp-cifar100-ft_e-s0-bft30       --dataset cifar100 --method ft_e --seed 0 --balanced-ft-epochs 30 --tag bft30
+session_01VMP6UNSSj5U2cS9kJxhKot  claude/ahr-exp-svhn-ahr_lossless-s1         --dataset svhn --method ahr_lossless --seed 1 --latent-domain input --lam-recon-new 0
+session_018r6JGAKqYU6HJEn4XRnJ1E  claude/ahr-exp-cifar10-ahr_lossless-s1      --dataset cifar10 --method ahr_lossless --seed 1 --latent-domain input --lam-recon-new 0 --latent-kind spatial --lam 0.3 --rfa-jitter 0
+session_015tDLkZNicMKzwkGvatWPwQ  claude/ahr-exp-cifar100-ahr_lossless-s1     --dataset cifar100 --method ahr_lossless --seed 1 --latent-domain input --lam-recon-new 0
