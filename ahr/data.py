@@ -121,13 +121,14 @@ def to_float(x_uint8):
     return x_uint8.float().div_(255.0)
 
 
-def augment(x, pad=4, flip=True):
-    """Random crop with zero padding + optional horizontal flip on a float batch."""
+def augment(x, pad=4, flip=True, pad_mode="constant"):
+    """Random crop with padding (zeros by default, or "reflect"/"replicate") + optional
+    horizontal flip on a float batch."""
     if pad <= 0 and not flip:
         return x
     B, C, H, W = x.shape
     if pad > 0:
-        xp = F.pad(x, (pad, pad, pad, pad))
+        xp = F.pad(x, (pad, pad, pad, pad), mode=pad_mode)
         i = torch.randint(0, 2 * pad + 1, (B,))
         j = torch.randint(0, 2 * pad + 1, (B,))
         rows = (i[:, None] + torch.arange(H)[None])[:, None, :, None]

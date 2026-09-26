@@ -152,6 +152,10 @@ def parse_args(argv=None):
                          "norm of this fraction of --rfa-target (0 = start exactly at the class means)")
     ap.add_argument("--rfa-target", type=float, help="stop RFA once new CCEs are this far apart "
                     "from all other CCEs (<=0: run the full --rfa-steps)")
+    ap.add_argument("--pad-mode", default="constant", choices=["constant", "reflect", "replicate"],
+                    help="AHR: padding of the random-crop augmentation. Zero padding gives decoded "
+                         "replays sharp black borders but reconstructed new samples blurred ones, a "
+                         "task cue the classifier learns (REPRODUCTION.md 3.14)")
     ap.add_argument("--val-fraction", type=float, default=0.0,
                     help="tuning mode: hold out this fraction of each class's training data and "
                          "report accuracy on it instead of the test set")

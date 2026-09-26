@@ -160,7 +160,7 @@ class AHR:
                         use = (torch.rand(len(x) - n, 1, 1, 1) < a.hf_transplant).float()
                         x = torch.cat([x[:n], (x[n:] + use * hf).clamp(0, 1)])
                 if a.augment:
-                    x = augment(x, pad=a.crop_pad, flip=flip)
+                    x = augment(x, pad=a.crop_pad, flip=flip, pad_mode=a.pad_mode)
                 use_rn = a.lam_recon_new > 0 and (old is not None or a.recon_new_source == "current")
                 x_in = x
                 if use_rn:
