@@ -33,3 +33,4 @@ after task 2: acc=92.01 per-task=[87.9, 96.1] memory-PSNR=32.04dB acc(recon test
 after task 3: acc=87.24 per-task=[84.1, 80.5, 97.1] memory-PSNR=32.02dB acc(recon test)=87.2 acc(memory)=98.9 [11744s]
   CCE placement (6490 RFA steps): |init spread|=26.433 mean shift=16.766 min/mean CCE distance=20.000/30.635 |p| mean=21.890
   task 4 epoch 1/50 (292 it, b_new=32) rec=5.965 lat=50.889 dz=200.486 dx=4.235 mem=0.822 rn=86.066 [11909s]
+  task 4 epoch 10/50 (292 it, b_new=32) rec=5.085 lat=6.431 dz=198.196 dx=4.061 mem=0.608 rn=15.074 [13125s]
