@@ -74,3 +74,5 @@ after task 7: acc=24.30 per-task=[9.1, 3.8, 19.8, 12.5, 23.4, 42.1, 59.4] memory
   CCE placement (4096 RFA steps): |init spread|=24.970 mean shift=27.316 min/mean CCE distance=20.000/49.011 |p| mean=36.375
   task 8 epoch 1/50 (157 it, b_new=32) rec=8.554 lat=0.000 dz=80.122 dx=2.344 mem=0.627 rn=578.746 [29468s]
   task 8 epoch 10/50 (157 it, b_new=32) rec=8.205 lat=0.000 dz=92.173 dx=2.785 mem=0.613 rn=513.144 [30905s]
+  task 8 epoch 20/50 (157 it, b_new=32) rec=7.917 lat=0.000 dz=90.350 dx=2.762 mem=0.505 rn=473.523 [32496s]
+  task 8 epoch 30/50 (157 it, b_new=32) rec=7.405 lat=0.000 dz=84.975 dx=2.362 mem=0.333 rn=422.963 [34087s]
