@@ -23,3 +23,10 @@ session_01CbNGVJ42PtDQCNRjoxSMBZ  claude/ahr-exp-cifar100-ft_e-s0-incjoint     -
 session_01BpDYCwrqWah82ecEQLLyc9  claude/ahr-exp-cifar100-icarl-s0-bce         --dataset cifar100 --method icarl --seed 0 --kd-form bce --tag bce
 session_01PVyWUo8yJZS2aufqpbeQj6  claude/ahr-exp-cifar10-ft_e-s0-n1920         --dataset cifar10 --method ft_e --seed 0 --n-exemplars 1920 --tag n1920
 session_01RWkEdp46JrABGTiUwbgyfh  claude/ahr-exp-cifar10-ft_e-s0-n1920_bft30   --dataset cifar10 --method ft_e --seed 0 --n-exemplars 1920 --balanced-ft-epochs 30 --tag n1920_bft30
+# validation-mode sweep (--val-fraction 0.1; accuracies are on held-out training data, not the test set)
+session_01PWNPt34YVsR1gEzeyeFqJm  claude/ahr-exp-cifar10-ahr-s0-val_base       --dataset cifar10 --method ahr --seed 0 --val-fraction 0.1 --tag val_base
+session_017qnW2cmofZqw4puyQr4mD4  claude/ahr-exp-cifar10-ahr-s0-val_az003      --dataset cifar10 --method ahr --seed 0 --val-fraction 0.1 --alpha-z 0.03 --tag val_az003
+session_01XKSR4df9KLR4JrUN4CtfJc  claude/ahr-exp-cifar10-ahr-s0-val_az03       --dataset cifar10 --method ahr --seed 0 --val-fraction 0.1 --alpha-z 0.3 --tag val_az03
+session_01HBRRWzCPqk5gBb4H2i7aAD  claude/ahr-exp-cifar10-ahr-s0-val_l03        --dataset cifar10 --method ahr --seed 0 --val-fraction 0.1 --lam 0.3 --tag val_l03
+session_01CVRp8D2VVNrWTfRePfu7b7  claude/ahr-exp-cifar10-ahr-s0-val_l3         --dataset cifar10 --method ahr --seed 0 --val-fraction 0.1 --lam 3 --tag val_l3
+session_01Y6yvx1zzjVoMbDYKvGtnsw  claude/ahr-exp-cifar10-ahr-s0-val_ax03       --dataset cifar10 --method ahr --seed 0 --val-fraction 0.1 --alpha-x 0.3 --tag val_ax03
