@@ -19,8 +19,15 @@ def main():
     ap.add_argument("--prefix", default="claude/ahr-exp-")
     ap.add_argument("--base", default="HEAD", help="files identical to this revision are skipped")
     a = ap.parse_args()
-    git("fetch", "-q", "origin", f"+refs/heads/{a.prefix}*:refs/remotes/origin/{a.prefix}*")
-    branches = git("for-each-ref", "--format=%(refname:short)", f"refs/remotes/origin/{a.prefix}").stdout.split()
+    # list the branches remotely and fetch them one by one (some git proxies reject wildcard refspecs)
+    remote = [l.split()[1][len("refs/heads/"):] for l in
+              git("ls-remote", "origin", f"refs/heads/{a.prefix}*").stdout.splitlines() if l.strip()]
+    branches = []
+    for b in remote:
+        if git("fetch", "-q", "origin", f"+refs/heads/{b}:refs/remotes/origin/{b}").returncode == 0:
+            branches.append(f"origin/{b}")
+        else:
+            print("fetch failed:", b)
     done, running = [], []
     for b in sorted(branches):
         files = git("diff", "--name-only", f"{a.base}...{b}", "--", "results/").stdout.split()

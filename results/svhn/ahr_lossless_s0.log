@@ -39,3 +39,11 @@ after task 3: acc=91.30 per-task=[90.3, 86.2, 97.4] [19840s]
 after task 4: acc=88.71 per-task=[83.8, 86.1, 87.1, 97.9] [33858s]
   CCE placement (7819 RFA steps): |init spread|=13.638 mean shift=30.536 min/mean CCE distance=20.001/33.360 |p| mean=24.025
   task 5 epoch 1/50 (359 it, b_new=26) rec=6.941 lat=139.522 dz=66.557 dx=5.127 mem=0.000 [34206s]
+  task 5 epoch 10/50 (359 it, b_new=26) rec=4.610 lat=38.917 dz=124.728 dx=2.896 mem=0.000 [37154s]
+  task 5 epoch 20/50 (359 it, b_new=26) rec=4.073 lat=26.758 dz=130.350 dx=2.456 mem=0.000 [40403s]
+  task 5 epoch 30/50 (359 it, b_new=26) rec=3.285 lat=21.324 dz=132.685 dx=1.792 mem=0.000 [43595s]
+  task 5 epoch 40/50 (359 it, b_new=26) rec=2.926 lat=19.147 dz=133.459 dx=1.453 mem=0.000 [46757s]
+  task 5 epoch 50/50 (359 it, b_new=26) rec=2.780 lat=18.600 dz=133.751 dx=1.326 mem=0.000 [49910s]
+  memory (frozen codes): 1920 exemplars (192/class), 5,898,240 scalars, 5,898,240 bytes
+after task 5: acc=85.97 per-task=[80.5, 78.9, 86.8, 87.1, 96.6] [49994s]
+FINAL svhn ahr_lossless seed=0: final acc=85.97 avg inc acc=91.84 time=833.2min
