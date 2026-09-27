@@ -52,3 +52,4 @@ after task 4: acc=32.65 per-task=[28.2, 8.9, 39.9, 53.6] memory-PSNR=23.01dB acc
   task 5 epoch 1/50 (99 it, b_new=51) rec=10.692 lat=0.000 dz=60.362 dx=3.018 mem=0.962 rn=484.043 [26809s]
   task 5 epoch 10/50 (99 it, b_new=51) rec=10.319 lat=0.000 dz=88.116 dx=3.830 mem=0.848 rn=401.151 [32352s]
   task 5 epoch 20/50 (99 it, b_new=51) rec=9.865 lat=0.000 dz=94.739 dx=3.871 mem=0.704 rn=359.891 [38556s]
+  task 5 epoch 30/50 (99 it, b_new=51) rec=9.229 lat=0.000 dz=90.843 dx=3.476 mem=0.476 rn=320.261 [44633s]
