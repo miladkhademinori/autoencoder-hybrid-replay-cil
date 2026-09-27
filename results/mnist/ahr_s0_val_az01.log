@@ -30,3 +30,20 @@ after task 2: acc=97.74 per-task=[99.8, 95.5] memory-PSNR=20.78dB acc(recon test
 after task 3: acc=97.25 per-task=[99.4, 96.4, 95.7] memory-PSNR=20.59dB acc(recon test)=96.2 acc(memory)=98.5 [346s]
   CCE placement (597 RFA steps): |init spread|=2.269 mean shift=3.455 min/mean CCE distance=5.001/6.870 |p| mean=5.480
   task 4 epoch 1/40 (343 it, b_new=32) rec=4.228 lat=5.012 dz=0.237 dx=0.969 mem=0.146 [353s]
+  task 4 epoch 10/40 (343 it, b_new=32) rec=2.912 lat=2.771 dz=1.419 dx=1.232 mem=0.143 [409s]
+  task 4 epoch 20/40 (343 it, b_new=32) rec=2.647 lat=2.369 dz=1.752 dx=1.183 mem=0.117 [471s]
+  task 4 epoch 30/40 (343 it, b_new=32) rec=2.515 lat=2.219 dz=1.900 dx=1.143 mem=0.101 [534s]
+  task 4 epoch 40/40 (343 it, b_new=32) rec=2.472 lat=2.168 dz=1.929 dx=1.125 mem=0.094 [595s]
+  memory (frozen codes): 7840 exemplars (980/class), 156,800 scalars, 627,200 bytes
+  memorisation: 20 decoder epochs (1240 steps) over 7840 exemplars, final loss=1.628
+after task 4: acc=96.76 per-task=[98.9, 94.9, 96.9, 96.3] memory-PSNR=20.81dB acc(recon test)=96.5 acc(memory)=99.5 [603s]
+  CCE placement (924 RFA steps): |init spread|=3.817 mean shift=5.243 min/mean CCE distance=5.001/7.422 |p| mean=6.035
+  task 5 epoch 1/40 (409 it, b_new=26) rec=3.470 lat=6.796 dz=0.360 dx=0.694 mem=0.146 [611s]
+  task 5 epoch 10/40 (409 it, b_new=26) rec=2.630 lat=3.977 dz=1.913 dx=0.867 mem=0.173 [678s]
+  task 5 epoch 20/40 (409 it, b_new=26) rec=2.382 lat=3.069 dz=2.615 dx=0.778 mem=0.136 [754s]
+  task 5 epoch 30/40 (409 it, b_new=26) rec=2.251 lat=2.788 dz=2.852 dx=0.714 mem=0.114 [828s]
+  task 5 epoch 40/40 (409 it, b_new=26) rec=2.208 lat=2.729 dz=2.907 dx=0.693 mem=0.108 [904s]
+  memory (frozen codes): 7840 exemplars (784/class), 156,800 scalars, 627,200 bytes
+  memorisation: 20 decoder epochs (1240 steps) over 7840 exemplars, final loss=1.685
+after task 5: acc=93.87 per-task=[98.2, 94.5, 95.5, 96.2, 84.6] memory-PSNR=20.71dB acc(recon test)=93.6 acc(memory)=96.2 [912s]
+FINAL mnist ahr seed=0: final acc=93.87 avg inc acc=97.11 time=15.2min

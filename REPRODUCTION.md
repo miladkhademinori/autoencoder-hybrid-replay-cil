@@ -530,3 +530,49 @@ implicit bias correction is class-balanced minibatches (tex:555), which this rep
 has as `--replay-sampling balanced` (MNIST FT-E 75.1). `--balanced-ft-epochs 30` (EEIL
 fine-tuning, MNIST FT-E 84.7 +- 0.3 over 3 seeds) is therefore reported only as a
 variant, not as the paper's FT-E.
+
+### 4.1 Follow-up experiments on the audit findings
+
+Tested after the audit (cloud sessions listed in `results/cloud_jobs.txt`; final
+accuracy %, seed 0 unless noted; the per-dataset variant tables in §0 have all runs):
+
+| Change | MNIST | SVHN | CIFAR-10 | CIFAR-100 |
+|---|---|---|---|---|
+| reference (reported configuration) | 94.6 (3 seeds; decoder-output domain: 91.5) | 74.4 spatial / 79.7, 82.6 split (s1, s2) | 56.6 (2 seeds) | 15.3 |
+| one latent-loss mean (K01) | decoder-output domain: 89.2 (3 seeds) | | running (56.0 after 4 of 5 tasks, reference 59.2) | |
+| replays via the test path (K02) | decoder-output domain: 87.7 (3 seeds) | running (86.3 after 4 of 5, reference 84.0) | running (46.8 after 4 of 5) | running |
+| reflect padding (K03) | no crop augmentation on MNIST | 79.2 (split latent) | running | worse: 14.0 after 8 of 10 (reference 18.2) |
+| fewer AHR steps per epoch (K12) | 92.0 (3 seeds) | | | |
+| iCaRL with sigmoid-BCE distillation (K15) | 88.9 (3 seeds; KL 88.6) | | | 34.6 (KL 38.0) |
+| FT-E + EEIL balanced fine-tuning | 84.7 (3 seeds; plain 72.2) | 45.6 (plain 55.6) | 36.0 (plain 44.0) | 33.4 (plain 27.1) |
+| FT-E with AHR-lossless's number of raw exemplars | 96.7 (7,840) | | 73.7 (1,920) | |
+| Joint: 100 epochs / incremental | | | | 61.5 / 57.0 (50 epochs: 59.4) |
+| AHR-lossy-mini / -lossless-mini with alpha_z 0.1 | 78.1 / 75.5 (3 seeds; alpha_z 0.01: 68.9 / 67.3) | | | |
+
+Validation-mode sweep of the loss weights the paper does not give (MNIST AHR, seed 0,
+`--val-fraction 0.1`: trained on 90% of each class's training data and scored on the
+other 10%, the test set is not used):
+
+| lambda | alpha_z | alpha_x | validation accuracy |
+|---|---|---|---|
+| **0.3** | **0.01** | **1** | **95.07** (reported configuration) |
+| 0.3 | 0.003 | 1 | 95.35 |
+| 0.3 | 0.03 | 1 | 95.13 |
+| 0.3 | 0.1 | 1 | 93.87 |
+| 0.3 | 0.01 | 0.3 | 95.42 |
+| 0.3 | 0.01 | 3 | 92.82 |
+| 0.1 | 0.01 | 1 | 74.91 |
+| 1 | 0.01 | 1 | 92.78 |
+
+The reported configuration is within noise (<= 0.35 points) of the best setting, so
+the unspecified loss weights do not explain MNIST's 3-point gap to the paper. The same
+sweep on CIFAR-10 is running.
+
+What this shows so far:
+* The paper's FT-E numbers are reached with about 10x the stated memory (CIFAR-10 FT-E
+  with 1,920 exemplars: 73.7 vs the paper's 72.2 "with 200"), consistent with audit K05.
+* With the same raw memory, plain FT-E beats this repository's AHR-lossless (CIFAR-10
+  73.7 vs 68.1, MNIST 96.7 vs 95.1), so part of the gap is in how AHR learns from
+  replay (nearest-CCE regression plus distillation), not only in the decoded exemplars.
+* None of the audit's fixes on the AHR side (K01, K02, K03, K12) closes the gap; K02
+  helps SVHN but hurts CIFAR-10 so far.
