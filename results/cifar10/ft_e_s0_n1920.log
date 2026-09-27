@@ -34,3 +34,6 @@ after task 4: acc=73.35 per-task=[87.0, 46.1, 63.2, 97.1] [10191s]
   task 5 epoch 20/50 (94 it) ce=0.072 kd=0.000 [11242s]
   task 5 epoch 30/50 (94 it) ce=0.029 kd=0.000 [11769s]
   task 5 epoch 40/50 (94 it) ce=0.011 kd=0.000 [12300s]
+  task 5 epoch 50/50 (94 it) ce=0.009 kd=0.000 [12830s]
+after task 5: acc=73.65 per-task=[64.1, 56.1, 71.1, 80.2, 96.9] [12845s]
+FINAL cifar10 ft_e seed=0: final acc=73.65 avg inc acc=82.19 time=214.1min
