@@ -47,3 +47,8 @@ after task 4: acc=85.15 per-task=[78.4, 82.5, 82.1, 97.6] memory-PSNR=31.72dB ac
   task 5 epoch 20/50 (359 it, b_new=26) rec=3.847 lat=2.782 dz=149.475 dx=2.867 mem=0.357 rn=6.321 [21316s]
   task 5 epoch 30/50 (359 it, b_new=26) rec=3.432 lat=1.877 dz=148.556 dx=2.493 mem=0.222 rn=2.813 [22925s]
   task 5 epoch 40/50 (359 it, b_new=26) rec=3.258 lat=1.455 dz=144.282 dx=2.310 mem=0.134 rn=1.273 [24505s]
+  task 5 epoch 50/50 (359 it, b_new=26) rec=3.167 lat=1.361 dz=140.237 dx=2.215 mem=0.109 rn=0.984 [26086s]
+  memory (frozen codes): 1920 exemplars (192/class), 614,400 scalars, 2,457,600 bytes
+  memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=0.487
+after task 5: acc=82.55 per-task=[76.7, 75.0, 82.9, 81.9, 96.3] memory-PSNR=31.67dB acc(recon test)=82.6 acc(memory)=99.7 [26339s]
+FINAL svhn ahr seed=2: final acc=82.55 avg inc acc=89.50 time=439.0min
