@@ -66,3 +66,4 @@ after task 6: acc=24.50 per-task=[9.7, 3.9, 25.1, 18.5, 26.6, 63.2] memory-PSNR=
   task 7 epoch 10/50 (136 it, b_new=37) rec=8.643 lat=0.000 dz=88.259 dx=3.204 mem=0.689 rn=464.474 [23579s]
   task 7 epoch 20/50 (136 it, b_new=37) rec=8.050 lat=0.000 dz=86.638 dx=2.958 mem=0.515 rn=420.919 [24927s]
   task 7 epoch 30/50 (136 it, b_new=37) rec=7.802 lat=0.000 dz=84.933 dx=2.759 mem=0.410 rn=386.903 [26287s]
+  task 7 epoch 40/50 (136 it, b_new=37) rec=7.525 lat=0.000 dz=81.192 dx=2.548 mem=0.267 rn=355.095 [27664s]
