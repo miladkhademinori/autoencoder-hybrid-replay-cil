@@ -62,3 +62,4 @@ resumed from results/cifar100/ahr_lossless_s1_ckpt_t5.pt after task 5: accs so f
   memory (frozen codes): 19200 exemplars (320/class), 58,982,400 scalars, 235,929,600 bytes
 after task 6: acc=58.55 per-task=[61.5, 58.2, 61.9, 57.6, 55.3, 56.8] [17956s]
   CCE placement (3525 RFA steps): |init spread|=20.322 mean shift=26.074 min/mean CCE distance=20.001/47.449 |p| mean=33.338
+  task 7 epoch 1/50 (136 it, b_new=37) rec=18.319 lat=363.649 dz=108.514 dx=2.719 mem=0.000 [18393s]
