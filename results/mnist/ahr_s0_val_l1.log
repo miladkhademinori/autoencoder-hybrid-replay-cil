@@ -1,0 +1,32 @@
+benchmark mnist(5/2) input=(1, 28, 28) method=ahr seed=0
+args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.01, "augment": false, "balanced_ft_epochs": 0, "balanced_ft_lr_scale": 0.1, "batch_size": 128, "bf16": false, "class_order": "natural", "cls_dim": 64, "crop_pad": 4, "data_root": "data", "dataset": "mnist", "decoder_in_budget": 0, "decoder_width": 1.0, "distill_norm": "sq", "enc_pool": 4, "epochs": 40, "eval_batch": 1000, "flush_denormal": 1, "herd_space": "encoder", "hf_sigma": 1.0, "hf_transplant": 0.0, "input_blur": 0.0, "kd_form": "kl", "kd_lambda": 1.0, "kd_scale": 0.25, "kd_temperature": 2.0, "lam": 1.0, "lam_recon_new": 0.0, "lat_real_first": 0, "latent_bits": 32, "latent_dim": 20, "latent_domain": "input", "latent_kind": "vector", "log_every": 10, "lr": 0.001, "lr_schedule": "cosine", "memorize_codes": 0, "memorize_epochs": 20, "memorize_lr": 0.001, "memorize_steps": null, "memory_kind": "latent", "memory_mode": "frozen", "method": "ahr", "momentum": 0.9, "n_exemplars": 7840, "n_tasks": null, "out": "results", "pad_mode": "constant", "raw_exemplars": 200, "recon_latent": "split", "recon_new_source": "current", "replay_sampling": "union", "resume": null, "rfa_damping": 0.0, "rfa_dt": 0.01, "rfa_jitter": 0.0, "rfa_mass": 1.0, "rfa_softening": 0.001, "rfa_steps": 20000, "rfa_target": 5.0, "rfa_zeta": 1.0, "save_ckpt": 0, "seed": 0, "selection": "herding", "stop_after": null, "tag": "val_l1", "threads": 1, "train_fraction": 1.0, "val_fraction": 0.1, "weight_decay": 0.0}
+[AHR] encoder params=482,420 decoder params=483,184 memory=latent x 7840 exemplars
+  CCE placement (3 RFA steps): |init spread|=0.005 mean shift=3.714 min/mean CCE distance=7.433/7.433 |p| mean=3.719
+  task 1 epoch 1/40 (90 it, b_new=128) rec=53.193 lat=5.310 dz=0.000 dx=0.000 mem=0.000 [2s]
+  task 1 epoch 10/40 (90 it, b_new=128) rec=12.562 lat=0.522 dz=0.000 dx=0.000 mem=0.000 [10s]
+  task 1 epoch 20/40 (90 it, b_new=128) rec=8.940 lat=0.475 dz=0.000 dx=0.000 mem=0.000 [19s]
+  task 1 epoch 30/40 (90 it, b_new=128) rec=7.546 lat=0.438 dz=0.000 dx=0.000 mem=0.000 [29s]
+  task 1 epoch 40/40 (90 it, b_new=128) rec=7.274 lat=0.435 dz=0.000 dx=0.000 mem=0.000 [38s]
+  memory (frozen codes): 7840 exemplars (3920/class), 156,800 scalars, 627,200 bytes
+  memorisation: 20 decoder epochs (1240 steps) over 7840 exemplars, final loss=6.761
+after task 1: acc=99.92 per-task=[99.9] memory-PSNR=22.71dB acc(recon test)=99.9 acc(memory)=100.0 [47s]
+  CCE placement (332 RFA steps): |init spread|=0.567 mean shift=3.868 min/mean CCE distance=5.001/6.354 |p| mean=4.540
+  task 2 epoch 1/40 (170 it, b_new=64) rec=18.515 lat=8.339 dz=0.512 dx=3.366 mem=0.396 [50s]
+  task 2 epoch 10/40 (170 it, b_new=64) rec=12.953 lat=0.818 dz=8.258 dx=4.726 mem=0.199 [76s]
+  task 2 epoch 20/40 (170 it, b_new=64) rec=11.682 lat=0.558 dz=8.818 dx=4.851 mem=0.135 [105s]
+  task 2 epoch 30/40 (170 it, b_new=64) rec=11.044 lat=0.486 dz=8.994 dx=4.913 mem=0.102 [133s]
+  task 2 epoch 40/40 (170 it, b_new=64) rec=10.896 lat=0.469 dz=9.042 dx=4.914 mem=0.092 [162s]
+  memory (frozen codes): 7840 exemplars (1960/class), 156,800 scalars, 627,200 bytes
+  memorisation: 20 decoder epochs (1240 steps) over 7840 exemplars, final loss=6.393
+after task 2: acc=98.87 per-task=[99.8, 97.9] memory-PSNR=20.31dB acc(recon test)=98.1 acc(memory)=99.8 [171s]
+  CCE placement (982 RFA steps): |init spread|=3.007 mean shift=5.993 min/mean CCE distance=5.001/7.137 |p| mean=5.469
+  task 3 epoch 1/40 (236 it, b_new=43) rec=9.084 lat=7.915 dz=3.445 dx=3.027 mem=0.438 [175s]
+  task 3 epoch 10/40 (236 it, b_new=43) rec=6.299 lat=0.730 dz=12.323 dx=2.948 mem=0.184 [212s]
+  task 3 epoch 20/40 (236 it, b_new=43) rec=5.762 lat=0.552 dz=12.661 dx=2.817 mem=0.125 [254s]
+  task 3 epoch 30/40 (236 it, b_new=43) rec=5.510 lat=0.492 dz=12.796 dx=2.734 mem=0.100 [297s]
+  task 3 epoch 40/40 (236 it, b_new=43) rec=5.438 lat=0.480 dz=12.829 dx=2.699 mem=0.094 [342s]
+  memory (frozen codes): 7836 exemplars (1306/class), 156,720 scalars, 626,880 bytes
+  memorisation: 20 decoder epochs (1240 steps) over 7836 exemplars, final loss=3.404
+after task 3: acc=97.61 per-task=[98.5, 95.9, 98.4] memory-PSNR=19.95dB acc(recon test)=96.8 acc(memory)=99.9 [350s]
+  CCE placement (951 RFA steps): |init spread|=2.812 mean shift=6.374 min/mean CCE distance=5.001/8.178 |p| mean=6.345
+  task 4 epoch 1/40 (343 it, b_new=32) rec=5.397 lat=3.807 dz=6.541 dx=2.914 mem=0.402 [357s]

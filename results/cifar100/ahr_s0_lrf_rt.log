@@ -63,3 +63,5 @@ after task 5: acc=29.70 per-task=[19.0, 6.0, 33.7, 29.0, 60.8] memory-PSNR=22.62
 after task 6: acc=24.50 per-task=[9.7, 3.9, 25.1, 18.5, 26.6, 63.2] memory-PSNR=22.63dB acc(recon test)=24.5 acc(memory)=56.0 [22183s]
   CCE placement (3540 RFA steps): |init spread|=22.701 mean shift=22.334 min/mean CCE distance=20.000/45.379 |p| mean=32.958
   task 7 epoch 1/50 (136 it, b_new=37) rec=9.330 lat=0.000 dz=75.428 dx=2.873 mem=0.818 rn=539.577 [22333s]
+  task 7 epoch 10/50 (136 it, b_new=37) rec=8.643 lat=0.000 dz=88.259 dx=3.204 mem=0.689 rn=464.474 [23579s]
+  task 7 epoch 20/50 (136 it, b_new=37) rec=8.050 lat=0.000 dz=86.638 dx=2.958 mem=0.515 rn=420.919 [24927s]
