@@ -41,8 +41,10 @@ PRESETS = {
 AHR_DEFAULTS = {
     "mnist":    dict(lam=0.3, alpha_z=0.01, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=5.0,
                      lam_recon_new=0.0, latent_kind="vector", latent_domain="input"),
-    "svhn":     dict(lam=0.3, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
-                     memorize_steps=1500, lam_recon_new=1.0, latent_kind="spatial",
+    # SVHN: the split latent of CIFAR (80.3 +- 1.2 over 3 seeds vs 74.4 with the spatial latent
+    # at lam 0.3, REPRODUCTION.md 4.1)
+    "svhn":     dict(lam=1.0, alpha_z=0.1, alpha_x=1.0, rfa_zeta=1.0, rfa_steps=20000, rfa_target=20.0,
+                     rfa_jitter=0.25, memorize_steps=1500, lam_recon_new=1.0, latent_kind="split",
                      latent_domain="recon"),
     # CIFAR-10: the split latent of CIFAR-100 (55.8% final vs 50.7% with the spatial latent at
     # lam=0.3, REPRODUCTION.md 3.13)

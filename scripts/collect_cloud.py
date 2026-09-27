@@ -22,8 +22,15 @@ def main():
     # list the branches remotely and fetch them one by one (some git proxies reject wildcard refspecs)
     remote = [l.split()[1][len("refs/heads/"):] for l in
               git("ls-remote", "origin", f"refs/heads/{a.prefix}*").stdout.splitlines() if l.strip()]
+    # branches whose results were imported and then renamed (e.g. a variant promoted to the
+    # main configuration) are listed in results/cloud_skip.txt so they are not copied again
+    skip_file = os.path.join(ROOT, "results", "cloud_skip.txt")
+    skip = set(l.split()[0] for l in open(skip_file) if l.strip() and not l.startswith("#")) \
+        if os.path.exists(skip_file) else set()
     branches = []
     for b in remote:
+        if b in skip:
+            continue
         if git("fetch", "-q", "origin", f"+refs/heads/{b}:refs/remotes/origin/{b}").returncode == 0:
             branches.append(f"origin/{b}")
         else:

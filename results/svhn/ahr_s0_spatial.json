@@ -1,57 +1,57 @@
 {
  "dataset": "svhn",
  "method": "ahr",
- "seed": 2,
- "tag": "split",
- "final_acc": 82.55172371864319,
- "avg_inc_acc": 89.50355291366577,
+ "seed": 0,
+ "tag": "spatial",
+ "final_acc": 74.43259954452515,
+ "avg_inc_acc": 84.69059586524963,
  "accs": [
-  98.18181991577148,
-  93.18181872367859,
-  88.4535014629364,
-  85.1489007472992,
-  82.55172371864319
+  97.93103337287903,
+  86.26959323883057,
+  84.16928052902222,
+  80.65047264099121,
+  74.43259954452515
  ],
  "acc_matrix": [
   [
-   98.18181991577148
+   97.93103337287903
   ],
   [
    89.84326124191284,
-   96.52037620544434
+   82.69592523574829
   ],
   [
-   84.98432636260986,
-   83.35423469543457,
-   97.02194333076477
+   87.86833882331848,
+   80.6583046913147,
+   83.981192111969
   ],
   [
-   78.43260169029236,
-   82.53918290138245,
-   82.06896781921387,
-   97.55485653877258
+   84.01253819465637,
+   75.29780268669128,
+   71.78683280944824,
+   91.50470495223999
   ],
   [
-   76.73981189727783,
-   74.98432397842407,
-   82.85266160964966,
-   81.91222548484802,
-   96.26958966255188
+   77.77429223060608,
+   63.918495178222656,
+   67.39811897277832,
+   75.2664566040039,
+   87.80564069747925
   ]
  ],
- "time_s": 26339.38999891281,
+ "time_s": 73918.8313844204,
  "n_exemplars": 1920,
  "args": {
   "dataset": "svhn",
   "method": "ahr",
-  "seed": 2,
+  "seed": 0,
   "data_root": "data",
   "out": "results",
-  "tag": "split",
+  "tag": "spatial",
   "n_tasks": null,
   "class_order": "natural",
   "train_fraction": 1.0,
-  "threads": 4,
+  "threads": 1,
   "stop_after": null,
   "resume": null,
   "save_ckpt": 1,
@@ -74,12 +74,12 @@
   "latent_dim": 320,
   "enc_pool": 4,
   "cls_dim": 64,
-  "latent_kind": "split",
+  "latent_kind": "spatial",
   "decoder_width": 1.0,
   "hf_transplant": 0.0,
   "hf_sigma": 1.0,
   "input_blur": 0.0,
-  "lam": 1.0,
+  "lam": 0.3,
   "alpha_z": 0.1,
   "alpha_x": 1.0,
   "distill_norm": "sq",
@@ -93,7 +93,6 @@
   "memorize_codes": 0,
   "lam_recon_new": 1.0,
   "latent_domain": "recon",
-  "lat_real_first": 0,
   "recon_new_source": "current",
   "selection": "herding",
   "rfa_zeta": 1.0,
@@ -102,26 +101,22 @@
   "rfa_steps": 20000,
   "rfa_damping": 0.0,
   "rfa_softening": 0.001,
-  "rfa_jitter": 0.25,
   "rfa_target": 20.0,
-  "val_fraction": 0.0,
-  "balanced_ft_epochs": 0,
-  "balanced_ft_lr_scale": 0.1,
   "replay_sampling": "union",
   "kd_lambda": 1.0,
   "kd_temperature": 2.0,
   "memory_kind": "latent"
  },
  "memory_psnr": [
-  31.942800521850586,
-  31.796430587768555,
-  31.79911231994629,
-  31.717620849609375,
-  31.674232482910156
+  30.862247467041016,
+  29.294940948486328,
+  29.12139892578125,
+  28.89923858642578,
+  28.975351333618164
  ],
  "cces": null,
  "memory_scalars": 614400,
  "memory_bytes": 2457600,
- "decoder_params": 1210883,
- "encoder_params": 470676
+ "decoder_params": 1206723,
+ "encoder_params": 466581
 }

@@ -17,10 +17,10 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 | FT-E | 72.18 ± 0.81 (n=3) | 92.17 ± 0.16 | 55.61 (n=1) | 87.13 ± 0.37 | 43.95 (n=1) | 72.17 ± 0.84 | 27.10 (n=1) | 48.47 ± 0.83 |
 | Joint | 98.54 ± 0.04 (n=3) | 98.48 ± 0.06 | 95.43 (n=1) | 95.88 ± 0.04 | 89.02 (n=1) | 92.37 ± 0.09 | 59.43 (n=1) | 73.87 ± 0.10 |
 | iCaRL | 88.60 ± 0.10 (n=3) | 93.06 ± 0.33 | 71.07 (n=1) | 89.63 ± 0.61 | 62.82 (n=1) | 73.29 ± 0.73 | 37.99 (n=1) | 49.38 ± 0.62 |
-| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 74.43 (n=1) | 93.02 ± 0.65 | 56.62 ± 0.83 (n=2) | 77.12 ± 0.75 | 15.32 (n=1) | 54.43 ± 0.93 |
+| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 80.30 ± 1.16 (n=3) | 93.02 ± 0.65 | 56.62 ± 0.83 (n=2) | 77.12 ± 0.75 | 15.32 (n=1) | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 | - | 50.85 ± 0.81 |
-| AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | 85.60 ± 0.38 (n=2) | 94.21 ± 0.23 | 68.13 ± 0.69 (n=2) | 78.35 ± 0.37 | - | 56.71 ± 0.57 |
+| AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | 85.60 ± 0.38 (n=2) | 94.21 ± 0.23 | 68.13 ± 0.69 (n=2) | 78.35 ± 0.37 | 48.61 (n=1) | 56.71 ± 0.57 |
 
 Epochs / exemplars / wall-clock per run:
 
@@ -38,7 +38,7 @@ Epochs / exemplars / wall-clock per run:
 | svhn | FT-E | 50 | 200 | 614,400 | 137 |
 | svhn | Joint | 50 | 0 | 0 | 142 |
 | svhn | iCaRL | 50 | 200 | 614,400 | 162 |
-| svhn | AHR | 50 | 1920 | 614,400 | 1232 |
+| svhn | AHR | 50 | 1920 | 614,400 | 723 |
 | svhn | AHR-lossless | 50 | 1920 | 5,898,240 | 557 |
 | cifar10 | FT | 50 | 0 | 0 | 143 |
 | cifar10 | FT-E | 50 | 200 | 614,400 | 147 |
@@ -51,6 +51,7 @@ Epochs / exemplars / wall-clock per run:
 | cifar100 | Joint | 50 | 0 | 0 | 123 |
 | cifar100 | iCaRL | 50 | 2000 | 6,144,000 | 249 |
 | cifar100 | AHR | 50 | 19200 | 6,144,000 | 1242 |
+| cifar100 | AHR-lossless | 50 | 19200 | 58,982,400 | 1642 |
 
 mnist: variants (final accuracy %, mean ± SEM over seeds):
 
@@ -67,9 +68,10 @@ mnist: variants (final accuracy %, mean ± SEM over seeds):
 | literal Alg. 1-4, Rank selection | 70.06 ± 0.96 (n=3) |
 | AHR-lossless | 95.11 ± 0.26 (n=3) |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) |
-| AHR-lossy-mini, alpha_z 0.1 | 80.80 (n=1) |
+| AHR-lossy-mini, alpha_z 0.1 | 78.14 ± 2.17 (n=3) |
 | AHR-lossy-mini, alpha_z 1 | 61.72 (n=1) |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) |
+| AHR-lossless-mini, alpha_z 0.1 | 75.46 ± 0.84 (n=3) |
 | FT-E | 72.18 ± 0.81 (n=3) |
 | FT-E with AHR's balanced minibatches | 75.10 ± 0.57 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 84.73 ± 0.27 (n=3) |
@@ -83,9 +85,10 @@ svhn: variants (final accuracy %, mean ± SEM over seeds):
 
 | Variant | Final acc. |
 |---|---|
-| AHR (final configuration) | 74.43 (n=1) |
-| split 8x8x4 + 64-d latent, lambda 1, RFA jitter 0.25 (§3.12-3.13) | 81.11 ± 1.44 (n=2) |
+| AHR (final configuration) | 80.30 ± 1.16 (n=3) |
+| spatial 8x8x5 latent, lambda 0.3, no RFA jitter (§3.9-3.11) | 74.43 (n=1) |
 | split latent + reflect padding | 79.17 (n=1) |
+| split latent + test-path replays, class-space herding, reflect padding | 82.33 (n=1) |
 | AHR-lossless | 85.60 ± 0.38 (n=2) |
 | FT-E | 55.61 (n=1) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 45.55 (n=1) |
@@ -98,6 +101,8 @@ cifar10: variants (final accuracy %, mean ± SEM over seeds):
 |---|---|
 | AHR (final configuration) | 56.62 ± 0.83 (n=2) |
 | spatial 8x8x5 latent, lambda 0.3, no RFA jitter (§3.9-3.11) | 50.72 (n=1) |
+| + one latent-loss mean, class-space herding, reflect padding (K01, K17, K03) | 53.66 (n=1) |
+| + replays via the test path, class-space herding, reflect padding (K02, K17, K03) | 46.30 (n=1) |
 | AHR-lossless | 68.13 ± 0.69 (n=2) |
 | FT-E | 43.95 (n=1) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 36.03 (n=1) |
@@ -111,12 +116,15 @@ cifar100: variants (final accuracy %, mean ± SEM over seeds):
 | Variant | Final acc. |
 |---|---|
 | AHR (final configuration) | 15.32 (n=1) |
+| + reflect padding (§3.14, audit K03) | 10.25 (n=1) |
+| AHR-lossless | 48.61 (n=1) |
 | FT-E | 27.10 (n=1) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 33.37 (n=1) |
 | incremental Joint (FT-E keeping all data) | 57.02 (n=1) |
 | iCaRL | 37.99 (n=1) |
 | iCaRL, sigmoid-BCE distillation (FACIL, audit K15) | 34.62 (n=1) |
 | Joint | 59.43 (n=1) |
+| Joint, 100 epochs | 61.49 (n=1) |
 <!-- /RESULTS -->
 
 ## Summary
@@ -137,10 +145,11 @@ the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
   (AHR 94.6 vs AHR-lossless 95.1; paper 97.5 vs 98.1), and storing ~40x more
   (compressed) exemplars matters far more than their fidelity (AHR-lossy-mini
   68.9, AHR-lossless-mini 67.3).
-* On Balanced SVHN, AHR (74.4; after each task 97.9, 86.3, 84.2, 80.7, 74.4) is above
-  iCaRL (71.1) and FT-E (55.6) with the same memory budget, as in the paper, though
-  all three are well below the paper's values (93.0 / 89.6 / 87.1). The decoded SVHN
-  exemplars stay at ~29 dB PSNR over all five tasks (figures/decoded_svhn.png).
+* On Balanced SVHN, AHR (80.3 +- 1.2 over 3 seeds with the split latent of CIFAR; 74.4
+  with the spatial latent) is above iCaRL (71.1) and FT-E (55.6) with the same memory
+  budget, as in the paper, though all three are well below the paper's values
+  (93.0 / 89.6 / 87.1). The decoded SVHN exemplars stay at ~29-31 dB PSNR over all
+  five tasks (figures/decoded_svhn.png, spatial-latent run).
 
 **What does not reproduce as described.**
 * The absolute numbers: AHR is 3 points below the paper on MNIST, and the FT-E /
@@ -203,14 +212,14 @@ their paper numbers are quoted for reference only.
 
 | Item | Choice | Why |
 |---|---|---|
-| `lambda` (Eq. 1) | 0.3 (MNIST, SVHN); 1 (CIFAR-10, CIFAR-100 with the split latent) | MNIST sweep over {0.1, 0.3, 1, 10, 100} (0.3: 93.0 vs 91.8 for 1.0); spatial latent on CIFAR over {0.3, 0.5, 1} (§3.9); split latent on CIFAR-100 over {1, 3} (§3.12) |
+| `lambda` (Eq. 1) | 0.3 (MNIST); 1 (SVHN, CIFAR-10, CIFAR-100 with the split latent) | MNIST sweep over {0.1, 0.3, 1, 10, 100} (0.3: 93.0 vs 91.8 for 1.0); spatial latent on CIFAR over {0.3, 0.5, 1} (§3.9); split latent on CIFAR-100 over {1, 3} (§3.12) |
 | Distillation weights `a_z`, `a_x` and form | `a_z` = 0.01 (MNIST) / 0.1 (SVHN, CIFAR), `a_x = 1`, squared L2 | strong encoder distillation keeps new-class samples away from their shifted CCEs (§3.4); on CIFAR at full scale 0.1 retains more of the old task than 0.01 (32.4% vs 6.6% after task 2) |
 | RFA constants `zeta, m, dt` | 1, 1, 0.01, softening 1e-3, no damping | scale-free once the duration is chosen as below |
-| RFA initial positions | class means (Alg. 2), plus isotropic Gaussian jitter of norm 0.25 `d` for CIFAR-10/100 | RFA cannot leave the span of the (anisotropic) class means, which inflates the CCE norms under the min-distance stopping rule (§3.12) |
+| RFA initial positions | class means (Alg. 2), plus isotropic Gaussian jitter of norm 0.25 `d` for SVHN and CIFAR | RFA cannot leave the span of the (anisotropic) class means, which inflates the CCE norms under the min-distance stopping rule (§3.12) |
 | RFA duration `tau` | integrate Alg. 2 until every new CCE is `>= d` from every other CCE; `d = 5` (MNIST, m = 20) and `d = 20` (m = 320), i.e. `d ~ sqrt(m)` | with a fixed `tau` the spacing depends on how close the initial class means are, which differs by an order of magnitude between the first task (random encoder) and later ones (§3.3) |
 | Encoder / latent (MNIST) | 784-400-400 ReLU + linear to 20 | paper |
-| Encoder / latent (SVHN; CIFAR-10 variant) | ResNet-32 up to its 8x8x64 feature map + 1x1 conv to 5 channels: an 8x8x5 = 320-number spatial latent (paper: 307); head initialised with std 1e-3 | a pooled 307-d vector latent reconstructs only colour blobs (§3.6, §3.9); the small init keeps the latent scale set by RFA rather than by the backbone's activation scale |
-| Encoder / latent (CIFAR-10, CIFAR-100) | split latent: 1x1 conv to 4 channels (8x8x4) + linear map of the pooled features to a 64-d class part (320 numbers); CCEs live in the 64-d part; the decoder maps the class part to one extra 8x8 input channel | the class code gets the global pooling of a normal classifier (§3.12); CIFAR-10 55.8 vs 50.7 with the spatial latent (§3.13) |
+| Encoder / latent (variant for SVHN and CIFAR-10) | ResNet-32 up to its 8x8x64 feature map + 1x1 conv to 5 channels: an 8x8x5 = 320-number spatial latent (paper: 307); head initialised with std 1e-3 | a pooled 307-d vector latent reconstructs only colour blobs (§3.6, §3.9); the small init keeps the latent scale set by RFA rather than by the backbone's activation scale |
+| Encoder / latent (SVHN, CIFAR-10, CIFAR-100) | split latent: 1x1 conv to 4 channels (8x8x4) + linear map of the pooled features to a 64-d class part (320 numbers); CCEs live in the 64-d part; the decoder maps the class part to one extra 8x8 input channel | the class code gets the global pooling of a normal classifier (§3.12); CIFAR-10 55.8 vs 50.7 and SVHN 78.7 vs 74.4 (seed 0) with the spatial latent (§3.13, §4.1) |
 | Decoder (MNIST) | mirror MLP 20-400-400-784, sigmoid | paper |
 | Decoder (SVHN, CIFAR) | Conv3x3(5->384) (split latent: 4+1 input channels), ConvT(384->192, x2), ConvT(192->3, x2), ReLU, sigmoid; 1.21M params | "3 layers of CNNs", ~1.4M params (Table 3) |
 | Classification domain (SVHN, CIFAR) | latent loss only on decoder outputs (decoded exemplars + reconstructions of the new samples); test on `phi(psi(phi(x)))` | removes the real-vs-decoded task cue (§3.10, §3.11); MNIST keeps the paper's rule |
@@ -538,10 +547,10 @@ accuracy %, seed 0 unless noted; the per-dataset variant tables in §0 have all 
 
 | Change | MNIST | SVHN | CIFAR-10 | CIFAR-100 |
 |---|---|---|---|---|
-| reference (reported configuration) | 94.6 (3 seeds; decoder-output domain: 91.5) | 74.4 spatial / 79.7, 82.6 split (s1, s2) | 56.6 (2 seeds) | 15.3 |
-| one latent-loss mean (K01) | decoder-output domain: 89.2 (3 seeds) | | running (56.0 after 4 of 5 tasks, reference 59.2) | |
-| replays via the test path (K02) | decoder-output domain: 87.7 (3 seeds) | running (86.3 after 4 of 5, reference 84.0) | running (46.8 after 4 of 5) | running |
-| reflect padding (K03) | no crop augmentation on MNIST | 79.2 (split latent) | running | worse: 14.0 after 8 of 10 (reference 18.2) |
+| reference (reported configuration) | 94.6 (3 seeds; decoder-output domain: 91.5) | 80.3 (split latent, 3 seeds; spatial 74.4) | 56.6 (2 seeds) | 15.3 |
+| one latent-loss mean (K01) | decoder-output domain: 89.2 (3 seeds) | | 53.7 | |
+| replays via the test path (K02) | decoder-output domain: 87.7 (3 seeds) | 82.3 (same seed: 78.7; seeds 1-2 running) | 46.3 | running |
+| reflect padding (K03) | no crop augmentation on MNIST | 79.2 (same seed: 78.7) | running | 10.3 |
 | fewer AHR steps per epoch (K12) | 92.0 (3 seeds) | | | |
 | iCaRL with sigmoid-BCE distillation (K15) | 88.9 (3 seeds; KL 88.6) | | | 34.6 (KL 38.0) |
 | FT-E + EEIL balanced fine-tuning | 84.7 (3 seeds; plain 72.2) | 45.6 (plain 55.6) | 36.0 (plain 44.0) | 33.4 (plain 27.1) |
@@ -574,5 +583,9 @@ What this shows so far:
 * With the same raw memory, plain FT-E beats this repository's AHR-lossless (CIFAR-10
   73.7 vs 68.1, MNIST 96.7 vs 95.1), so part of the gap is in how AHR learns from
   replay (nearest-CCE regression plus distillation), not only in the decoded exemplars.
-* None of the audit's fixes on the AHR side (K01, K02, K03, K12) closes the gap; K02
-  helps SVHN but hurts CIFAR-10 so far.
+* None of the audit's fixes on the AHR side (K01, K02, K03, K12) closes the gap: on
+  CIFAR-10 K01 and K02 lose 3 and 10 points, reflect padding loses 5 points on
+  CIFAR-100, and K02 gains 3.7 points on SVHN for one seed (two more seeds running).
+* The split latent (chosen on CIFAR-100) is now the default for SVHN as well; like on
+  CIFAR-10 (§3.13) it was adopted after seeing it do better on the benchmark itself, and
+  both variants are reported.

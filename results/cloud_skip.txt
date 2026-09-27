@@ -1,0 +1,3 @@
+# cloud branches whose results were imported and renamed; scripts/collect_cloud.py skips them
+claude/ahr-exp-svhn-ahr-s1-split    -> results/svhn/ahr_s1.* (split latent became the SVHN default)
+claude/ahr-exp-svhn-ahr-s2-split    -> results/svhn/ahr_s2.*
