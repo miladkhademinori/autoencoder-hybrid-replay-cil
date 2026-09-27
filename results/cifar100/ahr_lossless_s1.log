@@ -56,3 +56,4 @@ resumed from results/cifar100/ahr_lossless_s1_ckpt_t5.pt after task 5: accs so f
   task 6 epoch 1/50 (117 it, b_new=43) rec=19.680 lat=447.237 dz=115.446 dx=3.105 mem=0.000 [359s]
   task 6 epoch 10/50 (117 it, b_new=43) rec=18.993 lat=331.279 dz=192.633 dx=3.622 mem=0.000 [3555s]
   task 6 epoch 20/50 (117 it, b_new=43) rec=18.322 lat=261.315 dz=217.390 dx=3.517 mem=0.000 [7093s]
+  task 6 epoch 30/50 (117 it, b_new=43) rec=17.529 lat=209.371 dz=234.040 dx=3.071 mem=0.000 [10686s]
