@@ -34,3 +34,4 @@ resumed from results/cifar10/ahr_s0_val_az003_ckpt_t2.pt after task 2: accs so f
   task 3 epoch 1/50 (210 it, b_new=43) rec=11.887 lat=122.702 dz=87.487 dx=4.906 mem=1.268 rn=181.489 [558s]
   task 3 epoch 10/50 (210 it, b_new=43) rec=10.757 lat=23.711 dz=101.278 dx=6.069 mem=1.204 rn=91.101 [5359s]
   task 3 epoch 20/50 (210 it, b_new=43) rec=9.536 lat=11.796 dz=95.302 dx=5.440 mem=0.952 rn=68.167 [10731s]
+  task 3 epoch 30/50 (210 it, b_new=43) rec=8.864 lat=6.377 dz=92.833 dx=4.932 mem=0.713 rn=49.706 [15822s]
