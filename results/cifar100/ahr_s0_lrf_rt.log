@@ -95,3 +95,4 @@ resumed from results/cifar100/ahr_s0_lrf_rt_ckpt_t8.pt after task 8: accs so far
   task 9 epoch 1/50 (179 it, b_new=28) rec=8.949 lat=0.000 dz=76.918 dx=2.177 mem=0.531 rn=621.726 [205s]
   task 9 epoch 10/50 (179 it, b_new=28) rec=8.464 lat=0.000 dz=94.513 dx=2.520 mem=0.547 rn=558.766 [1908s]
   task 9 epoch 20/50 (179 it, b_new=28) rec=8.252 lat=0.000 dz=91.051 dx=2.514 mem=0.421 rn=500.731 [3841s]
+  task 9 epoch 30/50 (179 it, b_new=28) rec=7.880 lat=0.000 dz=85.811 dx=2.245 mem=0.302 rn=457.011 [5804s]
