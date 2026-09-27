@@ -61,12 +61,38 @@ ABLATION_TAGS = [
     ("ahr", "", "AHR (final configuration)"),
     ("ahr", "recon_new", "+ latent loss on reconstructions of new samples"),
     ("ahr", "recon_domain", "+ classification in the decoder's output domain (as used for SVHN/CIFAR)"),
+    ("ahr", "recon_single", "decoder-output domain, one latent-loss mean (audit K01)"),
+    ("ahr", "recon_rt", "decoder-output domain, replays via the test path (audit K02)"),
+    ("ahr", "union", "one epoch = (new data + memory) / B steps (audit K12)"),
     ("ahr", "no_memorize", "- decoder memorisation"),
     ("ahr", "literal_herding", "- frozen codes, - memorisation = literal Alg. 1-4 (herding selection)"),
     ("ahr", "literal_rank", "literal Alg. 1-4, Rank selection"),
-    ("ft_e", "balanced", "FT-E with AHR's balanced minibatches"),
     ("ahr", "spatial", "spatial 8x8x5 latent, lambda 0.3, no RFA jitter (§3.9-3.11)"),
     ("ahr", "split", "split 8x8x4 + 64-d latent, lambda 1, RFA jitter 0.25 (§3.12-3.13)"),
+    ("ahr", "reflect", "+ reflect padding (§3.14, audit K03)"),
+    ("ahr", "split_reflect", "split latent + reflect padding"),
+    ("ahr", "single", "+ one latent-loss mean, class-space herding, reflect padding (K01, K17, K03)"),
+    ("ahr", "rt", "+ replays via the test path, class-space herding, reflect padding (K02, K17, K03)"),
+    ("ahr", "split_rt", "split latent + test-path replays, class-space herding, reflect padding"),
+    ("ahr", "lrf_rt", "as rt + latent loss on real images of task 1 (K06)"),
+    ("ahr_lossless", "", "AHR-lossless"),
+    ("ahr_lossy_mini", "", "AHR-lossy-mini"),
+    ("ahr_lossy_mini", "az01", "AHR-lossy-mini, alpha_z 0.1"),
+    ("ahr_lossy_mini", "az1", "AHR-lossy-mini, alpha_z 1"),
+    ("ahr_lossless_mini", "", "AHR-lossless-mini"),
+    ("ahr_lossless_mini", "az01", "AHR-lossless-mini, alpha_z 0.1"),
+    ("ft_e", "", "FT-E"),
+    ("ft_e", "balanced", "FT-E with AHR's balanced minibatches"),
+    ("ft_e", "bft30", "FT-E + EEIL balanced fine-tuning, 30 epochs"),
+    ("ft_e", "n1920", "FT-E with 1,920 raw exemplars (AHR-lossless's memory)"),
+    ("ft_e", "n1920_bft30", "FT-E with 1,920 raw exemplars + balanced fine-tuning"),
+    ("ft_e", "n7840", "FT-E with 7,840 raw exemplars (AHR-lossless's memory)"),
+    ("ft_e", "incjoint", "incremental Joint (FT-E keeping all data)"),
+    ("icarl", "", "iCaRL"),
+    ("icarl", "bce", "iCaRL, sigmoid-BCE distillation (FACIL, audit K15)"),
+    ("icarl", "n7840", "iCaRL with 7,840 raw exemplars"),
+    ("joint", "", "Joint"),
+    ("joint", "e100", "Joint, 100 epochs"),
 ]
 
 
@@ -77,7 +103,7 @@ def ablation_table(results, dataset):
         if rs:
             rows.append(f"| {label} | {fmt(mean_sem([r['final_acc'] for r in rs]), len(rs))} |")
     if rows:
-        print(f"\n{dataset} ablations (final accuracy %, mean ± SEM):\n")
+        print(f"\n{dataset}: variants (final accuracy %, mean ± SEM over seeds):\n")
         print("| Variant | Final acc. |\n|---|---|")
         print("\n".join(rows))
 

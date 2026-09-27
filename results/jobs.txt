@@ -26,3 +26,8 @@
 1 --dataset mnist --method icarl --seed 2 --kd-form bce --tag bce
 1 --dataset mnist --method ahr --seed 1 --ahr-epoch union --tag union
 1 --dataset mnist --method ahr --seed 2 --ahr-epoch union --tag union
+1 --dataset mnist --method ahr_lossy_mini --seed 1 --alpha-z 0.1 --tag az01
+1 --dataset mnist --method ahr_lossy_mini --seed 2 --alpha-z 0.1 --tag az01
+1 --dataset mnist --method ahr_lossless_mini --seed 0 --alpha-z 0.1 --tag az01
+1 --dataset mnist --method ahr_lossless_mini --seed 1 --alpha-z 0.1 --tag az01
+1 --dataset mnist --method ahr_lossless_mini --seed 2 --alpha-z 0.1 --tag az01
