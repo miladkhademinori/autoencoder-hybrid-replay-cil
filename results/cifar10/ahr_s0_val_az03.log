@@ -35,3 +35,20 @@ after task 3: acc=63.13 per-task=[75.1, 40.4, 73.9] memory-PSNR=25.60dB acc(reco
   task 4 epoch 1/50 (282 it, b_new=32) rec=10.025 lat=85.748 dz=64.038 dx=3.671 mem=0.782 rn=97.036 [10841s]
   task 4 epoch 10/50 (282 it, b_new=32) rec=8.423 lat=15.457 dz=88.634 dx=3.866 mem=0.739 rn=25.192 [12050s]
   task 4 epoch 20/50 (282 it, b_new=32) rec=7.919 lat=9.524 dz=88.990 dx=3.839 mem=0.653 rn=15.943 [13423s]
+  task 4 epoch 30/50 (282 it, b_new=32) rec=7.249 lat=7.082 dz=87.232 dx=3.360 mem=0.429 rn=9.554 [14797s]
+  task 4 epoch 40/50 (282 it, b_new=32) rec=6.927 lat=5.775 dz=85.516 dx=3.065 mem=0.266 rn=4.897 [16150s]
+  task 4 epoch 50/50 (282 it, b_new=32) rec=6.892 lat=5.495 dz=86.686 dx=3.033 mem=0.225 rn=3.888 [17485s]
+  memory (frozen codes): 1920 exemplars (240/class), 614,400 scalars, 2,457,600 bytes
+  memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=2.630
+after task 4: acc=60.08 per-task=[79.8, 41.5, 50.9, 68.1] memory-PSNR=25.43dB acc(recon test)=60.1 acc(memory)=88.9 [17654s]
+  CCE placement (4462 RFA steps): |init spread|=9.620 mean shift=15.655 min/mean CCE distance=20.000/26.831 |p| mean=20.747
+  task 5 epoch 1/50 (347 it, b_new=26) rec=8.468 lat=71.447 dz=72.500 dx=3.569 mem=0.834 rn=149.925 [17841s]
+  task 5 epoch 10/50 (347 it, b_new=26) rec=7.503 lat=14.226 dz=68.733 dx=3.638 mem=0.747 rn=41.673 [19249s]
+  task 5 epoch 20/50 (347 it, b_new=26) rec=7.108 lat=8.546 dz=67.967 dx=3.522 mem=0.587 rn=25.766 [20820s]
+  task 5 epoch 30/50 (347 it, b_new=26) rec=6.652 lat=5.789 dz=65.207 dx=3.106 mem=0.424 rn=13.734 [22374s]
+  task 5 epoch 40/50 (347 it, b_new=26) rec=6.313 lat=4.613 dz=64.124 dx=2.783 mem=0.263 rn=6.142 [23941s]
+  task 5 epoch 50/50 (347 it, b_new=26) rec=6.244 lat=4.570 dz=64.269 dx=2.695 mem=0.221 rn=4.575 [25522s]
+  memory (frozen codes): 1920 exemplars (192/class), 614,400 scalars, 2,457,600 bytes
+  memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=1.905
+after task 5: acc=57.02 per-task=[62.0, 36.2, 44.0, 65.4, 77.5] memory-PSNR=25.44dB acc(recon test)=57.0 acc(memory)=93.6 [25699s]
+FINAL cifar10 ahr seed=0: final acc=57.02 avg inc acc=71.34 time=428.3min
