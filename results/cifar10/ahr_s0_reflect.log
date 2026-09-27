@@ -49,3 +49,4 @@ args: {"alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.1, "augme
 resumed from results/cifar10/ahr_s0_reflect_ckpt_t3.pt after task 3: accs so far [96.4, 77.75, 59.58]
   CCE placement (7106 RFA steps): |init spread|=7.601 mean shift=22.517 min/mean CCE distance=20.000/32.693 |p| mean=26.630
   task 4 epoch 1/50 (313 it, b_new=32) rec=9.486 lat=130.980 dz=112.322 dx=3.372 mem=0.972 rn=189.528 [809s]
+  task 4 epoch 10/50 (313 it, b_new=32) rec=8.814 lat=29.670 dz=142.347 dx=3.734 mem=0.898 rn=68.233 [7891s]
