@@ -75,3 +75,4 @@ after task 7: acc=17.53 per-task=[1.9, 1.4, 7.4, 3.7, 13.3, 25.1, 69.9] memory-P
   task 8 epoch 1/50 (157 it, b_new=32) rec=9.856 lat=487.415 dz=131.062 dx=3.154 mem=0.623 rn=729.186 [21206s]
   task 8 epoch 10/50 (157 it, b_new=32) rec=9.285 lat=444.756 dz=148.480 dx=4.013 mem=0.666 rn=407.584 [22110s]
   task 8 epoch 20/50 (157 it, b_new=32) rec=8.908 lat=416.627 dz=150.656 dx=3.886 mem=0.586 rn=319.205 [23145s]
+  task 8 epoch 30/50 (157 it, b_new=32) rec=8.577 lat=380.192 dz=147.677 dx=3.727 mem=0.452 rn=248.600 [24185s]
