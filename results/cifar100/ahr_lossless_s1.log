@@ -30,3 +30,4 @@ after task 2: acc=63.60 per-task=[73.2, 54.0] [8392s]
 after task 3: acc=63.13 per-task=[70.2, 60.8, 58.4] [17314s]
   CCE placement (3127 RFA steps): |init spread|=12.589 mean shift=24.422 min/mean CCE distance=20.001/36.427 |p| mean=25.414
   task 4 epoch 1/50 (79 it, b_new=64) rec=21.743 lat=341.634 dz=70.661 dx=3.723 mem=0.000 [17562s]
+  task 4 epoch 10/50 (79 it, b_new=64) rec=20.367 lat=256.959 dz=119.023 dx=3.839 mem=0.000 [19692s]
