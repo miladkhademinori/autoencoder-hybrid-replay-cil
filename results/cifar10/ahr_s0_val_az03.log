@@ -12,3 +12,6 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
   memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=10.442
 after task 1: acc=96.70 per-task=[96.7] memory-PSNR=25.31dB acc(recon test)=96.7 acc(memory)=99.3 [1733s]
   CCE placement (3970 RFA steps): |init spread|=7.425 mean shift=15.990 min/mean CCE distance=20.000/24.301 |p| mean=15.546
+  task 2 epoch 1/50 (141 it, b_new=64) rec=13.916 lat=32.722 dz=60.472 dx=6.981 mem=1.740 rn=305.136 [1831s]
+  task 2 epoch 10/50 (141 it, b_new=64) rec=12.101 lat=11.071 dz=27.078 dx=7.918 mem=1.487 rn=154.395 [2466s]
+  task 2 epoch 20/50 (141 it, b_new=64) rec=10.887 lat=6.336 dz=22.076 dx=6.942 mem=1.073 rn=114.655 [3157s]
