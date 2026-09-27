@@ -54,3 +54,4 @@ args: {"alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.1, "augme
 resumed from results/cifar100/ahr_lossless_s1_ckpt_t5.pt after task 5: accs so far [75.6, 63.6, 63.13, 60.18, 59.64]
   CCE placement (4261 RFA steps): |init spread|=20.398 mean shift=35.889 min/mean CCE distance=20.001/45.942 |p| mean=31.993
   task 6 epoch 1/50 (117 it, b_new=43) rec=19.680 lat=447.237 dz=115.446 dx=3.105 mem=0.000 [359s]
+  task 6 epoch 10/50 (117 it, b_new=43) rec=18.993 lat=331.279 dz=192.633 dx=3.622 mem=0.000 [3555s]
