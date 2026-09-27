@@ -93,3 +93,4 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
 resumed from results/cifar100/ahr_s0_lrf_rt_ckpt_t8.pt after task 8: accs so far [70.2, 51.05, 45.07, 35.6, 29.7, 24.5, 24.3, 20.58]
   CCE placement (3756 RFA steps): |init spread|=18.376 mean shift=24.628 min/mean CCE distance=20.000/51.383 |p| mean=39.344
   task 9 epoch 1/50 (179 it, b_new=28) rec=8.949 lat=0.000 dz=76.918 dx=2.177 mem=0.531 rn=621.726 [205s]
+  task 9 epoch 10/50 (179 it, b_new=28) rec=8.464 lat=0.000 dz=94.513 dx=2.520 mem=0.547 rn=558.766 [1908s]
