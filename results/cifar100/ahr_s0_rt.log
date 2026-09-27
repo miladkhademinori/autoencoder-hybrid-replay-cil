@@ -43,3 +43,4 @@ resumed from results/cifar100/ahr_s0_rt_ckpt_t3.pt after task 3: accs so far [69
   task 4 epoch 10/50 (79 it, b_new=64) rec=10.837 lat=0.000 dz=66.221 dx=4.110 mem=0.961 rn=348.866 [4859s]
   task 4 epoch 20/50 (79 it, b_new=64) rec=10.393 lat=0.000 dz=70.329 dx=4.418 mem=0.955 rn=309.409 [9759s]
   task 4 epoch 30/50 (79 it, b_new=64) rec=9.783 lat=0.000 dz=71.328 dx=4.041 mem=0.574 rn=273.888 [14647s]
+  task 4 epoch 40/50 (79 it, b_new=64) rec=9.351 lat=0.000 dz=72.188 dx=3.753 mem=0.359 rn=251.541 [19528s]
