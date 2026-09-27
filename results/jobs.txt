@@ -31,3 +31,12 @@
 1 --dataset mnist --method ahr_lossless_mini --seed 0 --alpha-z 0.1 --tag az01
 1 --dataset mnist --method ahr_lossless_mini --seed 1 --alpha-z 0.1 --tag az01
 1 --dataset mnist --method ahr_lossless_mini --seed 2 --alpha-z 0.1 --tag az01
+# validation-mode sweep of the unspecified loss weights for MNIST AHR (--val-fraction 0.1: evaluated on held-out training data, never on the test set)
+1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --tag val_base
+1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --alpha-z 0.003 --tag val_az0003
+1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --alpha-z 0.03 --tag val_az003
+1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --alpha-z 0.1 --tag val_az01
+1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --lam 1 --tag val_l1
+1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --lam 0.1 --tag val_l01
+1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --alpha-x 0.3 --tag val_ax03
+1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --alpha-x 3 --tag val_ax3
