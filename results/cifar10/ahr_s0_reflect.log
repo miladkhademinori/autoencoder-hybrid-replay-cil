@@ -53,3 +53,7 @@ resumed from results/cifar10/ahr_s0_reflect_ckpt_t3.pt after task 3: accs so far
   task 4 epoch 20/50 (313 it, b_new=32) rec=8.260 lat=14.978 dz=144.413 dx=3.538 mem=0.778 rn=45.368 [15760s]
   task 4 epoch 30/50 (313 it, b_new=32) rec=7.558 lat=7.755 dz=143.439 dx=3.000 mem=0.583 rn=25.756 [23616s]
   task 4 epoch 40/50 (313 it, b_new=32) rec=7.077 lat=4.596 dz=142.887 dx=2.591 mem=0.369 rn=13.037 [31561s]
+  task 4 epoch 50/50 (313 it, b_new=32) rec=6.980 lat=3.676 dz=140.081 dx=2.491 mem=0.320 rn=9.565 [40337s]
+  memory (frozen codes): 1920 exemplars (240/class), 614,400 scalars, 2,457,600 bytes
+  memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=2.671
+after task 4: acc=54.83 per-task=[69.2, 32.9, 60.0, 57.2] memory-PSNR=25.33dB acc(recon test)=54.8 acc(memory)=86.0 [41402s]
