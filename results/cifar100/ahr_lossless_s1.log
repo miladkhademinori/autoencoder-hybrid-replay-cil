@@ -65,3 +65,19 @@ after task 6: acc=58.55 per-task=[61.5, 58.2, 61.9, 57.6, 55.3, 56.8] [17956s]
   task 7 epoch 1/50 (136 it, b_new=37) rec=18.319 lat=363.649 dz=108.514 dx=2.719 mem=0.000 [18393s]
   task 7 epoch 10/50 (136 it, b_new=37) rec=17.665 lat=291.472 dz=136.812 dx=2.966 mem=0.000 [22237s]
   task 7 epoch 20/50 (136 it, b_new=37) rec=16.888 lat=238.822 dz=144.416 dx=2.706 mem=0.000 [26515s]
+  task 7 epoch 30/50 (136 it, b_new=37) rec=16.197 lat=193.424 dz=148.626 dx=2.236 mem=0.000 [30784s]
+  task 7 epoch 40/50 (136 it, b_new=37) rec=15.765 lat=169.794 dz=153.041 dx=2.070 mem=0.000 [35129s]
+  task 7 epoch 50/50 (136 it, b_new=37) rec=15.702 lat=161.132 dz=152.455 dx=2.006 mem=0.000 [39415s]
+  memory (frozen codes): 19180 exemplars (274/class), 58,920,960 scalars, 235,683,840 bytes
+after task 7: acc=56.41 per-task=[61.3, 54.8, 61.3, 54.8, 55.0, 58.9, 48.8] [39434s]
+  CCE placement (3562 RFA steps): |init spread|=23.084 mean shift=25.679 min/mean CCE distance=20.001/48.843 |p| mean=34.623
+  task 8 epoch 1/50 (157 it, b_new=32) rec=17.336 lat=345.478 dz=97.551 dx=2.509 mem=0.000 [39950s]
+  task 8 epoch 10/50 (157 it, b_new=32) rec=16.566 lat=282.330 dz=115.016 dx=2.572 mem=0.000 [44427s]
+benchmark cifar100(10/10) input=(3, 32, 32) method=ahr_lossless seed=1
+args: {"alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.1, "augment": true, "balanced_ft_epochs": 0, "balanced_ft_lr_scale": 0.1, "batch_size": 256, "bf16": true, "class_order": "natural", "cls_dim": 64, "crop_pad": 4, "data_root": "data", "dataset": "cifar100", "decoder_in_budget": 0, "decoder_width": 1.0, "distill_norm": "sq", "enc_pool": 4, "epochs": 50, "eval_batch": 1000, "flush_denormal": 1, "hf_sigma": 1.0, "hf_transplant": 0.0, "input_blur": 0.0, "kd_lambda": 1.0, "kd_scale": 0.25, "kd_temperature": 2.0, "lam": 1.0, "lam_recon_new": 0.0, "lat_real_first": 0, "latent_bits": 32, "latent_dim": 320, "latent_domain": "input", "latent_kind": "split", "log_every": 10, "lr": 0.001, "lr_schedule": "cosine", "memorize_codes": 0, "memorize_epochs": 20, "memorize_lr": 0.001, "memorize_steps": 1500, "memory_kind": "raw", "memory_mode": "frozen", "method": "ahr_lossless", "momentum": 0.9, "n_exemplars": 19200, "n_tasks": null, "out": "results", "raw_exemplars": 2000, "recon_new_source": "current", "replay_sampling": "union", "resume": "results/cifar100/ahr_lossless_s1_ckpt_t7.pt", "rfa_damping": 0.0, "rfa_dt": 0.01, "rfa_jitter": 0.25, "rfa_mass": 1.0, "rfa_softening": 0.001, "rfa_steps": 20000, "rfa_target": 20.0, "rfa_zeta": 1.0, "save_ckpt": 1, "seed": 1, "selection": "herding", "stop_after": null, "tag": "", "threads": 4, "train_fraction": 1.0, "val_fraction": 0.0, "weight_decay": 0.0}
+[AHR] encoder params=470,676 decoder params=1,210,883 memory=raw x 19200 exemplars
+resumed from results/cifar100/ahr_lossless_s1_ckpt_t7.pt after task 7: accs so far [75.6, 63.6, 63.13, 60.18, 59.64, 58.55, 56.41]
+  CCE placement (3819 RFA steps): |init spread|=23.772 mean shift=28.014 min/mean CCE distance=20.001/49.385 |p| mean=35.006
+  task 8 epoch 1/50 (157 it, b_new=32) rec=17.416 lat=355.341 dz=101.565 dx=2.706 mem=0.000 [506s]
+  task 8 epoch 10/50 (157 it, b_new=32) rec=16.571 lat=293.145 dz=126.014 dx=2.566 mem=0.000 [4918s]
+  task 8 epoch 20/50 (157 it, b_new=32) rec=15.846 lat=240.922 dz=128.974 dx=2.333 mem=0.000 [9790s]

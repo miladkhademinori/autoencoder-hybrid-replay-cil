@@ -34,3 +34,21 @@ after task 3: acc=89.34 per-task=[88.1, 85.0, 95.0] memory-PSNR=32.54dB acc(reco
   CCE placement (5116 RFA steps): |init spread|=24.654 mean shift=13.684 min/mean CCE distance=20.001/26.997 |p| mean=19.987
   task 4 epoch 1/50 (292 it, b_new=32) rec=3.689 lat=0.000 dz=36.167 dx=1.846 mem=0.655 rn=42.241 [21148s]
   task 4 epoch 10/50 (292 it, b_new=32) rec=3.382 lat=0.000 dz=27.295 dx=1.901 mem=0.550 rn=7.026 [23806s]
+  task 4 epoch 20/50 (292 it, b_new=32) rec=2.909 lat=0.000 dz=21.860 dx=1.531 mem=0.365 rn=3.330 [26862s]
+  task 4 epoch 30/50 (292 it, b_new=32) rec=2.642 lat=0.000 dz=18.542 dx=1.290 mem=0.194 rn=1.252 [29865s]
+  task 4 epoch 40/50 (292 it, b_new=32) rec=2.392 lat=0.000 dz=15.837 dx=1.045 mem=0.120 rn=0.716 [32810s]
+  task 4 epoch 50/50 (292 it, b_new=32) rec=2.439 lat=0.000 dz=15.690 dx=1.108 mem=0.098 rn=0.612 [35765s]
+  memory (frozen codes): 1920 exemplars (240/class), 614,400 scalars, 2,457,600 bytes
+  memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=0.401
+after task 4: acc=86.47 per-task=[83.6, 82.9, 83.2, 96.2] memory-PSNR=32.85dB acc(recon test)=86.5 acc(memory)=98.2 [36206s]
+  CCE placement (4368 RFA steps): |init spread|=14.160 mean shift=12.091 min/mean CCE distance=20.001/27.522 |p| mean=21.514
+  task 5 epoch 1/50 (359 it, b_new=26) rec=3.012 lat=0.000 dz=27.292 dx=1.490 mem=0.452 rn=30.701 [36627s]
+  task 5 epoch 10/50 (359 it, b_new=26) rec=2.848 lat=0.000 dz=21.317 dx=1.558 mem=0.418 rn=5.171 [40049s]
+  task 5 epoch 20/50 (359 it, b_new=26) rec=2.541 lat=0.000 dz=18.792 dx=1.311 mem=0.285 rn=2.594 [43809s]
+  task 5 epoch 30/50 (359 it, b_new=26) rec=2.272 lat=0.000 dz=16.933 dx=1.086 mem=0.168 rn=1.487 [47515s]
+  task 5 epoch 40/50 (359 it, b_new=26) rec=2.136 lat=0.000 dz=14.103 dx=0.953 mem=0.098 rn=0.896 [51159s]
+  task 5 epoch 50/50 (359 it, b_new=26) rec=2.025 lat=0.000 dz=13.262 dx=0.837 mem=0.080 rn=0.743 [54852s]
+  memory (frozen codes): 1920 exemplars (192/class), 614,400 scalars, 2,457,600 bytes
+  memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=0.320
+after task 5: acc=82.90 per-task=[80.6, 76.4, 80.8, 81.5, 95.2] memory-PSNR=33.06dB acc(recon test)=82.9 acc(memory)=98.6 [55310s]
+FINAL svhn ahr seed=2: final acc=82.90 avg inc acc=89.98 time=921.8min

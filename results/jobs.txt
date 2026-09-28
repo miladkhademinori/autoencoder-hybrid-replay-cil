@@ -40,3 +40,17 @@
 1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --lam 0.1 --tag val_l01
 1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --alpha-x 0.3 --tag val_ax03
 1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --alpha-x 3 --tag val_ax3
+# third CIFAR-10 AHR seed with the current default (split latent) and baseline seeds for SEMs
+2 --dataset cifar10 --method ahr --seed 1 --save-ckpt 1
+1 --dataset cifar10 --method icarl --seed 1
+1 --dataset svhn --method icarl --seed 1
+1 --dataset cifar10 --method ft_e --seed 1
+1 --dataset svhn --method ft_e --seed 1
+1 --dataset cifar10 --method icarl --seed 2
+1 --dataset svhn --method icarl --seed 2
+1 --dataset cifar10 --method ft_e --seed 2
+1 --dataset svhn --method ft_e --seed 2
+1 --dataset cifar100 --method icarl --seed 1
+1 --dataset cifar100 --method ft_e --seed 1
+1 --dataset cifar100 --method icarl --seed 2
+1 --dataset cifar100 --method ft_e --seed 2
