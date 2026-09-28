@@ -88,7 +88,7 @@ svhn: variants (final accuracy %, mean ± SEM over seeds):
 | AHR (final configuration) | 80.30 ± 1.16 (n=3) |
 | spatial 8x8x5 latent, lambda 0.3, no RFA jitter (§3.9-3.11) | 74.43 (n=1) |
 | split latent + reflect padding | 79.17 (n=1) |
-| split latent + test-path replays, class-space herding, reflect padding | 82.33 (n=1) |
+| split latent + test-path replays, class-space herding, reflect padding | 82.78 ± 0.23 (n=3) |
 | AHR-lossless | 85.60 ± 0.38 (n=2) |
 | FT-E | 55.61 (n=1) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 45.55 (n=1) |
@@ -117,6 +117,7 @@ cifar100: variants (final accuracy %, mean ± SEM over seeds):
 |---|---|
 | AHR (final configuration) | 15.32 (n=1) |
 | + reflect padding (§3.14, audit K03) | 10.25 (n=1) |
+| as rt + latent loss on real images of task 1 (K06) | 17.32 (n=1) |
 | AHR-lossless | 48.61 (n=1) |
 | FT-E | 27.10 (n=1) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 33.37 (n=1) |
@@ -549,7 +550,7 @@ accuracy %, seed 0 unless noted; the per-dataset variant tables in §0 have all 
 |---|---|---|---|---|
 | reference (reported configuration) | 94.6 (3 seeds; decoder-output domain: 91.5) | 80.3 (split latent, 3 seeds; spatial 74.4) | 56.6 (2 seeds) | 15.3 |
 | one latent-loss mean (K01) | decoder-output domain: 89.2 (3 seeds) | | 53.7 | |
-| replays via the test path (K02) | decoder-output domain: 87.7 (3 seeds) | 82.3 (same seed: 78.7; seeds 1-2 running) | 46.3 | running |
+| replays via the test path + class-space herding + reflect padding (K02, K17, K03) | decoder-output domain: 87.7 (3 seeds) | **82.8 +- 0.2 (3 seeds; reference 80.3 +- 1.2)** | 46.3 | running; with the task-1 real-image loss (K06): 17.3 |
 | reflect padding (K03) | no crop augmentation on MNIST | 79.2 (same seed: 78.7) | running | 10.3 |
 | fewer AHR steps per epoch (K12) | 92.0 (3 seeds) | | | |
 | iCaRL with sigmoid-BCE distillation (K15) | 88.9 (3 seeds; KL 88.6) | | | 34.6 (KL 38.0) |
@@ -574,8 +575,20 @@ other 10%, the test set is not used):
 | 1 | 0.01 | 1 | 92.78 |
 
 The reported configuration is within noise (<= 0.35 points) of the best setting, so
-the unspecified loss weights do not explain MNIST's 3-point gap to the paper. The same
-sweep on CIFAR-10 is running.
+the unspecified loss weights do not explain MNIST's 3-point gap to the paper.
+
+The same sweep on CIFAR-10 (split latent, seed 0, 10% of the training data held out):
+
+| lambda | alpha_z | alpha_x | validation accuracy |
+|---|---|---|---|
+| **1** | **0.1** | **1** | **58.08** (reported configuration) |
+| 0.3 | 0.1 | 1 | 58.18 |
+| 3 | 0.1 | 1 | 54.44 |
+| 1 | 0.3 | 1 | 57.02 |
+| 1 | 0.03 | 1 | running |
+| 1 | 0.1 | 0.3 | running |
+
+Again the reported configuration is within noise of the best one.
 
 What this shows so far:
 * The paper's FT-E numbers are reached with about 10x the stated memory (CIFAR-10 FT-E
@@ -585,7 +598,10 @@ What this shows so far:
   replay (nearest-CCE regression plus distillation), not only in the decoded exemplars.
 * None of the audit's fixes on the AHR side (K01, K02, K03, K12) closes the gap: on
   CIFAR-10 K01 and K02 lose 3 and 10 points, reflect padding loses 5 points on
-  CIFAR-100, and K02 gains 3.7 points on SVHN for one seed (two more seeds running).
+  CIFAR-100. The one exception is SVHN, where classifying the replays through the test
+  path (with class-space herding and reflect padding) gains 2.5 points over three seeds
+  (82.8 +- 0.2 vs 80.3 +- 1.2); since it costs 10 points on CIFAR-10 it is reported as an
+  SVHN variant, not as the default.
 * The split latent (chosen on CIFAR-100) is now the default for SVHN as well; like on
   CIFAR-10 (§3.13) it was adopted after seeing it do better on the benchmark itself, and
   both variants are reported.
