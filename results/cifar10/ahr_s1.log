@@ -26,3 +26,21 @@ after task 2: acc=79.35 per-task=[84.3, 74.4] memory-PSNR=25.44dB acc(recon test
   task 3 epoch 10/50 (233 it, b_new=43) rec=9.870 lat=19.166 dz=97.958 dx=5.342 mem=1.011 rn=88.821 [11897s]
   task 3 epoch 20/50 (233 it, b_new=43) rec=9.347 lat=8.985 dz=97.448 dx=5.241 mem=0.950 rn=64.929 [13799s]
   task 3 epoch 30/50 (233 it, b_new=43) rec=8.524 lat=5.005 dz=97.815 dx=4.637 mem=0.637 rn=45.918 [15697s]
+  task 3 epoch 40/50 (233 it, b_new=43) rec=8.018 lat=3.283 dz=97.047 dx=4.184 mem=0.457 rn=32.655 [17627s]
+  task 3 epoch 50/50 (233 it, b_new=43) rec=7.993 lat=2.781 dz=96.168 dx=4.120 mem=0.386 rn=24.811 [19551s]
+  memory (frozen codes): 1920 exemplars (320/class), 614,400 scalars, 2,457,600 bytes
+  memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=3.157
+after task 3: acc=63.15 per-task=[77.6, 42.4, 69.4] memory-PSNR=25.51dB acc(recon test)=63.2 acc(memory)=84.5 [19880s]
+  CCE placement (3145 RFA steps): |init spread|=8.078 mean shift=8.200 min/mean CCE distance=20.001/23.714 |p| mean=18.549
+  task 4 epoch 1/50 (313 it, b_new=32) rec=9.835 lat=71.337 dz=73.873 dx=3.421 mem=0.774 rn=79.432 [20176s]
+  task 4 epoch 10/50 (313 it, b_new=32) rec=8.440 lat=9.063 dz=99.942 dx=3.782 mem=0.764 rn=19.370 [22517s]
+  task 4 epoch 20/50 (313 it, b_new=32) rec=7.704 lat=4.531 dz=100.087 dx=3.510 mem=0.598 rn=11.528 [25199s]
+  task 4 epoch 30/50 (313 it, b_new=32) rec=7.134 lat=2.215 dz=100.832 dx=3.162 mem=0.418 rn=6.652 [27936s]
+  task 4 epoch 40/50 (313 it, b_new=32) rec=6.930 lat=1.469 dz=98.023 dx=2.968 mem=0.293 rn=3.150 [30892s]
+  task 4 epoch 50/50 (313 it, b_new=32) rec=6.768 lat=1.226 dz=98.771 dx=2.823 mem=0.246 rn=2.420 [34253s]
+  memory (frozen codes): 1920 exemplars (240/class), 614,400 scalars, 2,457,600 bytes
+  memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=2.402
+after task 4: acc=59.49 per-task=[77.9, 40.6, 51.5, 68.0] memory-PSNR=25.50dB acc(recon test)=59.5 acc(memory)=89.0 [34737s]
+  CCE placement (4203 RFA steps): |init spread|=11.701 mean shift=14.687 min/mean CCE distance=20.001/25.154 |p| mean=19.323
+  task 5 epoch 1/50 (385 it, b_new=26) rec=8.178 lat=61.349 dz=82.103 dx=3.337 mem=0.785 rn=138.950 [35235s]
+  task 5 epoch 10/50 (385 it, b_new=26) rec=7.403 lat=9.442 dz=74.591 dx=3.469 mem=0.756 rn=39.159 [38583s]

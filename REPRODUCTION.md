@@ -14,9 +14,9 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 | Method | MNIST (5/2) ours | paper | Balanced SVHN (5/2) ours | paper | CIFAR-10 (5/2) ours | paper | CIFAR-100 (10/10) ours | paper |
 |---|---|---|---|---|---|---|---|---|
 | FT | 19.76 ± 0.01 (n=3) | 19.93 ± 0.03 | 19.64 (n=1) | 19.19 ± 0.04 | 19.57 (n=1) | 18.72 ± 0.30 | 8.85 (n=1) | 8.91 ± 0.12 |
-| FT-E | 72.18 ± 0.81 (n=3) | 92.17 ± 0.16 | 55.61 (n=1) | 87.13 ± 0.37 | 43.95 (n=1) | 72.17 ± 0.84 | 27.10 (n=1) | 48.47 ± 0.83 |
+| FT-E | 72.18 ± 0.81 (n=3) | 92.17 ± 0.16 | 56.73 ± 0.93 (n=3) | 87.13 ± 0.37 | 44.91 ± 0.96 (n=2) | 72.17 ± 0.84 | 27.10 (n=1) | 48.47 ± 0.83 |
 | Joint | 98.54 ± 0.04 (n=3) | 98.48 ± 0.06 | 95.43 (n=1) | 95.88 ± 0.04 | 89.02 (n=1) | 92.37 ± 0.09 | 59.43 (n=1) | 73.87 ± 0.10 |
-| iCaRL | 88.60 ± 0.10 (n=3) | 93.06 ± 0.33 | 71.07 (n=1) | 89.63 ± 0.61 | 62.82 (n=1) | 73.29 ± 0.73 | 37.99 (n=1) | 49.38 ± 0.62 |
+| iCaRL | 88.60 ± 0.10 (n=3) | 93.06 ± 0.33 | 72.34 ± 0.71 (n=3) | 89.63 ± 0.61 | 62.80 ± 0.49 (n=3) | 73.29 ± 0.73 | 37.99 (n=1) | 49.38 ± 0.62 |
 | AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 80.30 ± 1.16 (n=3) | 93.02 ± 0.65 | 56.62 ± 0.83 (n=2) | 77.12 ± 0.75 | 15.32 (n=1) | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 | - | 50.85 ± 0.81 |
@@ -35,13 +35,13 @@ Epochs / exemplars / wall-clock per run:
 | mnist | AHR-lossless-mini | 40 | 200 | 156,800 | 13 |
 | mnist | AHR-lossless | 40 | 7840 | 6,146,560 | 15 |
 | svhn | FT | 50 | 0 | 0 | 136 |
-| svhn | FT-E | 50 | 200 | 614,400 | 137 |
+| svhn | FT-E | 50 | 200 | 614,400 | 146 |
 | svhn | Joint | 50 | 0 | 0 | 142 |
-| svhn | iCaRL | 50 | 200 | 614,400 | 162 |
+| svhn | iCaRL | 50 | 200 | 614,400 | 171 |
 | svhn | AHR | 50 | 1920 | 614,400 | 723 |
 | svhn | AHR-lossless | 50 | 1920 | 5,898,240 | 557 |
 | cifar10 | FT | 50 | 0 | 0 | 143 |
-| cifar10 | FT-E | 50 | 200 | 614,400 | 147 |
+| cifar10 | FT-E | 50 | 200 | 614,400 | 144 |
 | cifar10 | Joint | 50 | 0 | 0 | 155 |
 | cifar10 | iCaRL | 50 | 200 | 614,400 | 186 |
 | cifar10 | AHR | 50 | 1920 | 614,400 | 878 |
@@ -90,9 +90,9 @@ svhn: variants (final accuracy %, mean ± SEM over seeds):
 | split latent + reflect padding | 79.17 (n=1) |
 | split latent + test-path replays, class-space herding, reflect padding | 82.78 ± 0.23 (n=3) |
 | AHR-lossless | 85.60 ± 0.38 (n=2) |
-| FT-E | 55.61 (n=1) |
+| FT-E | 56.73 ± 0.93 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 45.55 (n=1) |
-| iCaRL | 71.07 (n=1) |
+| iCaRL | 72.34 ± 0.71 (n=3) |
 | Joint | 95.43 (n=1) |
 
 cifar10: variants (final accuracy %, mean ± SEM over seeds):
@@ -104,11 +104,11 @@ cifar10: variants (final accuracy %, mean ± SEM over seeds):
 | + one latent-loss mean, class-space herding, reflect padding (K01, K17, K03) | 53.66 (n=1) |
 | + replays via the test path, class-space herding, reflect padding (K02, K17, K03) | 46.30 (n=1) |
 | AHR-lossless | 68.13 ± 0.69 (n=2) |
-| FT-E | 43.95 (n=1) |
+| FT-E | 44.91 ± 0.96 (n=2) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 36.03 (n=1) |
 | FT-E with 1,920 raw exemplars (AHR-lossless's memory) | 73.65 (n=1) |
 | FT-E with 1,920 raw exemplars + balanced fine-tuning | 74.41 (n=1) |
-| iCaRL | 62.82 (n=1) |
+| iCaRL | 62.80 ± 0.49 (n=3) |
 | Joint | 89.02 (n=1) |
 
 cifar100: variants (final accuracy %, mean ± SEM over seeds):
