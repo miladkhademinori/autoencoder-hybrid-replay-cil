@@ -100,3 +100,4 @@ resumed from results/cifar100/ahr_lossless_s1_ckpt_t8.pt after task 8: accs so f
   task 9 epoch 10/50 (179 it, b_new=28) rec=16.550 lat=355.459 dz=206.115 dx=2.619 mem=0.000 [5941s]
   task 9 epoch 20/50 (179 it, b_new=28) rec=16.250 lat=284.452 dz=232.980 dx=2.652 mem=0.000 [12161s]
   task 9 epoch 30/50 (179 it, b_new=28) rec=15.606 lat=221.674 dz=239.088 dx=2.195 mem=0.000 [18393s]
+  task 9 epoch 40/50 (179 it, b_new=28) rec=15.146 lat=189.532 dz=247.367 dx=1.901 mem=0.000 [24392s]
