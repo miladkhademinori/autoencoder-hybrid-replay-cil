@@ -97,3 +97,5 @@ args: {"alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.1, "augme
 resumed from results/cifar100/ahr_lossless_s1_ckpt_t8.pt after task 8: accs so far [75.6, 63.6, 63.13, 60.18, 59.64, 58.55, 56.41, 53.46]
   CCE placement (4712 RFA steps): |init spread|=21.444 mean shift=44.226 min/mean CCE distance=20.001/53.520 |p| mean=37.736
   task 9 epoch 1/50 (179 it, b_new=28) rec=16.902 lat=469.211 dz=130.815 dx=2.420 mem=0.000 [595s]
+  task 9 epoch 10/50 (179 it, b_new=28) rec=16.550 lat=355.459 dz=206.115 dx=2.619 mem=0.000 [5941s]
+  task 9 epoch 20/50 (179 it, b_new=28) rec=16.250 lat=284.452 dz=232.980 dx=2.652 mem=0.000 [12161s]

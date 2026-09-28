@@ -14,10 +14,10 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 | Method | MNIST (5/2) ours | paper | Balanced SVHN (5/2) ours | paper | CIFAR-10 (5/2) ours | paper | CIFAR-100 (10/10) ours | paper |
 |---|---|---|---|---|---|---|---|---|
 | FT | 19.76 ± 0.01 (n=3) | 19.93 ± 0.03 | 19.64 (n=1) | 19.19 ± 0.04 | 19.57 (n=1) | 18.72 ± 0.30 | 8.85 (n=1) | 8.91 ± 0.12 |
-| FT-E | 72.18 ± 0.81 (n=3) | 92.17 ± 0.16 | 56.73 ± 0.93 (n=3) | 87.13 ± 0.37 | 44.91 ± 0.96 (n=2) | 72.17 ± 0.84 | 27.10 (n=1) | 48.47 ± 0.83 |
+| FT-E | 72.18 ± 0.81 (n=3) | 92.17 ± 0.16 | 56.73 ± 0.93 (n=3) | 87.13 ± 0.37 | 44.38 ± 0.77 (n=3) | 72.17 ± 0.84 | 27.23 ± 0.14 (n=2) | 48.47 ± 0.83 |
 | Joint | 98.54 ± 0.04 (n=3) | 98.48 ± 0.06 | 95.43 (n=1) | 95.88 ± 0.04 | 89.02 (n=1) | 92.37 ± 0.09 | 59.43 (n=1) | 73.87 ± 0.10 |
 | iCaRL | 88.60 ± 0.10 (n=3) | 93.06 ± 0.33 | 72.34 ± 0.71 (n=3) | 89.63 ± 0.61 | 62.80 ± 0.49 (n=3) | 73.29 ± 0.73 | 37.99 (n=1) | 49.38 ± 0.62 |
-| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 80.30 ± 1.16 (n=3) | 93.02 ± 0.65 | 56.62 ± 0.83 (n=2) | 77.12 ± 0.75 | 15.32 (n=1) | 54.43 ± 0.93 |
+| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 80.30 ± 1.16 (n=3) | 93.02 ± 0.65 | 56.51 ± 0.49 (n=3) | 77.12 ± 0.75 | 15.32 (n=1) | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 | - | 50.85 ± 0.81 |
 | AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | 85.60 ± 0.38 (n=2) | 94.21 ± 0.23 | 68.13 ± 0.69 (n=2) | 78.35 ± 0.37 | 48.61 (n=1) | 56.71 ± 0.57 |
@@ -41,13 +41,13 @@ Epochs / exemplars / wall-clock per run:
 | svhn | AHR | 50 | 1920 | 614,400 | 723 |
 | svhn | AHR-lossless | 50 | 1920 | 5,898,240 | 557 |
 | cifar10 | FT | 50 | 0 | 0 | 143 |
-| cifar10 | FT-E | 50 | 200 | 614,400 | 144 |
+| cifar10 | FT-E | 50 | 200 | 614,400 | 154 |
 | cifar10 | Joint | 50 | 0 | 0 | 155 |
 | cifar10 | iCaRL | 50 | 200 | 614,400 | 186 |
-| cifar10 | AHR | 50 | 1920 | 614,400 | 878 |
+| cifar10 | AHR | 50 | 1920 | 614,400 | 882 |
 | cifar10 | AHR-lossless | 50 | 1920 | 5,898,240 | 581 |
 | cifar100 | FT | 50 | 0 | 0 | 134 |
-| cifar100 | FT-E | 50 | 2000 | 6,144,000 | 184 |
+| cifar100 | FT-E | 50 | 2000 | 6,144,000 | 196 |
 | cifar100 | Joint | 50 | 0 | 0 | 123 |
 | cifar100 | iCaRL | 50 | 2000 | 6,144,000 | 249 |
 | cifar100 | AHR | 50 | 19200 | 6,144,000 | 1242 |
@@ -99,12 +99,12 @@ cifar10: variants (final accuracy %, mean ± SEM over seeds):
 
 | Variant | Final acc. |
 |---|---|
-| AHR (final configuration) | 56.62 ± 0.83 (n=2) |
+| AHR (final configuration) | 56.51 ± 0.49 (n=3) |
 | spatial 8x8x5 latent, lambda 0.3, no RFA jitter (§3.9-3.11) | 50.72 (n=1) |
 | + one latent-loss mean, class-space herding, reflect padding (K01, K17, K03) | 53.66 (n=1) |
 | + replays via the test path, class-space herding, reflect padding (K02, K17, K03) | 46.30 (n=1) |
 | AHR-lossless | 68.13 ± 0.69 (n=2) |
-| FT-E | 44.91 ± 0.96 (n=2) |
+| FT-E | 44.38 ± 0.77 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 36.03 (n=1) |
 | FT-E with 1,920 raw exemplars (AHR-lossless's memory) | 73.65 (n=1) |
 | FT-E with 1,920 raw exemplars + balanced fine-tuning | 74.41 (n=1) |
@@ -119,7 +119,7 @@ cifar100: variants (final accuracy %, mean ± SEM over seeds):
 | + reflect padding (§3.14, audit K03) | 10.25 (n=1) |
 | as rt + latent loss on real images of task 1 (K06) | 17.32 (n=1) |
 | AHR-lossless | 48.61 (n=1) |
-| FT-E | 27.10 (n=1) |
+| FT-E | 27.23 ± 0.14 (n=2) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 33.37 (n=1) |
 | incremental Joint (FT-E keeping all data) | 57.02 (n=1) |
 | iCaRL | 37.99 (n=1) |
@@ -171,7 +171,7 @@ the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
   works is a latent that keeps spatial layout plus classifying in the decoder's output
   domain (§3.9, §3.11), which departs from the paper's test rule. With a spatial
   8x8x5 latent CIFAR-10(5/2) AHR reaches 50.7%; with a split latent (8x8x4 spatial
-  part + a 64-d class part from pooled features, §3.12-3.13) **55.8%** (paper 77.1):
+  part + a 64-d class part from pooled features, §3.12-3.13) **56.5 +- 0.5%** over 3 seeds (paper 77.1):
   better than FT-E (44.0) but below iCaRL (62.8) under the same protocol. The same
   pipeline with raw instead of decoded exemplars (AHR-lossless, 1,920 images) reaches
   68.8% (paper 78.4), above iCaRL. That run is not the same pipeline, though: it
@@ -476,7 +476,8 @@ that decoded replay forces (§3.10-3.11), not the CCE classifier itself.
 
 ### 3.13 The split latent on CIFAR-10
 The CIFAR-100 finding (§3.12) carries over. With the split latent (lambda = 1, RFA
-jitter 0.25; every other setting as in §3.11) CIFAR-10(5/2) AHR ends at **55.8%**
+jitter 0.25; every other setting as in §3.11) CIFAR-10(5/2) AHR ends at **55.8%** (seed 0;
+56.5 +- 0.5 over seeds 0-2)
 instead of 50.7% with the spatial latent (seed 0 for both):
 
 | Latent | after each task | final | avg. inc. acc. | memory PSNR |
@@ -548,7 +549,7 @@ accuracy %, seed 0 unless noted; the per-dataset variant tables in §0 have all 
 
 | Change | MNIST | SVHN | CIFAR-10 | CIFAR-100 |
 |---|---|---|---|---|
-| reference (reported configuration) | 94.6 (3 seeds; decoder-output domain: 91.5) | 80.3 (split latent, 3 seeds; spatial 74.4) | 56.6 (2 seeds) | 15.3 |
+| reference (reported configuration) | 94.6 (3 seeds; decoder-output domain: 91.5) | 80.3 (split latent, 3 seeds; spatial 74.4) | 56.5 (3 seeds) | 15.3 |
 | one latent-loss mean (K01) | decoder-output domain: 89.2 (3 seeds) | | 53.7 | |
 | replays via the test path + class-space herding + reflect padding (K02, K17, K03) | decoder-output domain: 87.7 (3 seeds) | **82.8 +- 0.2 (3 seeds; reference 80.3 +- 1.2)** | 46.3 | running; with the task-1 real-image loss (K06): 17.3 |
 | reflect padding (K03) | no crop augmentation on MNIST | 79.2 (same seed: 78.7) | running | 10.3 |
