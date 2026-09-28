@@ -88,3 +88,4 @@ resumed from results/cifar100/ahr_lossless_s1_ckpt_t7.pt after task 7: accs so f
 after task 8: acc=53.46 per-task=[57.3, 54.3, 58.4, 51.4, 56.3, 56.9, 49.3, 43.8] [24401s]
   CCE placement (3501 RFA steps): |init spread|=21.914 mean shift=26.231 min/mean CCE distance=20.001/50.339 |p| mean=35.752
   task 9 epoch 1/50 (179 it, b_new=28) rec=16.900 lat=341.589 dz=100.180 dx=2.359 mem=0.000 [24957s]
+  task 9 epoch 10/50 (179 it, b_new=28) rec=16.411 lat=281.678 dz=123.300 dx=2.447 mem=0.000 [29927s]
