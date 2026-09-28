@@ -54,3 +54,8 @@
 1 --dataset cifar100 --method ft_e --seed 1
 1 --dataset cifar100 --method icarl --seed 2
 1 --dataset cifar100 --method ft_e --seed 2
+# remaining seeds for the main table
+2 --dataset cifar100 --method ahr --seed 1 --save-ckpt 1
+2 --dataset cifar100 --method ahr --seed 2 --save-ckpt 1
+1 --dataset svhn --method ahr_lossless --seed 2 --latent-domain input --lam-recon-new 0 --latent-kind spatial --lam 0.3 --rfa-jitter 0
+1 --dataset cifar10 --method ahr_lossless --seed 2 --latent-domain input --lam-recon-new 0 --latent-kind spatial --lam 0.3 --rfa-jitter 0
