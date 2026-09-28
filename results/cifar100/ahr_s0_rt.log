@@ -65,3 +65,7 @@ resumed from results/cifar100/ahr_s0_rt_ckpt_t4.pt after task 4: accs so far [69
   task 5 epoch 40/50 (99 it, b_new=51) rec=8.889 lat=0.000 dz=84.973 dx=3.196 mem=0.350 rn=287.089 [24722s]
   task 5 epoch 50/50 (99 it, b_new=51) rec=8.920 lat=0.000 dz=84.260 dx=3.246 mem=0.310 rn=286.633 [31324s]
   memory (frozen codes): 19200 exemplars (384/class), 6,144,000 scalars, 24,576,000 bytes
+  memorisation: 20 decoder epochs (1500 steps) over 19200 exemplars, final loss=3.421
+after task 5: acc=25.52 per-task=[16.3, 3.9, 22.0, 22.5, 62.9] memory-PSNR=23.10dB acc(recon test)=25.5 acc(memory)=54.2 [33305s]
+  CCE placement (3841 RFA steps): |init spread|=19.226 mean shift=27.400 min/mean CCE distance=20.000/43.409 |p| mean=31.424
+  task 6 epoch 1/50 (117 it, b_new=43) rec=10.305 lat=0.000 dz=82.622 dx=2.973 mem=0.883 rn=520.955 [34132s]
