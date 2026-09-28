@@ -57,3 +57,5 @@ resumed from results/cifar10/ahr_s0_reflect_ckpt_t3.pt after task 3: accs so far
   memory (frozen codes): 1920 exemplars (240/class), 614,400 scalars, 2,457,600 bytes
   memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=2.671
 after task 4: acc=54.83 per-task=[69.2, 32.9, 60.0, 57.2] memory-PSNR=25.33dB acc(recon test)=54.8 acc(memory)=86.0 [41402s]
+  CCE placement (6798 RFA steps): |init spread|=12.078 mean shift=20.764 min/mean CCE distance=20.000/33.351 |p| mean=27.701
+  task 5 epoch 1/50 (385 it, b_new=26) rec=8.617 lat=125.208 dz=160.105 dx=2.970 mem=0.902 rn=214.614 [42554s]
