@@ -54,6 +54,18 @@
 1 --dataset cifar100 --method ft_e --seed 1
 1 --dataset cifar100 --method icarl --seed 2
 1 --dataset cifar100 --method ft_e --seed 2
+# memory-scaling diagnostic (paper Fig. 3): how much memory each method needs here to reach the paper's numbers
+1 --dataset mnist --method ft_e --seed 0 --n-exemplars 1000 --tag n1000
+1 --dataset mnist --method icarl --seed 0 --n-exemplars 1000 --tag n1000
+1 --dataset mnist --method ft_e --seed 0 --n-exemplars 2000 --tag n2000
+1 --dataset mnist --method icarl --seed 0 --n-exemplars 2000 --tag n2000
+1 --dataset cifar10 --method icarl --seed 0 --n-exemplars 1920 --tag n1920
+1 --dataset svhn --method icarl --seed 0 --n-exemplars 1920 --tag n1920
+1 --dataset svhn --method ft_e --seed 0 --n-exemplars 1920 --tag n1920
+1 --dataset mnist --method ahr --seed 0 --n-exemplars 20000 --tag m20000
+1 --dataset mnist --method ahr --seed 0 --n-exemplars 40000 --tag m40000
+1 --dataset cifar100 --method icarl --seed 0 --n-exemplars 20000 --tag n20000
+1 --dataset cifar100 --method ft_e --seed 0 --n-exemplars 20000 --tag n20000
 # remaining seeds for the main table
 2 --dataset cifar100 --method ahr --seed 1 --save-ckpt 1
 2 --dataset cifar100 --method ahr --seed 2 --save-ckpt 1

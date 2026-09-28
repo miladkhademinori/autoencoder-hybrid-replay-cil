@@ -30,3 +30,6 @@ session_01XKSR4df9KLR4JrUN4CtfJc  claude/ahr-exp-cifar10-ahr-s0-val_az03       -
 session_01HBRRWzCPqk5gBb4H2i7aAD  claude/ahr-exp-cifar10-ahr-s0-val_l03        --dataset cifar10 --method ahr --seed 0 --val-fraction 0.1 --lam 0.3 --tag val_l03
 session_01CVRp8D2VVNrWTfRePfu7b7  claude/ahr-exp-cifar10-ahr-s0-val_l3         --dataset cifar10 --method ahr --seed 0 --val-fraction 0.1 --lam 3 --tag val_l3
 session_01Y6yvx1zzjVoMbDYKvGtnsw  claude/ahr-exp-cifar10-ahr-s0-val_ax03       --dataset cifar10 --method ahr --seed 0 --val-fraction 0.1 --alpha-x 0.3 --tag val_ax03
+# memory-scaling diagnostic: AHR with 10x the stated number of latent codes
+session_01QbmMYTrfsyb8gbVxq62uR3  claude/ahr-exp-cifar10-ahr-s0-m19200        --dataset cifar10 --method ahr --seed 0 --n-exemplars 19200 --tag m19200
+session_017Sgcdzv4LGc2dhCAka2Kti  claude/ahr-exp-svhn-ahr-s0-m19200           --dataset svhn --method ahr --seed 0 --n-exemplars 19200 --tag m19200
