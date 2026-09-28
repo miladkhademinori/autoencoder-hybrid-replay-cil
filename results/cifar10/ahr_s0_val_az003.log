@@ -41,3 +41,4 @@ resumed from results/cifar10/ahr_s0_val_az003_ckpt_t2.pt after task 2: accs so f
   memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=3.393
 after task 3: acc=61.20 per-task=[75.3, 34.1, 74.2] memory-PSNR=25.37dB acc(recon test)=61.2 acc(memory)=84.3 [26851s]
   CCE placement (4543 RFA steps): |init spread|=7.132 mean shift=14.019 min/mean CCE distance=20.000/27.917 |p| mean=22.917
+  task 4 epoch 1/50 (282 it, b_new=32) rec=10.413 lat=94.601 dz=115.934 dx=3.706 mem=0.892 rn=127.479 [27566s]
