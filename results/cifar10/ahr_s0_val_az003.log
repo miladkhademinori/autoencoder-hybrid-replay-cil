@@ -50,3 +50,4 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
 resumed from results/cifar10/ahr_s0_val_az003_ckpt_t3.pt after task 3: accs so far [97.0, 79.65, 61.2]
   CCE placement (5609 RFA steps): |init spread|=6.571 mean shift=19.677 min/mean CCE distance=20.000/29.971 |p| mean=24.236
   task 4 epoch 1/50 (282 it, b_new=32) rec=10.750 lat=112.317 dz=119.566 dx=4.094 mem=1.057 rn=163.540 [781s]
+  task 4 epoch 10/50 (282 it, b_new=32) rec=9.420 lat=24.013 dz=151.351 dx=4.366 mem=0.939 rn=62.775 [7709s]
