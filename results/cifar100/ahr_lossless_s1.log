@@ -81,3 +81,10 @@ resumed from results/cifar100/ahr_lossless_s1_ckpt_t7.pt after task 7: accs so f
   task 8 epoch 1/50 (157 it, b_new=32) rec=17.416 lat=355.341 dz=101.565 dx=2.706 mem=0.000 [506s]
   task 8 epoch 10/50 (157 it, b_new=32) rec=16.571 lat=293.145 dz=126.014 dx=2.566 mem=0.000 [4918s]
   task 8 epoch 20/50 (157 it, b_new=32) rec=15.846 lat=240.922 dz=128.974 dx=2.333 mem=0.000 [9790s]
+  task 8 epoch 30/50 (157 it, b_new=32) rec=15.504 lat=196.143 dz=135.108 dx=2.191 mem=0.000 [14677s]
+  task 8 epoch 40/50 (157 it, b_new=32) rec=14.940 lat=172.426 dz=138.957 dx=1.755 mem=0.000 [19558s]
+  task 8 epoch 50/50 (157 it, b_new=32) rec=14.919 lat=165.150 dz=139.483 dx=1.681 mem=0.000 [24380s]
+  memory (frozen codes): 19200 exemplars (240/class), 58,982,400 scalars, 235,929,600 bytes
+after task 8: acc=53.46 per-task=[57.3, 54.3, 58.4, 51.4, 56.3, 56.9, 49.3, 43.8] [24401s]
+  CCE placement (3501 RFA steps): |init spread|=21.914 mean shift=26.231 min/mean CCE distance=20.001/50.339 |p| mean=35.752
+  task 9 epoch 1/50 (179 it, b_new=28) rec=16.900 lat=341.589 dz=100.180 dx=2.359 mem=0.000 [24957s]
