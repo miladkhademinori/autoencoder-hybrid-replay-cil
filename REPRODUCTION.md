@@ -66,6 +66,8 @@ mnist: variants (final accuracy %, mean ± SEM over seeds):
 | - decoder memorisation | 84.00 ± 1.39 (n=3) |
 | - frozen codes, - memorisation = literal Alg. 1-4 (herding selection) | 75.01 ± 1.48 (n=3) |
 | literal Alg. 1-4, Rank selection | 70.06 ± 0.96 (n=3) |
+| AHR with 20,000 latent codes (memory-scaling diagnostic) | 95.25 (n=1) |
+| AHR with 40,000 latent codes (memory-scaling diagnostic) | 95.14 (n=1) |
 | AHR-lossless | 95.11 ± 0.26 (n=3) |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) |
 | AHR-lossy-mini, alpha_z 0.1 | 78.14 ± 2.17 (n=3) |
@@ -76,9 +78,13 @@ mnist: variants (final accuracy %, mean ± SEM over seeds):
 | FT-E with AHR's balanced minibatches | 75.10 ± 0.57 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 84.73 ± 0.27 (n=3) |
 | FT-E with 7,840 raw exemplars (AHR-lossless's memory) | 96.70 (n=1) |
+| FT-E with 1,000 raw exemplars | 89.84 (n=1) |
+| FT-E with 2,000 raw exemplars | 93.07 (n=1) |
 | iCaRL | 88.60 ± 0.10 (n=3) |
 | iCaRL, sigmoid-BCE distillation (FACIL, audit K15) | 88.93 ± 0.37 (n=3) |
 | iCaRL with 7,840 raw exemplars | 95.39 (n=1) |
+| iCaRL with 1,000 raw exemplars | 93.95 (n=1) |
+| iCaRL with 2,000 raw exemplars | 95.04 (n=1) |
 | Joint | 98.54 ± 0.04 (n=3) |
 
 svhn: variants (final accuracy %, mean ± SEM over seeds):
@@ -92,7 +98,9 @@ svhn: variants (final accuracy %, mean ± SEM over seeds):
 | AHR-lossless | 85.60 ± 0.38 (n=2) |
 | FT-E | 56.73 ± 0.93 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 45.55 (n=1) |
+| FT-E with 1,920 raw exemplars (AHR-lossless's memory) | 85.09 (n=1) |
 | iCaRL | 72.34 ± 0.71 (n=3) |
+| iCaRL with 1,920 raw exemplars | 86.83 (n=1) |
 | Joint | 95.43 (n=1) |
 
 cifar10: variants (final accuracy %, mean ± SEM over seeds):
@@ -109,6 +117,7 @@ cifar10: variants (final accuracy %, mean ± SEM over seeds):
 | FT-E with 1,920 raw exemplars (AHR-lossless's memory) | 73.65 (n=1) |
 | FT-E with 1,920 raw exemplars + balanced fine-tuning | 74.41 (n=1) |
 | iCaRL | 62.80 ± 0.49 (n=3) |
+| iCaRL with 1,920 raw exemplars | 74.80 (n=1) |
 | Joint | 89.02 (n=1) |
 
 cifar100: variants (final accuracy %, mean ± SEM over seeds):
@@ -606,3 +615,49 @@ What this shows so far:
 * The split latent (chosen on CIFAR-100) is now the default for SVHN as well; like on
   CIFAR-10 (§3.13) it was adopted after seeing it do better on the benchmark itself, and
   both variants are reported.
+
+### 4.2 Memory scaling and the AHR ceiling (diagnostics)
+
+How much memory does each method need in this implementation to reach the number the
+paper reports for the stated budget (paper Fig. 3 plots accuracy against memory size)?
+Final accuracy %, seed 0 unless noted; the paper's value is for 200 (MNIST, SVHN,
+CIFAR-10) or 2,000 (CIFAR-100) raw exemplars, i.e. 7,840 / 1,920 / 1,920 / 19,200 codes:
+
+| Method | memory | MNIST | SVHN | CIFAR-10 | CIFAR-100 |
+|---|---|---|---|---|---|
+| FT-E | stated (200 / 2,000) | 72.2 (3 seeds) | 56.7 (3 seeds) | 44.4 (3 seeds) | 27.4 (3 seeds) |
+| FT-E | 1,000 | 89.8 | | | |
+| FT-E | 1,920-2,000 (~10x) | 93.1 | 85.1 | 73.7 | |
+| FT-E | 7,840 | 96.7 | | | |
+| **FT-E, paper** | stated | **92.2** | **87.1** | **72.2** | **48.5** |
+| iCaRL | stated | 88.6 (3 seeds) | 72.3 (3 seeds) | 62.8 (3 seeds) | 37.6 (3 seeds) |
+| iCaRL | 1,000 | 94.0 | | | |
+| iCaRL | 1,920-2,000 (~10x) | 95.0 | 86.8 | 74.8 | |
+| iCaRL | 7,840 | 95.4 | | | |
+| **iCaRL, paper** | stated | **93.1** | **89.6** | **73.3** | **49.4** |
+| AHR | stated (7,840 / 1,920 / 1,920 / 19,200 codes) | 94.6 (3 seeds) | 80.3 (3 seeds) | 56.5 (3 seeds) | 15.3 |
+| AHR | 20,000 / 40,000 codes | 95.3 / 95.1 | | | |
+| AHR | 19,200 codes (10x) | | running | running | |
+| **AHR, paper** | stated | **97.5** | **93.0** | **77.1** | **54.4** |
+
+* The paper's FT-E and iCaRL values are what this implementation reaches with about
+  5-10x the stated number of raw exemplars on every benchmark measured, consistent with
+  audit K05 (published results at the stated budgets match this repository). The
+  paper's Fig. 3 places these values at the stated budget, so this is a discrepancy
+  between the paper and independent results, not a protocol that can be recovered.
+* AHR on MNIST does not improve with more memory (95.3 / 95.1 with 20,000 / 40,000
+  codes). Its classifier is not the limit: trained on all ten classes as a single task,
+  AHR reaches 97.5 / 98.4 / 98.6 with lambda 0.3 / 1 / 3 (Joint: 98.5). The limit is
+  forgetting across tasks: a larger lambda raises the single-task ceiling but loses more
+  over the five tasks, and stronger distillation does not compensate (validation grid
+  below; held-out training data, seed 0):
+
+| lambda | alpha_z | alpha_x | validation accuracy |
+|---|---|---|---|
+| **0.3** | **0.01** | **1** | **95.07** (reported) |
+| 1 | 0.1 | 1 | 93.65 |
+| 1 | 1 | 1 | 91.23 |
+| 1 | 0.1 | 3 | 90.20 |
+| 3 | 0.1 | 1 | 84.26 |
+| 3 | 1 | 1 | 84.23 |
+| 3 | 1 | 3 | 80.80 |
