@@ -661,3 +661,9 @@ CIFAR-10) or 2,000 (CIFAR-100) raw exemplars, i.e. 7,840 / 1,920 / 1,920 / 19,20
 | 3 | 0.1 | 1 | 84.26 |
 | 3 | 1 | 1 | 84.23 |
 | 3 | 1 | 3 | 80.80 |
+
+Alg. 3 writes the distillation terms as unsquared norms with unit weight
+(`||phi_old(D) - phi(D)|| + ||psi_old(phi_old(D)) - psi(phi(D))||`). Taken literally
+(`--distill-norm l2 --alpha-z 1 --alpha-x 1`) on the same validation split: 91.6 with
+lambda 0.3, 94.63 with lambda 1, and a collapse (34.1) with alpha_z 3; the reported
+squared form (95.07) remains the best.
