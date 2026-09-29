@@ -4,3 +4,10 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
   CCE placement (208 RFA steps): |init spread|=1.639 mean shift=2.998 min/mean CCE distance=5.016/6.081 |p| mean=4.111
   task 1 epoch 1/40 (469 it, b_new=128) rec=33.351 lat=12.401 dz=0.000 dx=0.000 mem=0.000 [7s]
   task 1 epoch 10/40 (469 it, b_new=128) rec=7.029 lat=3.183 dz=0.000 dx=0.000 mem=0.000 [53s]
+  task 1 epoch 20/40 (469 it, b_new=128) rec=5.471 lat=2.239 dz=0.000 dx=0.000 mem=0.000 [104s]
+  task 1 epoch 30/40 (469 it, b_new=128) rec=4.840 lat=1.911 dz=0.000 dx=0.000 mem=0.000 [154s]
+  task 1 epoch 40/40 (469 it, b_new=128) rec=4.630 lat=1.840 dz=0.000 dx=0.000 mem=0.000 [204s]
+  memory (frozen codes): 7840 exemplars (784/class), 156,800 scalars, 627,200 bytes
+  memorisation: 20 decoder epochs (1240 steps) over 7840 exemplars, final loss=4.924
+after task 1: acc=97.45 per-task=[97.5] memory-PSNR=22.79dB acc(recon test)=97.3 acc(memory)=99.6 [215s]
+FINAL mnist ahr seed=0: final acc=97.45 avg inc acc=97.45 time=3.6min
