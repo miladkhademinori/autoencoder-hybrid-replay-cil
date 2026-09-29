@@ -76,3 +76,4 @@ resumed from results/cifar10/ahr_s0_reflect_ckpt_t4.pt after task 4: accs so far
   CCE placement (8401 RFA steps): |init spread|=17.628 mean shift=22.884 min/mean CCE distance=20.000/34.233 |p| mean=28.732
   task 5 epoch 1/50 (385 it, b_new=26) rec=8.272 lat=116.326 dz=142.817 dx=2.527 mem=0.746 rn=174.153 [1069s]
   task 5 epoch 10/50 (385 it, b_new=26) rec=7.678 lat=19.938 dz=179.973 dx=2.983 mem=0.761 rn=58.830 [9919s]
+  task 5 epoch 20/50 (385 it, b_new=26) rec=7.159 lat=10.168 dz=177.794 dx=2.844 mem=0.661 rn=39.821 [19743s]
