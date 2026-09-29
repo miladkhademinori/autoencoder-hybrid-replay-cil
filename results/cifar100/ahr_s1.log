@@ -4,3 +4,4 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
   CCE placement (1537 RFA steps): |init spread|=6.863 mean shift=10.114 min/mean CCE distance=20.003/21.916 |p| mean=14.781
   task 1 epoch 1/50 (20 it, b_new=256) rec=213.573 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=217.403 [57s]
   task 1 epoch 10/50 (20 it, b_new=256) rec=30.610 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=182.207 [329s]
+  task 1 epoch 20/50 (20 it, b_new=256) rec=27.131 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=139.122 [626s]
