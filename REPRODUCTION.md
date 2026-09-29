@@ -139,9 +139,23 @@ cifar100: variants (final accuracy %, mean ± SEM over seeds):
 
 ## Summary
 
+**Bottom line.** The paper's qualitative claims reproduce on MNIST and Balanced SVHN
+(AHR > iCaRL > FT-E at the stated budgets; on MNIST decoded exemplars are almost as good
+as raw ones and many compressed exemplars beat a few raw ones), but none of its absolute
+numbers do: AHR is 3 (MNIST), 13 (SVHN), 21 (CIFAR-10) and 39 (CIFAR-100) points below
+Table 2, and on CIFAR-10/100 it is below iCaRL. The FT-E and iCaRL baselines are also
+5-30 points below the paper, while FT and Joint (MNIST, SVHN) match it. At the stated
+budgets independent published results agree with this repository, and here the paper's
+FT-E / iCaRL values are reached only with ~5-10x the stated number of exemplars (§4.2).
+For AHR itself, the loss weights the paper does not give (validation sweeps, §4.1-4.2),
+the literal distillation of Alg. 3, the CCE spacing, the fixes suggested by a 49-agent
+audit (§4) and more memory on MNIST do not close the gap; the one lever that helps
+clearly is 10x memory on SVHN (§4.2, running).
+
 **Setting.** Everything was run on a 4-core CPU without a GPU (bf16 on AMX), at the
-paper's epochs, batch sizes, optimiser and memory budgets (Table 4). MNIST results
-are 3 seeds; the image benchmarks are 1 seed. miniImageNet was not run (compute).
+paper's epochs, batch sizes, optimiser and memory budgets (Table 4), plus separate
+4-core cloud machines for §4 (`results/cloud_jobs.txt`). Main results are 3 seeds
+(CIFAR-100 AHR: 1 seed, more running). miniImageNet was not run (compute).
 The paper does not specify the loss weights, the RFA constants, the latent head or
 the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
 
@@ -666,4 +680,5 @@ Alg. 3 writes the distillation terms as unsquared norms with unit weight
 (`||phi_old(D) - phi(D)|| + ||psi_old(phi_old(D)) - psi(phi(D))||`). Taken literally
 (`--distill-norm l2 --alpha-z 1 --alpha-x 1`) on the same validation split: 91.6 with
 lambda 0.3, 94.63 with lambda 1, and a collapse (34.1) with alpha_z 3; the reported
-squared form (95.07) remains the best.
+squared form (95.07) remains the best. Neither does the CCE geometry: RFA jitter 0.25,
+minimum spacing 7 instead of 5, or both give 94.9 / 95.2 / 95.4 on the same split.
