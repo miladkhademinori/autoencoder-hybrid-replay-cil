@@ -132,6 +132,7 @@ cifar100: variants (final accuracy %, mean ± SEM over seeds):
 | AHR-lossless | 48.58 ± 0.03 (n=2) |
 | FT-E | 27.35 ± 0.14 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 33.37 (n=1) |
+| FT-E with 10,000 raw exemplars | 46.47 (n=1) |
 | FT-E with 20,000 raw exemplars | 53.37 (n=1) |
 | incremental Joint (FT-E keeping all data) | 57.02 (n=1) |
 | iCaRL | 37.55 ± 0.23 (n=3) |
@@ -647,7 +648,7 @@ CIFAR-10) or 2,000 (CIFAR-100) raw exemplars, i.e. 7,840 / 1,920 / 1,920 / 19,20
 |---|---|---|---|---|---|
 | FT-E | stated (200 / 2,000) | 72.2 (3 seeds) | 56.7 (3 seeds) | 44.4 (3 seeds) | 27.4 (3 seeds) |
 | FT-E | 1,000 | 89.8 | | | |
-| FT-E | 10,000 (5x) | | | | *running* |
+| FT-E | 10,000 (5x) | | | | 46.5 |
 | FT-E | 1,920-2,000 / 20,000 (~10x) | 93.1 | 85.1 | 73.7 | 53.4 |
 | FT-E | 7,840 | 96.7 | | | |
 | **FT-E, paper** | stated | **92.2** | **87.1** | **72.2** | **48.5** |
@@ -664,8 +665,9 @@ CIFAR-10) or 2,000 (CIFAR-100) raw exemplars, i.e. 7,840 / 1,920 / 1,920 / 19,20
 * The paper's FT-E and iCaRL values are what this implementation reaches with about
   5-10x the stated number of raw exemplars on every benchmark measured, consistent with
   audit K05 (published results at the stated budgets match this repository). On
-  CIFAR-100, 20,000 exemplars (40% of the training set) give FT-E 53.4 (paper 48.5) but
-  iCaRL only 46.8 (paper 49.4), so the paper's CIFAR-100 iCaRL value lies above what this
+  CIFAR-100, FT-E reaches the paper's 48.5 between 10,000 and 20,000 exemplars (46.5 /
+  53.4; 20,000 is 40% of the training set), but iCaRL gets only 46.8 with 20,000
+  (paper 49.4), so the paper's CIFAR-100 iCaRL value lies above what this
   implementation reaches with 10x memory. The
   paper's Fig. 3 places these values at the stated budget, so this is a discrepancy
   between the paper and independent results, not a protocol that can be recovered.
