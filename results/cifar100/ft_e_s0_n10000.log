@@ -2,3 +2,9 @@ benchmark cifar100(10/10) input=(3, 32, 32) method=ft_e seed=0
 args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "alpha_z": 0.1, "augment": true, "balanced_ft_epochs": 0, "balanced_ft_lr_scale": 0.1, "batch_size": 256, "bf16": true, "class_order": "natural", "cls_dim": 64, "crop_pad": 4, "data_root": "data", "dataset": "cifar100", "decoder_in_budget": 0, "decoder_width": 1.0, "distill_norm": "sq", "enc_pool": 4, "epochs": 50, "eval_batch": 1000, "flush_denormal": 1, "herd_space": "encoder", "hf_sigma": 1.0, "hf_transplant": 0.0, "input_blur": 0.0, "kd_form": "kl", "kd_lambda": 1.0, "kd_scale": 0.25, "kd_temperature": 2.0, "lam": 1.0, "lam_recon_new": 1.0, "lat_real_first": 0, "latent_bits": 32, "latent_dim": 307, "latent_domain": "recon", "latent_kind": "split", "log_every": 10, "lr": 0.001, "lr_schedule": "cosine", "memorize_codes": 0, "memorize_epochs": 20, "memorize_lr": 0.001, "memorize_steps": 1500, "memory_kind": "latent", "memory_mode": "frozen", "method": "ft_e", "momentum": 0.9, "n_exemplars": 10000, "n_tasks": null, "out": "results", "pad_mode": "constant", "raw_exemplars": 2000, "recon_latent": "split", "recon_new_source": "current", "replay_sampling": "union", "resume": null, "rfa_damping": 0.0, "rfa_dt": 0.01, "rfa_jitter": 0.25, "rfa_mass": 1.0, "rfa_softening": 0.001, "rfa_steps": 20000, "rfa_target": 20.0, "rfa_zeta": 1.0, "save_ckpt": 0, "seed": 0, "selection": "herding", "stop_after": null, "tag": "n10000", "threads": 2, "train_fraction": 1.0, "val_fraction": 0.0, "weight_decay": 0.0}
 [ft_e] backbone params=466,256 memory=raw x 10000
   task 1 epoch 1/50 (20 it) ce=2.082 kd=0.000 [13s]
+  task 1 epoch 10/50 (20 it) ce=0.981 kd=0.000 [120s]
+  task 1 epoch 20/50 (20 it) ce=0.638 kd=0.000 [235s]
+  task 1 epoch 30/50 (20 it) ce=0.427 kd=0.000 [349s]
+  task 1 epoch 40/50 (20 it) ce=0.311 kd=0.000 [464s]
+  task 1 epoch 50/50 (20 it) ce=0.275 kd=0.000 [578s]
+after task 1: acc=77.90 per-task=[77.9] [581s]
