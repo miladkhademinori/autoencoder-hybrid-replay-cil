@@ -20,7 +20,7 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 | AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 80.30 ± 1.16 (n=3) | 93.02 ± 0.65 | 56.51 ± 0.49 (n=3) | 77.12 ± 0.75 | 15.32 (n=1) | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 | - | 50.85 ± 0.81 |
-| AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | 85.60 ± 0.38 (n=2) | 94.21 ± 0.23 | 68.13 ± 0.69 (n=2) | 78.35 ± 0.37 | 48.61 (n=1) | 56.71 ± 0.57 |
+| AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | 85.60 ± 0.38 (n=2) | 94.21 ± 0.23 | 68.13 ± 0.69 (n=2) | 78.35 ± 0.37 | 48.58 ± 0.03 (n=2) | 56.71 ± 0.57 |
 
 Epochs / exemplars / wall-clock per run:
 
@@ -51,7 +51,7 @@ Epochs / exemplars / wall-clock per run:
 | cifar100 | Joint | 50 | 0 | 0 | 123 |
 | cifar100 | iCaRL | 50 | 2000 | 6,144,000 | 261 |
 | cifar100 | AHR | 50 | 19200 | 6,144,000 | 1242 |
-| cifar100 | AHR-lossless | 50 | 19200 | 58,982,400 | 1642 |
+| cifar100 | AHR-lossless | 50 | 19200 | 58,982,400 | 1085 |
 
 mnist: variants (final accuracy %, mean ± SEM over seeds):
 
@@ -95,6 +95,7 @@ svhn: variants (final accuracy %, mean ± SEM over seeds):
 | spatial 8x8x5 latent, lambda 0.3, no RFA jitter (§3.9-3.11) | 74.43 (n=1) |
 | split latent + reflect padding | 79.17 (n=1) |
 | split latent + test-path replays, class-space herding, reflect padding | 82.78 ± 0.23 (n=3) |
+| AHR with 19,200 latent codes (10x the stated budget; memory-scaling diagnostic) | 89.51 (n=1) |
 | AHR-lossless | 85.60 ± 0.38 (n=2) |
 | FT-E | 56.73 ± 0.93 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 45.55 (n=1) |
@@ -111,6 +112,7 @@ cifar10: variants (final accuracy %, mean ± SEM over seeds):
 | spatial 8x8x5 latent, lambda 0.3, no RFA jitter (§3.9-3.11) | 50.72 (n=1) |
 | + one latent-loss mean, class-space herding, reflect padding (K01, K17, K03) | 53.66 (n=1) |
 | + replays via the test path, class-space herding, reflect padding (K02, K17, K03) | 46.30 (n=1) |
+| AHR with 19,200 latent codes (10x the stated budget; memory-scaling diagnostic) | 52.00 (n=1) |
 | AHR-lossless | 68.13 ± 0.69 (n=2) |
 | FT-E | 44.38 ± 0.77 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 36.03 (n=1) |
@@ -127,7 +129,7 @@ cifar100: variants (final accuracy %, mean ± SEM over seeds):
 | AHR (final configuration) | 15.32 (n=1) |
 | + reflect padding (§3.14, audit K03) | 10.25 (n=1) |
 | as rt + latent loss on real images of task 1 (K06) | 17.32 (n=1) |
-| AHR-lossless | 48.61 (n=1) |
+| AHR-lossless | 48.58 ± 0.03 (n=2) |
 | FT-E | 27.35 ± 0.14 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 33.37 (n=1) |
 | incremental Joint (FT-E keeping all data) | 57.02 (n=1) |

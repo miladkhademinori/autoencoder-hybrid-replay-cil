@@ -75,7 +75,7 @@
 1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --lam 1 --alpha-z 0.1 --alpha-x 3 --tag val_l1_az01_ax3
 1 --dataset mnist --method ahr --seed 0 --val-fraction 0.1 --lam 3 --alpha-z 1 --alpha-x 3 --tag val_l3_az1_ax3
 # remaining seeds for the main table
-2 --dataset cifar100 --method ahr --seed 1 --save-ckpt 1
+2 --dataset cifar100 --method ahr --seed 1 --save-ckpt 1 --resume results/cifar100/ahr_s1_ckpt_t2.pt
 2 --dataset cifar100 --method ahr --seed 2 --save-ckpt 1
 1 --dataset svhn --method ahr_lossless --seed 2 --latent-domain input --lam-recon-new 0 --latent-kind spatial --lam 0.3 --rfa-jitter 0
 1 --dataset cifar10 --method ahr_lossless --seed 2 --latent-domain input --lam-recon-new 0 --latent-kind spatial --lam 0.3 --rfa-jitter 0
