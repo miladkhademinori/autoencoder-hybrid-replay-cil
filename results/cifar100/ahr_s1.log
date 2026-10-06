@@ -48,3 +48,4 @@ resumed from results/cifar100/ahr_s1_ckpt_t2.pt after task 2: accs so far [65.3,
 after task 3: acc=39.07 per-task=[27.9, 28.5, 60.8] memory-PSNR=22.75dB acc(recon test)=39.1 acc(memory)=51.8 [5879s]
   CCE placement (2385 RFA steps): |init spread|=13.260 mean shift=14.140 min/mean CCE distance=20.001/34.919 |p| mean=24.661
   task 4 epoch 1/50 (79 it, b_new=64) rec=16.416 lat=362.815 dz=94.273 dx=6.619 mem=1.305 rn=409.143 [6043s]
+  task 4 epoch 10/50 (79 it, b_new=64) rec=14.495 lat=299.476 dz=120.192 dx=7.818 mem=1.296 rn=245.377 [7257s]

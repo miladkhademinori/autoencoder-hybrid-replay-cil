@@ -64,3 +64,7 @@ after task 8: acc=52.25 per-task=[49.4, 44.7, 52.0, 46.7, 48.4, 56.1, 48.6, 72.1
   task 9 epoch 40/50 (59 it) ce=0.161 kd=0.000 [13931s]
   task 9 epoch 50/50 (59 it) ce=0.139 kd=0.000 [14267s]
 after task 9: acc=50.29 per-task=[47.7, 39.6, 48.2, 44.4, 46.0, 51.4, 49.4, 52.0, 73.9] [14286s]
+  task 10 epoch 1/50 (59 it) ce=1.393 kd=0.000 [14321s]
+  task 10 epoch 10/50 (59 it) ce=0.586 kd=0.000 [14621s]
+  task 10 epoch 20/50 (59 it) ce=0.385 kd=0.000 [14950s]
+  task 10 epoch 30/50 (59 it) ce=0.227 kd=0.000 [15286s]
