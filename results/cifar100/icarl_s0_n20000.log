@@ -8,3 +8,7 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
   task 1 epoch 40/50 (20 it) ce=0.311 kd=0.000 [449s]
   task 1 epoch 50/50 (20 it) ce=0.275 kd=0.000 [557s]
 after task 1: acc=78.80 per-task=[78.8] [593s]
+  task 2 epoch 1/50 (40 it) ce=1.831 kd=0.383 [622s]
+  task 2 epoch 10/50 (40 it) ce=1.237 kd=0.325 [881s]
+  task 2 epoch 20/50 (40 it) ce=1.058 kd=0.308 [1168s]
+  task 2 epoch 30/50 (40 it) ce=0.864 kd=0.227 [1459s]
