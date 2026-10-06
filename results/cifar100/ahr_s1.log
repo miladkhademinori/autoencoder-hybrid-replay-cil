@@ -37,3 +37,4 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
 [AHR] encoder params=470,676 decoder params=1,210,883 memory=latent x 19200 exemplars
 resumed from results/cifar100/ahr_s1_ckpt_t2.pt after task 2: accs so far [65.3, 49.5]
   CCE placement (3236 RFA steps): |init spread|=11.057 mean shift=25.606 min/mean CCE distance=20.002/35.629 |p| mean=24.609
+  task 3 epoch 1/50 (59 it, b_new=85) rec=18.532 lat=288.000 dz=85.550 dx=8.344 mem=2.003 rn=759.352 [142s]
