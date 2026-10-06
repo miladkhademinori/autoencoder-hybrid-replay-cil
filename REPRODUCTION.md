@@ -132,6 +132,7 @@ cifar100: variants (final accuracy %, mean ± SEM over seeds):
 | AHR-lossless | 48.58 ± 0.03 (n=2) |
 | FT-E | 27.35 ± 0.14 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 33.37 (n=1) |
+| FT-E with 20,000 raw exemplars | 53.37 (n=1) |
 | incremental Joint (FT-E keeping all data) | 57.02 (n=1) |
 | iCaRL | 37.55 ± 0.23 (n=3) |
 | iCaRL, sigmoid-BCE distillation (FACIL, audit K15) | 34.62 (n=1) |
@@ -644,12 +645,13 @@ CIFAR-10) or 2,000 (CIFAR-100) raw exemplars, i.e. 7,840 / 1,920 / 1,920 / 19,20
 |---|---|---|---|---|---|
 | FT-E | stated (200 / 2,000) | 72.2 (3 seeds) | 56.7 (3 seeds) | 44.4 (3 seeds) | 27.4 (3 seeds) |
 | FT-E | 1,000 | 89.8 | | | |
-| FT-E | 1,920-2,000 (~10x) | 93.1 | 85.1 | 73.7 | |
+| FT-E | 10,000 (5x) | | | | *running* |
+| FT-E | 1,920-2,000 / 20,000 (~10x) | 93.1 | 85.1 | 73.7 | 53.4 |
 | FT-E | 7,840 | 96.7 | | | |
 | **FT-E, paper** | stated | **92.2** | **87.1** | **72.2** | **48.5** |
 | iCaRL | stated | 88.6 (3 seeds) | 72.3 (3 seeds) | 62.8 (3 seeds) | 37.6 (3 seeds) |
 | iCaRL | 1,000 | 94.0 | | | |
-| iCaRL | 1,920-2,000 (~10x) | 95.0 | 86.8 | 74.8 | |
+| iCaRL | 1,920-2,000 / 20,000 (~10x) | 95.0 | 86.8 | 74.8 | *running* |
 | iCaRL | 7,840 | 95.4 | | | |
 | **iCaRL, paper** | stated | **93.1** | **89.6** | **73.3** | **49.4** |
 | AHR | stated (7,840 / 1,920 / 1,920 / 19,200 codes) | 94.6 (3 seeds) | 80.3 (3 seeds) | 56.5 (3 seeds) | 15.3 |
