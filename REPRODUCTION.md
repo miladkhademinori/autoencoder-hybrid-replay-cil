@@ -151,8 +151,9 @@ budgets independent published results agree with this repository, and here the p
 FT-E / iCaRL values are reached only with ~5-10x the stated number of exemplars (§4.2).
 For AHR itself, the loss weights the paper does not give (validation sweeps, §4.1-4.2),
 the literal distillation of Alg. 3, the CCE spacing, the fixes suggested by a 49-agent
-audit (§4) and more memory on MNIST do not close the gap; the one lever that helps
-clearly is 10x memory on SVHN (§4.2, running).
+audit (§4) and more memory on MNIST do not close the gap. With 10x the stated number of
+latent codes AHR reaches 89.5 on SVHN (paper 93.0) but not more on CIFAR-10 (52.0), where
+it cannot even fit its decoded memory (§4.2).
 
 **Setting.** Everything was run on a 4-core CPU without a GPU (bf16 on AMX), at the
 paper's epochs, batch sizes, optimiser and memory budgets (Table 4), plus separate
@@ -611,8 +612,8 @@ The same sweep on CIFAR-10 (split latent, seed 0, 10% of the training data held 
 | 0.3 | 0.1 | 1 | 58.18 |
 | 3 | 0.1 | 1 | 54.44 |
 | 1 | 0.3 | 1 | 57.02 |
-| 1 | 0.03 | 1 | running |
-| 1 | 0.1 | 0.3 | running |
+| 1 | 0.03 | 1 | 54.28 |
+| 1 | 0.1 | 0.3 | not finished (cloud session lost; 50.4 after 4 of 5 tasks) |
 
 Again the reported configuration is within noise of the best one.
 
@@ -653,7 +654,7 @@ CIFAR-10) or 2,000 (CIFAR-100) raw exemplars, i.e. 7,840 / 1,920 / 1,920 / 19,20
 | **iCaRL, paper** | stated | **93.1** | **89.6** | **73.3** | **49.4** |
 | AHR | stated (7,840 / 1,920 / 1,920 / 19,200 codes) | 94.6 (3 seeds) | 80.3 (3 seeds) | 56.5 (3 seeds) | 15.3 |
 | AHR | 20,000 / 40,000 codes | 95.3 / 95.1 | | | |
-| AHR | 19,200 codes (10x) | | running | running | |
+| AHR | 19,200 codes (10x) | | 89.5 | 52.0 | |
 | **AHR, paper** | stated | **97.5** | **93.0** | **77.1** | **54.4** |
 
 * The paper's FT-E and iCaRL values are what this implementation reaches with about
@@ -661,6 +662,10 @@ CIFAR-10) or 2,000 (CIFAR-100) raw exemplars, i.e. 7,840 / 1,920 / 1,920 / 19,20
   audit K05 (published results at the stated budgets match this repository). The
   paper's Fig. 3 places these values at the stated budget, so this is a discrepancy
   between the paper and independent results, not a protocol that can be recovered.
+* With 10x the stated number of latent codes AHR improves strongly on SVHN (89.5 vs 80.3)
+  but gets worse on CIFAR-10 (52.0 vs 56.5): there it fits only ~73% of its decoded
+  memory during training, so more codes do not translate into retained classes. Even
+  with 10x memory, AHR stays below the paper's value for the stated budget on both.
 * AHR on MNIST does not improve with more memory (95.3 / 95.1 with 20,000 / 40,000
   codes). Its classifier is not the limit: trained on all ten classes as a single task,
   AHR reaches 97.5 / 98.4 / 98.6 with lambda 0.3 / 1 / 3 (Joint: 98.5). The limit is
