@@ -7,3 +7,22 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
   task 1 epoch 20/50 (20 it, b_new=256) rec=27.131 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=139.122 [626s]
   task 1 epoch 30/50 (20 it, b_new=256) rec=21.568 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=113.200 [3620s]
   task 1 epoch 40/50 (20 it, b_new=256) rec=20.505 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=99.418 [6553s]
+  task 1 epoch 50/50 (20 it, b_new=256) rec=20.263 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=95.259 [6840s]
+  memory (frozen codes): 5000 exemplars (1920/class), 1,600,000 scalars, 6,400,000 bytes
+  memorisation: 75 decoder epochs (1500 steps) over 5000 exemplars, final loss=17.286
+after task 1: acc=65.30 per-task=[65.3] memory-PSNR=23.00dB acc(recon test)=65.3 acc(memory)=73.9 [7315s]
+  CCE placement (2433 RFA steps): |init spread|=8.189 mean shift=19.732 min/mean CCE distance=20.002/29.440 |p| mean=20.106
+  task 2 epoch 1/50 (40 it, b_new=128) rec=21.618 lat=125.745 dz=32.851 dx=7.824 mem=2.745 rn=587.102 [7395s]
+  task 2 epoch 10/50 (40 it, b_new=128) rec=17.130 lat=148.756 dz=84.937 dx=8.173 mem=1.420 rn=428.471 [7958s]
+  task 2 epoch 20/50 (40 it, b_new=128) rec=16.813 lat=138.592 dz=80.226 dx=9.242 mem=1.107 rn=366.162 [8585s]
+  task 2 epoch 30/50 (40 it, b_new=128) rec=15.926 lat=119.352 dz=59.051 dx=8.931 mem=0.857 rn=294.712 [9211s]
+  task 2 epoch 40/50 (40 it, b_new=128) rec=15.298 lat=102.474 dz=52.056 dx=8.469 mem=0.697 rn=245.581 [9838s]
+  task 2 epoch 50/50 (40 it, b_new=128) rec=15.123 lat=105.293 dz=50.990 dx=8.303 mem=0.590 rn=236.525 [10451s]
+  memory (frozen codes): 10000 exemplars (960/class), 3,200,000 scalars, 12,800,000 bytes
+  memorisation: 38 decoder epochs (1520 steps) over 10000 exemplars, final loss=9.768
+after task 2: acc=49.50 per-task=[47.2, 51.8] memory-PSNR=22.76dB acc(recon test)=49.5 acc(memory)=61.7 [10966s]
+  CCE placement (2629 RFA steps): |init spread|=11.273 mean shift=18.311 min/mean CCE distance=20.001/31.961 |p| mean=22.184
+  task 3 epoch 1/50 (59 it, b_new=85) rec=17.344 lat=261.681 dz=67.859 dx=7.479 mem=1.668 rn=531.026 [11074s]
+  task 3 epoch 10/50 (59 it, b_new=85) rec=14.831 lat=260.904 dz=87.464 dx=8.026 mem=1.087 rn=288.837 [11939s]
+  task 3 epoch 20/50 (59 it, b_new=85) rec=14.331 lat=227.948 dz=84.866 dx=8.321 mem=1.094 rn=219.572 [12919s]
+  task 3 epoch 30/50 (59 it, b_new=85) rec=13.298 lat=206.386 dz=87.580 dx=7.791 mem=0.764 rn=172.153 [13923s]

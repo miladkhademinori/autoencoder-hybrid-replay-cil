@@ -63,3 +63,9 @@ resumed from results/cifar10/ahr_s0_val_ax03_ckpt_t3.pt after task 3: accs so fa
   task 4 epoch 10/50 (282 it, b_new=32) rec=9.836 lat=37.995 dz=121.572 dx=6.336 mem=0.952 rn=108.556 [8905s]
   task 4 epoch 20/50 (282 it, b_new=32) rec=9.002 lat=19.261 dz=126.080 dx=6.061 mem=0.777 rn=72.424 [17315s]
   task 4 epoch 30/50 (282 it, b_new=32) rec=8.371 lat=9.551 dz=123.750 dx=5.724 mem=0.630 rn=38.213 [25707s]
+  task 4 epoch 40/50 (282 it, b_new=32) rec=7.664 lat=5.742 dz=123.554 dx=5.172 mem=0.439 rn=18.407 [33956s]
+  task 4 epoch 50/50 (282 it, b_new=32) rec=7.536 lat=4.651 dz=123.397 dx=5.037 mem=0.388 rn=13.631 [42694s]
+  memory (frozen codes): 1920 exemplars (240/class), 614,400 scalars, 2,457,600 bytes
+  memorisation: 100 decoder epochs (1500 steps) over 1920 exemplars, final loss=3.177
+after task 4: acc=50.42 per-task=[79.7, 36.9, 68.7, 16.4] memory-PSNR=25.01dB acc(recon test)=50.4 acc(memory)=77.3 [43906s]
+  CCE placement (4602 RFA steps): |init spread|=11.647 mean shift=14.262 min/mean CCE distance=20.000/31.784 |p| mean=24.822

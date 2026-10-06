@@ -116,3 +116,9 @@ resumed from results/cifar100/ahr_lossless_s1_ckpt_t9.pt after task 9: accs so f
   task 10 epoch 1/50 (193 it, b_new=26) rec=16.625 lat=417.782 dz=126.905 dx=2.323 mem=0.000 [644s]
   task 10 epoch 10/50 (193 it, b_new=26) rec=16.169 lat=331.433 dz=159.636 dx=2.342 mem=0.000 [6244s]
   task 10 epoch 20/50 (193 it, b_new=26) rec=15.840 lat=270.241 dz=164.047 dx=2.275 mem=0.000 [12534s]
+  task 10 epoch 30/50 (193 it, b_new=26) rec=15.205 lat=214.556 dz=164.914 dx=1.837 mem=0.000 [18748s]
+  task 10 epoch 40/50 (193 it, b_new=26) rec=14.929 lat=184.669 dz=167.931 dx=1.620 mem=0.000 [25023s]
+  task 10 epoch 50/50 (193 it, b_new=26) rec=14.788 lat=178.204 dz=167.087 dx=1.529 mem=0.000 [31647s]
+  memory (frozen codes): 19200 exemplars (192/class), 58,982,400 scalars, 235,929,600 bytes
+after task 10: acc=48.55 per-task=[52.2, 46.1, 54.2, 46.6, 50.3, 53.0, 47.3, 48.2, 52.3, 35.3] [31677s]
+FINAL cifar100 ahr_lossless seed=1: final acc=48.55 avg inc acc=59.02 time=527.9min
