@@ -136,6 +136,7 @@ cifar100: variants (final accuracy %, mean ± SEM over seeds):
 | incremental Joint (FT-E keeping all data) | 57.02 (n=1) |
 | iCaRL | 37.55 ± 0.23 (n=3) |
 | iCaRL, sigmoid-BCE distillation (FACIL, audit K15) | 34.62 (n=1) |
+| iCaRL with 20,000 raw exemplars | 46.84 (n=1) |
 | Joint | 59.43 (n=1) |
 | Joint, 100 epochs | 61.49 (n=1) |
 <!-- /RESULTS -->
@@ -149,7 +150,8 @@ numbers do: AHR is 3 (MNIST), 13 (SVHN), 21 (CIFAR-10) and 39 (CIFAR-100) points
 Table 2, and on CIFAR-10/100 it is below iCaRL. The FT-E and iCaRL baselines are also
 5-30 points below the paper, while FT and Joint (MNIST, SVHN) match it. At the stated
 budgets independent published results agree with this repository, and here the paper's
-FT-E / iCaRL values are reached only with ~5-10x the stated number of exemplars (§4.2).
+FT-E / iCaRL values are reached only with ~5-10x the stated number of exemplars, and the
+CIFAR-100 iCaRL value not even with 10x (46.8 vs 49.4; §4.2).
 For AHR itself, the loss weights the paper does not give (validation sweeps, §4.1-4.2),
 the literal distillation of Alg. 3, the CCE spacing, the fixes suggested by a 49-agent
 audit (§4) and more memory on MNIST do not close the gap. With 10x the stated number of
@@ -651,7 +653,7 @@ CIFAR-10) or 2,000 (CIFAR-100) raw exemplars, i.e. 7,840 / 1,920 / 1,920 / 19,20
 | **FT-E, paper** | stated | **92.2** | **87.1** | **72.2** | **48.5** |
 | iCaRL | stated | 88.6 (3 seeds) | 72.3 (3 seeds) | 62.8 (3 seeds) | 37.6 (3 seeds) |
 | iCaRL | 1,000 | 94.0 | | | |
-| iCaRL | 1,920-2,000 / 20,000 (~10x) | 95.0 | 86.8 | 74.8 | *running* |
+| iCaRL | 1,920-2,000 / 20,000 (~10x) | 95.0 | 86.8 | 74.8 | 46.8 |
 | iCaRL | 7,840 | 95.4 | | | |
 | **iCaRL, paper** | stated | **93.1** | **89.6** | **73.3** | **49.4** |
 | AHR | stated (7,840 / 1,920 / 1,920 / 19,200 codes) | 94.6 (3 seeds) | 80.3 (3 seeds) | 56.5 (3 seeds) | 15.3 |
@@ -661,7 +663,10 @@ CIFAR-10) or 2,000 (CIFAR-100) raw exemplars, i.e. 7,840 / 1,920 / 1,920 / 19,20
 
 * The paper's FT-E and iCaRL values are what this implementation reaches with about
   5-10x the stated number of raw exemplars on every benchmark measured, consistent with
-  audit K05 (published results at the stated budgets match this repository). The
+  audit K05 (published results at the stated budgets match this repository). On
+  CIFAR-100, 20,000 exemplars (40% of the training set) give FT-E 53.4 (paper 48.5) but
+  iCaRL only 46.8 (paper 49.4), so the paper's CIFAR-100 iCaRL value lies above what this
+  implementation reaches with 10x memory. The
   paper's Fig. 3 places these values at the stated budget, so this is a discrepancy
   between the paper and independent results, not a protocol that can be recovered.
 * With 10x the stated number of latent codes AHR improves strongly on SVHN (89.5 vs 80.3)
