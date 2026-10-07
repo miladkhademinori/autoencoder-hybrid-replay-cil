@@ -36,3 +36,6 @@ after task 3: acc=41.17 per-task=[33.9, 26.9, 62.7] memory-PSNR=22.50dB acc(reco
   task 4 epoch 10/50 (79 it, b_new=64) rec=13.495 lat=278.110 dz=90.888 dx=7.270 mem=0.946 rn=331.083 [13203s]
   task 4 epoch 20/50 (79 it, b_new=64) rec=12.957 lat=257.020 dz=92.974 dx=7.466 mem=0.929 rn=268.611 [14605s]
   task 4 epoch 30/50 (79 it, b_new=64) rec=11.864 lat=235.653 dz=92.277 dx=6.605 mem=0.612 rn=212.374 [16071s]
+  task 4 epoch 40/50 (79 it, b_new=64) rec=11.488 lat=223.241 dz=90.591 dx=6.338 mem=0.482 rn=165.628 [17489s]
+  task 4 epoch 50/50 (79 it, b_new=64) rec=11.308 lat=220.760 dz=90.946 dx=6.190 mem=0.421 rn=157.113 [18908s]
+  memory (frozen codes): 19200 exemplars (480/class), 6,144,000 scalars, 24,576,000 bytes
