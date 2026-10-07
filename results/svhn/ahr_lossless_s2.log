@@ -6,3 +6,7 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
   task 1 epoch 10/50 (73 it, b_new=128) rec=8.346 lat=55.166 dz=0.000 dx=0.000 mem=0.000 [633s]
   task 1 epoch 20/50 (73 it, b_new=128) rec=7.425 lat=17.150 dz=0.000 dx=0.000 mem=0.000 [1228s]
   task 1 epoch 30/50 (73 it, b_new=128) rec=4.854 lat=9.952 dz=0.000 dx=0.000 mem=0.000 [1815s]
+  task 1 epoch 40/50 (73 it, b_new=128) rec=4.607 lat=7.468 dz=0.000 dx=0.000 mem=0.000 [2415s]
+  task 1 epoch 50/50 (73 it, b_new=128) rec=4.118 lat=6.727 dz=0.000 dx=0.000 mem=0.000 [3002s]
+  memory (frozen codes): 1920 exemplars (960/class), 5,898,240 scalars, 5,898,240 bytes
+after task 1: acc=97.99 per-task=[98.0] [3052s]
