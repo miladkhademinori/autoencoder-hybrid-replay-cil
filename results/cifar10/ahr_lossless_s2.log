@@ -10,3 +10,5 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
   task 1 epoch 50/50 (79 it, b_new=128) rec=12.595 lat=15.130 dz=0.000 dx=0.000 mem=0.000 [3222s]
   memory (frozen codes): 1920 exemplars (960/class), 5,898,240 scalars, 5,898,240 bytes
 after task 1: acc=97.05 per-task=[97.0] [3270s]
+  CCE placement (4952 RFA steps): |init spread|=3.074 mean shift=31.147 min/mean CCE distance=20.007/34.726 |p| mean=20.792
+  task 2 epoch 1/50 (157 it, b_new=64) rec=17.818 lat=476.929 dz=38.127 dx=8.031 mem=0.000 [3467s]
