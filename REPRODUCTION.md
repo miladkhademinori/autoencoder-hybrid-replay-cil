@@ -17,7 +17,7 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 | FT-E | 72.18 ± 0.81 (n=3) | 92.17 ± 0.16 | 56.73 ± 0.93 (n=3) | 87.13 ± 0.37 | 44.38 ± 0.77 (n=3) | 72.17 ± 0.84 | 27.35 ± 0.14 (n=3) | 48.47 ± 0.83 |
 | Joint | 98.54 ± 0.04 (n=3) | 98.48 ± 0.06 | 95.43 (n=1) | 95.88 ± 0.04 | 89.02 (n=1) | 92.37 ± 0.09 | 59.43 (n=1) | 73.87 ± 0.10 |
 | iCaRL | 88.60 ± 0.10 (n=3) | 93.06 ± 0.33 | 72.34 ± 0.71 (n=3) | 89.63 ± 0.61 | 62.80 ± 0.49 (n=3) | 73.29 ± 0.73 | 37.55 ± 0.23 (n=3) | 49.38 ± 0.62 |
-| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 80.30 ± 1.16 (n=3) | 93.02 ± 0.65 | 56.51 ± 0.49 (n=3) | 77.12 ± 0.75 | 15.32 (n=1) | 54.43 ± 0.93 |
+| AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 80.30 ± 1.16 (n=3) | 93.02 ± 0.65 | 56.51 ± 0.49 (n=3) | 77.12 ± 0.75 | 14.56 ± 0.76 (n=2) | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 | - | 50.85 ± 0.81 |
 | AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | 85.60 ± 0.38 (n=2) | 94.21 ± 0.23 | 68.13 ± 0.69 (n=2) | 78.35 ± 0.37 | 48.58 ± 0.03 (n=2) | 56.71 ± 0.57 |
@@ -50,8 +50,10 @@ Epochs / exemplars / wall-clock per run:
 | cifar100 | FT-E | 50 | 2000 | 6,144,000 | 200 |
 | cifar100 | Joint | 50 | 0 | 0 | 123 |
 | cifar100 | iCaRL | 50 | 2000 | 6,144,000 | 261 |
-| cifar100 | AHR | 50 | 19200 | 6,144,000 | 1242 |
-| cifar100 | AHR-lossless | 50 | 19200 | 58,982,400 | 1085 |
+| cifar100 | AHR | 50 | 19200 | 6,144,000 | 894* |
+| cifar100 | AHR-lossless | 50 | 19200 | 58,982,400 | 1085* |
+
+\* at least one run was resumed from a checkpoint after a container restart; its time covers only the last segment (segments also used different thread counts).
 
 mnist: variants (final accuracy %, mean ± SEM over seeds):
 
@@ -126,7 +128,7 @@ cifar100: variants (final accuracy %, mean ± SEM over seeds):
 
 | Variant | Final acc. |
 |---|---|
-| AHR (final configuration) | 15.32 (n=1) |
+| AHR (final configuration) | 14.56 ± 0.76 (n=2) |
 | + reflect padding (§3.14, audit K03) | 10.25 (n=1) |
 | as rt + latent loss on real images of task 1 (K06) | 17.32 (n=1) |
 | AHR-lossless | 48.58 ± 0.03 (n=2) |
@@ -147,7 +149,7 @@ cifar100: variants (final accuracy %, mean ± SEM over seeds):
 **Bottom line.** The paper's qualitative claims reproduce on MNIST and Balanced SVHN
 (AHR > iCaRL > FT-E at the stated budgets; on MNIST decoded exemplars are almost as good
 as raw ones and many compressed exemplars beat a few raw ones), but none of its absolute
-numbers do: AHR is 3 (MNIST), 13 (SVHN), 21 (CIFAR-10) and 39 (CIFAR-100) points below
+numbers do: AHR is 3 (MNIST), 13 (SVHN), 21 (CIFAR-10) and 40 (CIFAR-100) points below
 Table 2, and on CIFAR-10/100 it is below iCaRL. The FT-E and iCaRL baselines are also
 5-30 points below the paper, while FT and Joint (MNIST, SVHN) match it. At the stated
 budgets independent published results agree with this repository, and here the paper's
@@ -162,7 +164,8 @@ it cannot even fit its decoded memory (§4.2).
 **Setting.** Everything was run on a 4-core CPU without a GPU (bf16 on AMX), at the
 paper's epochs, batch sizes, optimiser and memory budgets (Table 4), plus separate
 4-core cloud machines for §4 (`results/cloud_jobs.txt`). Main results are 3 seeds
-(CIFAR-100 AHR: 1 seed, more running). miniImageNet was not run (compute).
+for FT-E, iCaRL and AHR (CIFAR-100 AHR and the SVHN / CIFAR AHR-lossless rows: 2 seeds;
+FT and Joint outside MNIST: 1 seed). miniImageNet was not run (compute).
 The paper does not specify the loss weights, the RFA constants, the latent head or
 the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
 
@@ -214,7 +217,7 @@ the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
   and with 10
   classes per task the reconstruction-domain classifier is weak. Decoded CIFAR-100
   exemplars are at ~22 dB (figures/decoded_cifar100.png) and AHR ends at **15.3%**
-  (paper 54.4; iCaRL 38.0, FT-E 27.1 here), whereas the same classifier with raw
+  (seed 0; seed 1: 13.8; paper 54.4; iCaRL 38.0, FT-E 27.1 here), whereas the same classifier with raw
   exemplars (AHR-lossless) stays above iCaRL throughout.
 
 ## 1. What is implemented
@@ -495,7 +498,9 @@ Continued to all ten tasks, CIFAR-100 AHR ends at **15.3%** (after each task: 63
 47.5, 38.6, 34.9, 27.7, 23.4, 22.9, 18.2, 17.4, 15.3; average incremental accuracy
 30.9), below FT-E (27.1) and iCaRL (38.0) and far below the paper's 54.4. The final
 per-task accuracies are [1.8, 1.5, 11.3, 3.2, 10.8, 9.6, 16.5, 16.4, 15.9, 66.2]:
-the old classes are essentially lost. The decoded memory stays at ~22.5 dB, but
+the old classes are essentially lost. A second seed ends at 13.8 (average incremental
+accuracy 30.5; per-task [2.0, 1.5, 6.3, 2.0, 8.3, 6.4, 12.0, 14.9, 18.1, 66.5]), so
+AHR on CIFAR-100 is 14.56 +- 0.76 over 2 seeds. The decoded memory stays at ~22.5 dB, but
 even the decoded exemplars themselves are classified correctly only 38-51% of the
 time from task 3 on (82-93% on CIFAR-10), i.e. at ~22 dB and 10 classes per task the
 reconstruction-domain classifier cannot fit its own replay data. The same classifier
@@ -552,15 +557,15 @@ that change how the results should be read:
 
 | # | Verified finding | Consequence |
 |---|---|---|
-| K02 | In the decoder-output domain old classes are trained only as decodes of frozen codes, new classes only as round trips through the current autoencoder (the test path); on CIFAR-100 (task 10) decoded exemplars are 41% correct on the training path but 17% on the test path | `--recon-latent roundtrip` classifies replays through the test path as well (runs in progress) |
-| K03 | The zero-border cue of §3.14 is also present on SVHN and CIFAR-100 | `--pad-mode reflect` runs in progress |
+| K02 | In the decoder-output domain old classes are trained only as decodes of frozen codes, new classes only as round trips through the current autoencoder (the test path); on CIFAR-100 (task 10) decoded exemplars are 41% correct on the training path but 17% on the test path | `--recon-latent roundtrip` classifies replays through the test path as well: +2.5 on SVHN (3 seeds), worse on MNIST and CIFAR-10 (§4.1) |
+| K03 | The zero-border cue of §3.14 is also present on SVHN and CIFAR-100 | `--pad-mode reflect`: SVHN 79.2 vs 78.7 (same seed), CIFAR-100 10.3 vs 15.3 (§4.1) |
 | K01 | The latent loss in the decoder-output domain is two separate means (replays, new reconstructions), weighting each new sample up to 8.9x an old one; Eq. 1 is one per-sample sum | `--recon-latent single` / `roundtrip` use one mean |
-| K06 | On CIFAR-100 the decoder-output-domain classifier costs ~14 points already on task 1 (63.2 vs 77.5 for the input-domain run) | `--lat-real-first 1` run in progress |
+| K06 | On CIFAR-100 the decoder-output-domain classifier costs ~14 points already on task 1 (63.2 vs 77.5 for the input-domain run) | `--lat-real-first 1` (with test-path replays): 17.3 on CIFAR-100 vs 15.3 (§4.1) |
 | K17 | Herding runs in `cls(phi(x))`, which carries almost no class information in the decoder-output domain | `--herd-space class` |
-| K12 | AHR takes 2.9-4x the baselines' optimiser steps per task (epoch = one pass over the new data at B/l new samples per batch) | `--ahr-epoch union/fixed`; MNIST test in progress |
-| K15 | iCaRL's distillation is LwF-style softmax KL, not the per-class sigmoid BCE of FACIL / the original iCaRL | `--kd-form bce` runs in progress |
+| K12 | AHR takes 2.9-4x the baselines' optimiser steps per task (epoch = one pass over the new data at B/l new samples per batch) | `--ahr-epoch union/fixed`; fewer steps cost accuracy on MNIST (92.0 vs 94.6, §4.1) |
+| K15 | iCaRL's distillation is LwF-style softmax KL, not the per-class sigmoid BCE of FACIL / the original iCaRL | `--kd-form bce`: MNIST 88.9 vs 88.6, CIFAR-100 34.6 vs 38.0 (§4.1) |
 | K05 | At the paper's stated budgets, independent FT-E/replay and iCaRL results match this repository, not Table 2 | baseline rows kept at the stated budgets |
-| K07-K09 | The paper's Joint row is close to PEC's ResNet-18 Joint; the cited FACIL Joint is incremental; CIFAR-100 Joint here is under-trained (train CE 0.98) | longer and incremental Joint runs in progress |
+| K07-K09 | The paper's Joint row is close to PEC's ResNet-18 Joint; the cited FACIL Joint is incremental; CIFAR-100 Joint here is under-trained (train CE 0.98) | CIFAR-100 Joint: 61.5 with 100 epochs, 57.0 incremental (paper 73.9; §4.1) |
 | K11 | AHR vs AHR-lossless differ in five settings on CIFAR-10 | Summary corrected |
 | K16 | The RFA jitter bounds the CCE radius only for the first task in the real CIFAR-100 run | §3.12 / Summary corrected |
 
@@ -579,10 +584,10 @@ accuracy %, seed 0 unless noted; the per-dataset variant tables in §0 have all 
 
 | Change | MNIST | SVHN | CIFAR-10 | CIFAR-100 |
 |---|---|---|---|---|
-| reference (reported configuration) | 94.6 (3 seeds; decoder-output domain: 91.5) | 80.3 (split latent, 3 seeds; spatial 74.4) | 56.5 (3 seeds) | 15.3 |
+| reference (reported configuration) | 94.6 (3 seeds; decoder-output domain: 91.5) | 80.3 (split latent, 3 seeds; spatial 74.4) | 56.5 (3 seeds) | 15.3 (2 seeds: 14.6) |
 | one latent-loss mean (K01) | decoder-output domain: 89.2 (3 seeds) | | 53.7 | |
-| replays via the test path + class-space herding + reflect padding (K02, K17, K03) | decoder-output domain: 87.7 (3 seeds) | **82.8 +- 0.2 (3 seeds; reference 80.3 +- 1.2)** | 46.3 | running; with the task-1 real-image loss (K06): 17.3 |
-| reflect padding (K03) | no crop augmentation on MNIST | 79.2 (same seed: 78.7) | running | 10.3 |
+| replays via the test path + class-space herding + reflect padding (K02, K17, K03) | decoder-output domain: 87.7 (3 seeds) | **82.8 +- 0.2 (3 seeds; reference 80.3 +- 1.2)** | 46.3 | not finished (cloud session lost after task 5: 25.5); with the task-1 real-image loss (K06): 17.3 |
+| reflect padding (K03) | no crop augmentation on MNIST | 79.2 (same seed: 78.7) | not finished (cloud session lost after task 4: 54.8) | 10.3 |
 | fewer AHR steps per epoch (K12) | 92.0 (3 seeds) | | | |
 | iCaRL with sigmoid-BCE distillation (K15) | 88.9 (3 seeds; KL 88.6) | | | 34.6 (KL 38.0) |
 | FT-E + EEIL balanced fine-tuning | 84.7 (3 seeds; plain 72.2) | 45.6 (plain 55.6) | 36.0 (plain 44.0) | 33.4 (plain 27.1) |
@@ -657,7 +662,7 @@ CIFAR-10) or 2,000 (CIFAR-100) raw exemplars, i.e. 7,840 / 1,920 / 1,920 / 19,20
 | iCaRL | 1,920-2,000 / 20,000 (~10x) | 95.0 | 86.8 | 74.8 | 46.8 |
 | iCaRL | 7,840 | 95.4 | | | |
 | **iCaRL, paper** | stated | **93.1** | **89.6** | **73.3** | **49.4** |
-| AHR | stated (7,840 / 1,920 / 1,920 / 19,200 codes) | 94.6 (3 seeds) | 80.3 (3 seeds) | 56.5 (3 seeds) | 15.3 |
+| AHR | stated (7,840 / 1,920 / 1,920 / 19,200 codes) | 94.6 (3 seeds) | 80.3 (3 seeds) | 56.5 (3 seeds) | 14.6 (2 seeds) |
 | AHR | 20,000 / 40,000 codes | 95.3 / 95.1 | | | |
 | AHR | 19,200 codes (10x) | | 89.5 | 52.0 | |
 | **AHR, paper** | stated | **97.5** | **93.0** | **77.1** | **54.4** |

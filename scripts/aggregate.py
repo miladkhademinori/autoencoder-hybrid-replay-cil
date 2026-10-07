@@ -156,8 +156,12 @@ def main():
             if not rs:
                 continue
             r = rs[0]
+            resumed = any(x["args"].get("resume") for x in rs)
             print(f"| {d} | {METHOD_NAMES[m]} | {r['args']['epochs']} | {r['n_exemplars']} | "
-                  f"{r.get('memory_scalars', 0):,} | {sum(x['time_s'] for x in rs) / len(rs) / 60:.0f} |")
+                  f"{r.get('memory_scalars', 0):,} | {sum(x['time_s'] for x in rs) / len(rs) / 60:.0f}"
+                  f"{'*' if resumed else ''} |")
+    print("\n\\* at least one run was resumed from a checkpoint after a container restart; "
+          "its time covers only the last segment (segments also used different thread counts).")
 
 
 if __name__ == "__main__":
