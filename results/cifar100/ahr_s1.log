@@ -127,3 +127,4 @@ after task 9: acc=16.70 per-task=[2.8, 2.3, 10.0, 6.7, 12.9, 14.6, 21.0, 24.3, 5
   task 10 epoch 1/50 (193 it, b_new=26) rec=11.832 lat=542.921 dz=162.500 dx=3.970 mem=0.745 rn=695.752 [23272s]
   task 10 epoch 10/50 (193 it, b_new=26) rec=11.038 lat=512.430 dz=201.544 dx=4.986 mem=0.798 rn=314.720 [24986s]
   task 10 epoch 20/50 (193 it, b_new=26) rec=10.491 lat=461.864 dz=197.496 dx=4.706 mem=0.629 rn=232.605 [26868s]
+  task 10 epoch 30/50 (193 it, b_new=26) rec=9.997 lat=412.423 dz=180.794 dx=4.316 mem=0.460 rn=167.267 [28723s]
