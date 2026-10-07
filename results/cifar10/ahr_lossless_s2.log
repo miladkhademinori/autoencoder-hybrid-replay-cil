@@ -28,3 +28,4 @@ after task 2: acc=83.67 per-task=[90.8, 76.6] [11543s]
   task 3 epoch 50/50 (233 it, b_new=43) rec=13.284 lat=84.175 dz=438.301 dx=4.749 mem=0.000 [24392s]
   memory (frozen codes): 1920 exemplars (320/class), 5,898,240 scalars, 5,898,240 bytes
 after task 3: acc=73.58 per-task=[84.9, 46.2, 89.6] [24455s]
+  CCE placement (2901 RFA steps): |init spread|=5.910 mean shift=7.055 min/mean CCE distance=20.003/39.470 |p| mean=32.348
