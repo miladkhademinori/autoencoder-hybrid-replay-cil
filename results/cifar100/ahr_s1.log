@@ -105,3 +105,4 @@ resumed from results/cifar100/ahr_s1_ckpt_t6.pt after task 6: accs so far [65.3,
 after task 7: acc=21.76 per-task=[4.4, 3.3, 17.2, 10.0, 20.0, 27.7, 69.7] memory-PSNR=22.41dB acc(recon test)=21.8 acc(memory)=47.0 [6506s]
   CCE placement (4671 RFA steps): |init spread|=25.990 mean shift=30.559 min/mean CCE distance=20.002/53.524 |p| mean=41.354
   task 8 epoch 1/50 (157 it, b_new=32) rec=13.389 lat=586.256 dz=145.064 dx=4.821 mem=0.899 rn=1014.789 [6669s]
+  task 8 epoch 10/50 (157 it, b_new=32) rec=12.250 lat=563.693 dz=194.039 dx=6.230 mem=0.937 rn=574.642 [7955s]
