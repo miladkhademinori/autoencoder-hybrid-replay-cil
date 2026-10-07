@@ -3,3 +3,9 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
 [AHR] encoder params=470,676 decoder params=1,210,883 memory=latent x 19200 exemplars
   CCE placement (1561 RFA steps): |init spread|=7.261 mean shift=9.711 min/mean CCE distance=20.007/21.697 |p| mean=14.658
   task 1 epoch 1/50 (20 it, b_new=256) rec=211.290 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=211.804 [65s]
+  task 1 epoch 10/50 (20 it, b_new=256) rec=37.484 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=171.644 [356s]
+  task 1 epoch 20/50 (20 it, b_new=256) rec=29.459 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=137.033 [677s]
+  task 1 epoch 30/50 (20 it, b_new=256) rec=24.435 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=113.615 [1003s]
+  task 1 epoch 40/50 (20 it, b_new=256) rec=22.990 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=97.568 [1323s]
+  task 1 epoch 50/50 (20 it, b_new=256) rec=22.592 lat=0.000 dz=0.000 dx=0.000 mem=0.000 rn=93.339 [1639s]
+  memory (frozen codes): 5000 exemplars (1920/class), 1,600,000 scalars, 6,400,000 bytes
