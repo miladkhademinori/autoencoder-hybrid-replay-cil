@@ -17,3 +17,7 @@ after task 1: acc=64.80 per-task=[64.8] memory-PSNR=22.49dB acc(recon test)=64.8
   task 2 epoch 20/50 (40 it, b_new=128) rec=17.784 lat=141.628 dz=91.280 dx=9.440 mem=1.124 rn=358.758 [3532s]
   task 2 epoch 30/50 (40 it, b_new=128) rec=17.091 lat=117.414 dz=64.802 dx=9.368 mem=0.822 rn=300.599 [4219s]
   task 2 epoch 40/50 (40 it, b_new=128) rec=16.638 lat=105.096 dz=52.154 dx=8.990 mem=0.630 rn=252.658 [4892s]
+  task 2 epoch 50/50 (40 it, b_new=128) rec=16.566 lat=104.785 dz=50.725 dx=9.043 mem=0.569 rn=248.391 [5572s]
+  memory (frozen codes): 10000 exemplars (960/class), 3,200,000 scalars, 12,800,000 bytes
+  memorisation: 38 decoder epochs (1520 steps) over 10000 exemplars, final loss=10.659
+after task 2: acc=50.05 per-task=[47.3, 52.8] memory-PSNR=22.30dB acc(recon test)=50.1 acc(memory)=61.2 [6119s]
