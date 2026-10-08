@@ -3,12 +3,14 @@
 Reads jobs from a text file (one per line: ``<threads> <arguments for run.py>``),
 and every ``--poll`` seconds starts the next job whose thread count fits into the
 budget left by *all* running ``scripts/run.py`` processes (including ones started
-elsewhere). Jobs whose result JSON already exists are skipped. The file is re-read
+elsewhere, matched by result file). Jobs whose result JSON already exists are skipped;
+``--save-ckpt 1`` jobs resume from their newest checkpoint. The file is re-read
 on every poll, so jobs can be appended while the queue runs.
 
     python scripts/jobqueue.py --jobs results/jobs.txt --budget 4
 """
 import argparse
+import glob
 import os
 import re
 import shlex
@@ -55,17 +57,26 @@ def main():
             if line and not line.startswith("#"):
                 threads, rest = line.split(maxsplit=1)
                 jobs.append((int(threads), rest))
-        # skip finished jobs and jobs already running (started by this or another queue)
-        running = running_runs()
+        # skip finished jobs and jobs already running (started by this or another queue, or by
+        # hand with extra arguments such as --resume): a running run.py with the same result
+        # file counts as the same job
+        running = {result_path(shlex.split(line.split("scripts/run.py", 1)[1])) for line in running_runs()}
         pending = [(t, r) for t, r in jobs if r not in started
                    and not os.path.exists(result_path(shlex.split(r)))
-                   and not any(f"run.py {r} --threads" in line for line in running)]
+                   and result_path(shlex.split(r)) not in running]
         if not pending:
             print("queue empty", flush=True)
             return
         t, rest = pending[0]  # strictly in order, so long jobs are not starved
         if running_threads() + t <= a.budget:
             args = shlex.split(rest)
+            if "--save-ckpt" in args and "--resume" not in args:
+                # continue from the newest checkpoint if an earlier attempt was killed
+                base = result_path(args)[:-len(".json")]
+                ckpts = sorted(glob.glob(base + "_ckpt_t*.pt"),
+                               key=lambda f: int(re.search(r"_ckpt_t(\d+)\.pt$", f).group(1)))
+                if ckpts:
+                    args += ["--resume", os.path.relpath(ckpts[-1], ROOT)]
             cmd = [sys.executable, os.path.join(ROOT, "scripts", "run.py"), *args, "--threads", str(t)]
             os.makedirs(os.path.dirname(result_path(args)), exist_ok=True)
             log = open(result_path(args).replace(".json", ".stdout"), "w")
