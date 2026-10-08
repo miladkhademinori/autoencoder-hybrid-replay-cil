@@ -20,7 +20,7 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 | AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 80.30 ± 1.16 (n=3) | 93.02 ± 0.65 | 56.51 ± 0.49 (n=3) | 77.12 ± 0.75 | 14.56 ± 0.76 (n=2) | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 | - | 50.85 ± 0.81 |
-| AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | 85.60 ± 0.38 (n=2) | 94.21 ± 0.23 | 68.13 ± 0.69 (n=2) | 78.35 ± 0.37 | 48.58 ± 0.03 (n=2) | 56.71 ± 0.57 |
+| AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | 85.75 ± 0.27 (n=3) | 94.21 ± 0.23 | 68.13 ± 0.69 (n=2) | 78.35 ± 0.37 | 48.58 ± 0.03 (n=2) | 56.71 ± 0.57 |
 
 Epochs / exemplars / wall-clock per run:
 
@@ -39,7 +39,7 @@ Epochs / exemplars / wall-clock per run:
 | svhn | Joint | 50 | 0 | 0 | 142 |
 | svhn | iCaRL | 50 | 200 | 614,400 | 171 |
 | svhn | AHR | 50 | 1920 | 614,400 | 723 |
-| svhn | AHR-lossless | 50 | 1920 | 5,898,240 | 557 |
+| svhn | AHR-lossless | 50 | 1920 | 5,898,240 | 458* |
 | cifar10 | FT | 50 | 0 | 0 | 143 |
 | cifar10 | FT-E | 50 | 200 | 614,400 | 154 |
 | cifar10 | Joint | 50 | 0 | 0 | 155 |
@@ -98,7 +98,7 @@ svhn: variants (final accuracy %, mean ± SEM over seeds):
 | split latent + reflect padding | 79.17 (n=1) |
 | split latent + test-path replays, class-space herding, reflect padding | 82.78 ± 0.23 (n=3) |
 | AHR with 19,200 latent codes (10x the stated budget; memory-scaling diagnostic) | 89.51 (n=1) |
-| AHR-lossless | 85.60 ± 0.38 (n=2) |
+| AHR-lossless | 85.75 ± 0.27 (n=3) |
 | FT-E | 56.73 ± 0.93 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 45.55 (n=1) |
 | FT-E with 1,920 raw exemplars (AHR-lossless's memory) | 85.09 (n=1) |

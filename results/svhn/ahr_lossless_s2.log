@@ -53,3 +53,7 @@ resumed from results/svhn/ahr_lossless_s2_ckpt_t4.pt after task 4: accs so far [
   task 5 epoch 20/50 (359 it, b_new=26) rec=4.001 lat=24.755 dz=111.327 dx=2.308 mem=0.000 [6238s]
   task 5 epoch 30/50 (359 it, b_new=26) rec=3.454 lat=20.158 dz=112.857 dx=1.847 mem=0.000 [9283s]
   task 5 epoch 40/50 (359 it, b_new=26) rec=3.054 lat=17.407 dz=113.742 dx=1.497 mem=0.000 [12342s]
+  task 5 epoch 50/50 (359 it, b_new=26) rec=2.917 lat=16.764 dz=114.181 dx=1.374 mem=0.000 [15524s]
+  memory (frozen codes): 1920 exemplars (192/class), 5,898,240 scalars, 23,592,960 bytes
+after task 5: acc=86.06 per-task=[81.8, 80.1, 85.1, 87.5, 95.7] [15608s]
+FINAL svhn ahr_lossless seed=2: final acc=86.06 avg inc acc=91.51 time=260.1min
