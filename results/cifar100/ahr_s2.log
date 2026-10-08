@@ -86,3 +86,5 @@ resumed from results/cifar100/ahr_s2_ckpt_t7.pt after task 7: accs so far [64.8,
   task 8 epoch 40/50 (157 it, b_new=32) rec=9.006 lat=364.000 dz=153.221 dx=4.651 mem=0.398 rn=220.764 [8662s]
   task 8 epoch 50/50 (157 it, b_new=32) rec=8.880 lat=358.090 dz=149.134 dx=4.526 mem=0.366 rn=204.054 [10765s]
   memory (frozen codes): 19200 exemplars (240/class), 6,144,000 scalars, 24,576,000 bytes
+  memorisation: 20 decoder epochs (1500 steps) over 19200 exemplars, final loss=2.110
+after task 8: acc=17.00 per-task=[5.5, 0.7, 7.3, 2.8, 11.3, 20.5, 22.3, 65.6] memory-PSNR=22.69dB acc(recon test)=17.0 acc(memory)=45.3 [11383s]
