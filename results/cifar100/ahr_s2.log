@@ -81,3 +81,4 @@ resumed from results/cifar100/ahr_s2_ckpt_t7.pt after task 7: accs so far [64.8,
   CCE placement (4170 RFA steps): |init spread|=24.671 mean shift=28.938 min/mean CCE distance=20.000/49.052 |p| mean=36.664
   task 8 epoch 1/50 (157 it, b_new=32) rec=11.516 lat=479.292 dz=137.417 dx=4.706 mem=0.843 rn=881.233 [280s]
   task 8 epoch 10/50 (157 it, b_new=32) rec=10.033 lat=447.076 dz=161.265 dx=5.193 mem=0.738 rn=481.181 [2256s]
+  task 8 epoch 20/50 (157 it, b_new=32) rec=9.850 lat=411.474 dz=158.128 dx=5.315 mem=0.695 rn=375.086 [4400s]
