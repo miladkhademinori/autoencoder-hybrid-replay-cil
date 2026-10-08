@@ -3,3 +3,4 @@ args: {"ahr_epoch": "new", "alpha_kd": 0.0, "alpha_mem": 1.0, "alpha_x": 1.0, "a
 [joint] backbone params=466,256
   task 1 epoch 1/50 (364 it) ce=1.135 kd=0.000 [177s]
   task 1 epoch 10/50 (364 it) ce=0.176 kd=0.000 [1844s]
+  task 1 epoch 20/50 (364 it) ce=0.092 kd=0.000 [3667s]
