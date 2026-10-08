@@ -83,3 +83,4 @@ resumed from results/cifar100/ahr_s2_ckpt_t7.pt after task 7: accs so far [64.8,
   task 8 epoch 10/50 (157 it, b_new=32) rec=10.033 lat=447.076 dz=161.265 dx=5.193 mem=0.738 rn=481.181 [2256s]
   task 8 epoch 20/50 (157 it, b_new=32) rec=9.850 lat=411.474 dz=158.128 dx=5.315 mem=0.695 rn=375.086 [4400s]
   task 8 epoch 30/50 (157 it, b_new=32) rec=9.264 lat=384.625 dz=150.676 dx=4.896 mem=0.512 rn=285.818 [6551s]
+  task 8 epoch 40/50 (157 it, b_new=32) rec=9.006 lat=364.000 dz=153.221 dx=4.651 mem=0.398 rn=220.764 [8662s]
