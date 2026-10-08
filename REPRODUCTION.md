@@ -20,7 +20,7 @@ Final accuracy (%) after the last task, mean ± SEM over seeds (metric: `final_a
 | AHR | 94.57 ± 0.61 (n=3) | 97.53 ± 0.32 | 80.30 ± 1.16 (n=3) | 93.02 ± 0.65 | 56.51 ± 0.49 (n=3) | 77.12 ± 0.75 | 14.56 ± 0.76 (n=2) | 54.43 ± 0.93 |
 | AHR-lossy-mini | 68.90 ± 0.60 (n=3) | 93.35 ± 0.32 | - | 90.40 ± 0.58 | - | 73.28 ± 0.47 | - | 50.29 ± 0.90 |
 | AHR-lossless-mini | 67.34 ± 2.06 (n=3) | 93.76 ± 0.26 | - | 90.88 ± 0.50 | - | 73.68 ± 0.41 | - | 50.85 ± 0.81 |
-| AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | 85.75 ± 0.27 (n=3) | 94.21 ± 0.23 | 68.13 ± 0.69 (n=2) | 78.35 ± 0.37 | 48.58 ± 0.03 (n=2) | 56.71 ± 0.57 |
+| AHR-lossless | 95.11 ± 0.26 (n=3) | 98.12 ± 0.08 | 85.75 ± 0.27 (n=3) | 94.21 ± 0.23 | 68.07 ± 0.40 (n=3) | 78.35 ± 0.37 | 48.58 ± 0.03 (n=2) | 56.71 ± 0.57 |
 
 Epochs / exemplars / wall-clock per run:
 
@@ -45,7 +45,7 @@ Epochs / exemplars / wall-clock per run:
 | cifar10 | Joint | 50 | 0 | 0 | 155 |
 | cifar10 | iCaRL | 50 | 200 | 614,400 | 186 |
 | cifar10 | AHR | 50 | 1920 | 614,400 | 882 |
-| cifar10 | AHR-lossless | 50 | 1920 | 5,898,240 | 581 |
+| cifar10 | AHR-lossless | 50 | 1920 | 5,898,240 | 482* |
 | cifar100 | FT | 50 | 0 | 0 | 134 |
 | cifar100 | FT-E | 50 | 2000 | 6,144,000 | 200 |
 | cifar100 | Joint | 50 | 0 | 0 | 123 |
@@ -115,7 +115,7 @@ cifar10: variants (final accuracy %, mean ± SEM over seeds):
 | + one latent-loss mean, class-space herding, reflect padding (K01, K17, K03) | 53.66 (n=1) |
 | + replays via the test path, class-space herding, reflect padding (K02, K17, K03) | 46.30 (n=1) |
 | AHR with 19,200 latent codes (10x the stated budget; memory-scaling diagnostic) | 52.00 (n=1) |
-| AHR-lossless | 68.13 ± 0.69 (n=2) |
+| AHR-lossless | 68.07 ± 0.40 (n=3) |
 | FT-E | 44.38 ± 0.77 (n=3) |
 | FT-E + EEIL balanced fine-tuning, 30 epochs | 36.03 (n=1) |
 | FT-E with 1,920 raw exemplars (AHR-lossless's memory) | 73.65 (n=1) |
@@ -164,8 +164,8 @@ it cannot even fit its decoded memory (§4.2).
 **Setting.** Everything was run on a 4-core CPU without a GPU (bf16 on AMX), at the
 paper's epochs, batch sizes, optimiser and memory budgets (Table 4), plus separate
 4-core cloud machines for §4 (`results/cloud_jobs.txt`). Main results are 3 seeds
-for FT-E, iCaRL and AHR (CIFAR-100 AHR and the SVHN / CIFAR AHR-lossless rows: 2 seeds;
-FT and Joint outside MNIST: 1 seed). miniImageNet was not run (compute).
+for FT-E, iCaRL, AHR and AHR-lossless (CIFAR-100 AHR and AHR-lossless: 2 seeds, a third
+AHR seed running; FT and Joint outside MNIST: 1 seed). miniImageNet was not run (compute).
 The paper does not specify the loss weights, the RFA constants, the latent head or
 the decoder beyond "3 layers of CNNs"; the values used are listed in §2.
 
@@ -630,7 +630,7 @@ What this shows so far:
 * The paper's FT-E numbers are reached with about 10x the stated memory (CIFAR-10 FT-E
   with 1,920 exemplars: 73.7 vs the paper's 72.2 "with 200"), consistent with audit K05.
 * With the same raw memory, plain FT-E beats this repository's AHR-lossless (CIFAR-10
-  73.7 vs 68.1, MNIST 96.7 vs 95.1), so part of the gap is in how AHR learns from
+  73.7 vs 68.1 over 3 seeds, MNIST 96.7 vs 95.1), so part of the gap is in how AHR learns from
   replay (nearest-CCE regression plus distillation), not only in the decoded exemplars.
 * None of the audit's fixes on the AHR side (K01, K02, K03, K12) closes the gap: on
   CIFAR-10 K01 and K02 lose 3 and 10 points, reflect padding loses 5 points on

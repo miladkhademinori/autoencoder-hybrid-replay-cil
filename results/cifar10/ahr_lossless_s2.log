@@ -52,3 +52,7 @@ resumed from results/cifar10/ahr_lossless_s2_ckpt_t4.pt after task 4: accs so fa
   task 5 epoch 20/50 (385 it, b_new=26) rec=14.331 lat=41.000 dz=100.760 dx=4.906 mem=0.000 [6792s]
   task 5 epoch 30/50 (385 it, b_new=26) rec=13.069 lat=31.348 dz=102.379 dx=4.044 mem=0.000 [10120s]
   task 5 epoch 40/50 (385 it, b_new=26) rec=11.933 lat=26.025 dz=103.339 dx=3.134 mem=0.000 [13504s]
+  task 5 epoch 50/50 (385 it, b_new=26) rec=11.599 lat=24.352 dz=104.020 dx=2.846 mem=0.000 [16967s]
+  memory (frozen codes): 1920 exemplars (192/class), 5,898,240 scalars, 23,592,960 bytes
+after task 5: acc=67.93 per-task=[64.1, 40.5, 57.9, 82.8, 94.2] [17035s]
+FINAL cifar10 ahr_lossless seed=2: final acc=67.93 avg inc acc=77.62 time=283.9min
