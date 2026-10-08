@@ -94,3 +94,6 @@ after task 8: acc=17.00 per-task=[5.5, 0.7, 7.3, 2.8, 11.3, 20.5, 22.3, 65.6] me
   task 9 epoch 20/50 (179 it, b_new=28) rec=10.008 lat=459.965 dz=171.685 dx=5.165 mem=0.675 rn=390.030 [16529s]
   task 9 epoch 30/50 (179 it, b_new=28) rec=9.517 lat=427.400 dz=170.658 dx=4.885 mem=0.543 rn=303.059 [19259s]
   task 9 epoch 40/50 (179 it, b_new=28) rec=9.162 lat=401.325 dz=165.477 dx=4.509 mem=0.416 rn=237.235 [22211s]
+  task 9 epoch 50/50 (179 it, b_new=28) rec=9.043 lat=392.923 dz=162.608 dx=4.423 mem=0.380 rn=223.302 [25497s]
+  memory (frozen codes): 19170 exemplars (213/class), 6,134,400 scalars, 24,537,600 bytes
+  memorisation: 20 decoder epochs (1500 steps) over 19170 exemplars, final loss=2.439
