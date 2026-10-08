@@ -32,3 +32,8 @@ after task 4: acc=24.83 per-task=[0.0, 0.0, 0.0, 99.3] [6456s]
   task 5 epoch 1/50 (73 it) ce=1.402 kd=0.000 [6487s]
   task 5 epoch 10/50 (73 it) ce=0.033 kd=0.000 [6790s]
   task 5 epoch 20/50 (73 it) ce=0.012 kd=0.000 [7121s]
+  task 5 epoch 30/50 (73 it) ce=0.004 kd=0.000 [7451s]
+  task 5 epoch 40/50 (73 it) ce=0.000 kd=0.000 [7793s]
+  task 5 epoch 50/50 (73 it) ce=0.001 kd=0.000 [8130s]
+after task 5: acc=19.61 per-task=[0.0, 0.0, 0.0, 0.0, 98.0] [8190s]
+FINAL svhn ft seed=2: final acc=19.61 avg inc acc=44.91 time=136.5min
