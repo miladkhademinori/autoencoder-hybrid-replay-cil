@@ -51,3 +51,4 @@ resumed from results/svhn/ahr_lossless_s2_ckpt_t4.pt after task 4: accs so far [
   task 5 epoch 1/50 (359 it, b_new=26) rec=6.480 lat=100.661 dz=66.004 dx=4.446 mem=0.000 [358s]
   task 5 epoch 10/50 (359 it, b_new=26) rec=4.698 lat=38.206 dz=105.032 dx=2.842 mem=0.000 [3159s]
   task 5 epoch 20/50 (359 it, b_new=26) rec=4.001 lat=24.755 dz=111.327 dx=2.308 mem=0.000 [6238s]
+  task 5 epoch 30/50 (359 it, b_new=26) rec=3.454 lat=20.158 dz=112.857 dx=1.847 mem=0.000 [9283s]

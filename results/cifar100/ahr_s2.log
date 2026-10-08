@@ -84,3 +84,5 @@ resumed from results/cifar100/ahr_s2_ckpt_t7.pt after task 7: accs so far [64.8,
   task 8 epoch 20/50 (157 it, b_new=32) rec=9.850 lat=411.474 dz=158.128 dx=5.315 mem=0.695 rn=375.086 [4400s]
   task 8 epoch 30/50 (157 it, b_new=32) rec=9.264 lat=384.625 dz=150.676 dx=4.896 mem=0.512 rn=285.818 [6551s]
   task 8 epoch 40/50 (157 it, b_new=32) rec=9.006 lat=364.000 dz=153.221 dx=4.651 mem=0.398 rn=220.764 [8662s]
+  task 8 epoch 50/50 (157 it, b_new=32) rec=8.880 lat=358.090 dz=149.134 dx=4.526 mem=0.366 rn=204.054 [10765s]
+  memory (frozen codes): 19200 exemplars (240/class), 6,144,000 scalars, 24,576,000 bytes
